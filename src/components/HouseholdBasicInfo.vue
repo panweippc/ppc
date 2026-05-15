@@ -199,7 +199,7 @@
             <el-table-column prop="village" label="行政村" />
             <el-table-column prop="naturalGroup" label="自然组" />
             <el-table-column prop="householdNo" label="户号" />
-            <el-table-column label="操作" width="300">
+            <el-table-column label="操作" width="320">
               <template #default="scope">
                 <div class="action-buttons">
                   <el-button type="primary" size="small" icon="edit" @click="handleEdit(scope.row)">编辑</el-button>
@@ -2921,21 +2921,17 @@ const handleSubmit = () => {
 .action-buttons {
   display: flex;
   align-items: center;
-  gap: 1px;
+  gap: 4px;
   flex-wrap: nowrap;
-}
-
-.action-buttons .divider {
-  color: #999;
-  margin: 0 1px;
-  font-size: 12px;
+  justify-content: flex-start;
 }
 
 .action-buttons :deep(.el-button) {
-  padding: 3px 6px;
-  font-size: 11px;
-  border-radius: 2px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 3px;
   margin: 0;
+  min-width: 50px;
 }
 
 .pagination-wrapper {
