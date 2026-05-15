@@ -864,65 +864,743 @@
           </div>
           
           <div v-show="activeTab === 'farming'" class="farming-form">
-            <div class="form-row">
-              <div class="form-item">
-                <label class="form-label">耕地面积（亩）</label>
-                <el-input v-model="farmingForm.cultivatedArea" placeholder="请输入面积" class="form-input" />
+            <div class="agriculture-section">
+              <div class="section-divider">现有农业</div>
+              <template v-for="(item, index) in existingAgricultureList" :key="item.id">
+                <div class="agriculture-row">
+                  <div class="agriculture-item required">
+                    <label class="form-label">*类型</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in cropTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="agriculture-item required">
+                    <label class="form-label">*名称</label>
+                    <el-select v-model="item.name" placeholder="请选择" class="form-select">
+                      <el-option v-for="name in cropNames" :key="name.value" :label="name.label" :value="name.value" />
+                    </el-select>
+                  </div>
+                  <div class="agriculture-item required">
+                    <label class="form-label">*面积</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="agriculture-item required">
+                    <label class="form-label">*单位</label>
+                    <el-select v-model="item.unit" placeholder="请选择" class="form-select">
+                      <el-option v-for="unit in units" :key="unit.value" :label="unit.label" :value="unit.value" />
+                    </el-select>
+                  </div>
+                  <div class="agriculture-item required">
+                    <label class="form-label">*实际收入</label>
+                    <el-input v-model="item.actualIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="agriculture-item delete-col">
+                    <el-button 
+                      type="text" 
+                      class="delete-btn"
+                      @click="removeExistingAgriculture(index)"
+                    >
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="agriculture-add-btn" v-if="existingAgricultureList.length === 0 || existingAgricultureList.length > 0">
+                <el-button type="primary" @click="addExistingAgriculture">+ 添加</el-button>
               </div>
-              <div class="form-item">
-                <label class="form-label">主要种植作物</label>
-                <el-input v-model="farmingForm.mainCrop" placeholder="请输入作物名称" class="form-input" />
-              </div>
-              <div class="form-item">
-                <label class="form-label">种植面积（亩）</label>
-                <el-input v-model="farmingForm.cropArea" placeholder="请输入面积" class="form-input" />
-              </div>
-              <div class="form-item">
-                <label class="form-label">产量（公斤）</label>
-                <el-input v-model="farmingForm.output" placeholder="请输入产量" class="form-input" />
+            </div>
+
+            <div class="agriculture-section">
+              <div class="section-divider">规划农业</div>
+              <template v-for="(item, index) in plannedAgricultureList" :key="item.id">
+                <div class="agriculture-row">
+                  <div class="agriculture-item required">
+                    <label class="form-label">*类型</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in cropTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="agriculture-item required">
+                    <label class="form-label">*名称</label>
+                    <el-select v-model="item.name" placeholder="请选择" class="form-select">
+                      <el-option v-for="name in cropNames" :key="name.value" :label="name.label" :value="name.value" />
+                    </el-select>
+                  </div>
+                  <div class="agriculture-item required">
+                    <label class="form-label">*面积</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="agriculture-item required">
+                    <label class="form-label">*单位</label>
+                    <el-select v-model="item.unit" placeholder="请选择" class="form-select">
+                      <el-option v-for="unit in units" :key="unit.value" :label="unit.label" :value="unit.value" />
+                    </el-select>
+                  </div>
+                  <div class="agriculture-item required">
+                    <label class="form-label">*预计单价</label>
+                    <el-input v-model="item.estimatedPrice" placeholder="请输入单价" class="form-input" />
+                  </div>
+                  <div class="agriculture-item required">
+                    <label class="form-label">*预计收入</label>
+                    <el-input v-model="item.estimatedIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="agriculture-item delete-col">
+                    <el-button 
+                      type="text" 
+                      class="delete-btn"
+                      @click="removePlannedAgriculture(index)"
+                    >
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="agriculture-add-btn" v-if="plannedAgricultureList.length === 0 || plannedAgricultureList.length > 0">
+                <el-button type="primary" @click="addPlannedAgriculture">+ 添加</el-button>
               </div>
             </div>
           </div>
           
           <div v-show="activeTab === 'breeding'" class="breeding-form">
-            <div class="form-row">
-              <div class="form-item">
-                <label class="form-label">养殖类型</label>
-                <el-select v-model="breedingForm.type" placeholder="请选择" class="form-select">
-                  <el-option label="牛" value="cattle" />
-                  <el-option label="羊" value="sheep" />
-                  <el-option label="猪" value="pig" />
-                  <el-option label="家禽" value="poultry" />
-                </el-select>
+            <div class="breeding-section">
+              <div class="section-divider">养殖设施(现有)</div>
+              <template v-for="(item, index) in existingBreedingFacilityList" :key="item.id">
+                <div class="breeding-facility-row">
+                  <div class="breeding-facility-item required">
+                    <label class="form-label">*棚圈结构</label>
+                    <el-select v-model="item.structure" placeholder="请选择" class="form-select">
+                      <el-option v-for="structure in shedStructures" :key="structure.value" :label="structure.label" :value="structure.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-facility-item required">
+                    <label class="form-label">*棚圈面积（㎡）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="breeding-facility-item delete-col">
+                    <el-button 
+                      type="text" 
+                      class="delete-btn"
+                      @click="removeExistingBreedingFacility(index)"
+                    >
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="breeding-add-btn">
+                <el-button type="primary" @click="addExistingBreedingFacility">+ 添加</el-button>
               </div>
-              <div class="form-item">
-                <label class="form-label">数量</label>
-                <el-input v-model="breedingForm.quantity" placeholder="请输入数量" class="form-input" />
+            </div>
+
+            <div class="breeding-section">
+              <div class="section-divider">现有养殖</div>
+              <template v-for="(item, index) in existingBreedingList" :key="item.id">
+                <div class="breeding-row">
+                  <div class="breeding-item">
+                    <label class="form-label">类型</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in breedingTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-item">
+                    <label class="form-label">名称</label>
+                    <el-select v-model="item.name" placeholder="请选择" class="form-select">
+                      <el-option v-for="name in breedingNames" :key="name.value" :label="name.label" :value="name.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-item required">
+                    <label class="form-label">*繁育信息</label>
+                    <el-select v-model="item.breedingInfo" placeholder="请选择" class="form-select">
+                      <el-option v-for="info in breedingInfo" :key="info.value" :label="info.label" :value="info.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-item required">
+                    <label class="form-label">*数量</label>
+                    <el-input v-model="item.quantity" placeholder="请输入数量" class="form-input" />
+                  </div>
+                  <div class="breeding-item required">
+                    <label class="form-label">*单位</label>
+                    <el-select v-model="item.unit" placeholder="请选择" class="form-select">
+                      <el-option v-for="unit in breedingUnits" :key="unit.value" :label="unit.label" :value="unit.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-item required">
+                    <label class="form-label">*实际收入</label>
+                    <el-input v-model="item.actualIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="breeding-item delete-col">
+                    <el-button 
+                      type="text" 
+                      class="delete-btn"
+                      @click="removeExistingBreeding(index)"
+                    >
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="breeding-add-btn">
+                <el-button type="primary" @click="addExistingBreeding">+ 添加</el-button>
               </div>
-              <div class="form-item">
-                <label class="form-label">出栏量</label>
-                <el-input v-model="breedingForm.slaughter" placeholder="请输入出栏量" class="form-input" />
+            </div>
+
+            <div class="breeding-section">
+              <div class="section-divider">养殖设施(规划)</div>
+              <template v-for="(item, index) in plannedBreedingFacilityList" :key="item.id">
+                <div class="breeding-facility-row">
+                  <div class="breeding-facility-item required">
+                    <label class="form-label">*棚圈结构</label>
+                    <el-select v-model="item.structure" placeholder="请选择" class="form-select">
+                      <el-option v-for="structure in shedStructures" :key="structure.value" :label="structure.label" :value="structure.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-facility-item required">
+                    <label class="form-label">*棚圈面积（㎡）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="breeding-facility-item delete-col">
+                    <el-button 
+                      type="text" 
+                      class="delete-btn"
+                      @click="removePlannedBreedingFacility(index)"
+                    >
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="breeding-add-btn">
+                <el-button type="primary" @click="addPlannedBreedingFacility">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="breeding-section">
+              <div class="section-divider">规划养殖</div>
+              <template v-for="(item, index) in plannedBreedingList" :key="item.id">
+                <div class="breeding-row">
+                  <div class="breeding-item">
+                    <label class="form-label">类型</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in breedingTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-item">
+                    <label class="form-label">名称</label>
+                    <el-select v-model="item.name" placeholder="请选择" class="form-select">
+                      <el-option v-for="name in breedingNames" :key="name.value" :label="name.label" :value="name.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-item">
+                    <label class="form-label">繁育信息</label>
+                    <el-select v-model="item.breedingInfo" placeholder="请选择" class="form-select">
+                      <el-option v-for="info in breedingInfo" :key="info.value" :label="info.label" :value="info.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-item required">
+                    <label class="form-label">*数量</label>
+                    <el-input v-model="item.quantity" placeholder="请输入数量" class="form-input" />
+                  </div>
+                  <div class="breeding-item required">
+                    <label class="form-label">*单位</label>
+                    <el-select v-model="item.unit" placeholder="请选择" class="form-select">
+                      <el-option v-for="unit in breedingUnits" :key="unit.value" :label="unit.label" :value="unit.value" />
+                    </el-select>
+                  </div>
+                  <div class="breeding-item required">
+                    <label class="form-label">*预计单价</label>
+                    <el-input v-model="item.estimatedPrice" placeholder="请输入单价" class="form-input" />
+                  </div>
+                  <div class="breeding-item required">
+                    <label class="form-label">*预计收入</label>
+                    <el-input v-model="item.estimatedIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="breeding-item delete-col">
+                    <el-button 
+                      type="text" 
+                      class="delete-btn"
+                      @click="removePlannedBreeding(index)"
+                    >
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="breeding-add-btn">
+                <el-button type="primary" @click="addPlannedBreeding">+ 添加</el-button>
               </div>
             </div>
           </div>
           
           <div v-show="activeTab === 'specialty'" class="specialty-form">
-            <div class="form-row">
-              <div class="form-item">
-                <label class="form-label">特色产业名称</label>
-                <el-input v-model="specialtyForm.name" placeholder="请输入产业名称" class="form-input" />
+            <div class="section-divider">现有特色产业</div>
+            
+            <div class="specialty-section">
+              <div class="specialty-subtitle">现有特色产业（农/牧家乐）</div>
+              <template v-for="(item, index) in existingFarmhouseList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">类型</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in farmhouseTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">名称</label>
+                    <el-input v-model="item.name" placeholder="请输入名称" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*住宿可容纳人数</label>
+                    <el-input v-model="item.accommodationCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*餐饮可容纳人数</label>
+                    <el-input v-model="item.cateringCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*特色菜品</label>
+                    <el-input v-model="item.specialDishes" placeholder="请输入特色菜品" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">特色采摘</label>
+                    <el-input v-model="item.specialPicking" placeholder="请输入特色采摘" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">占地（亩）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*实际收入</label>
+                    <el-input v-model="item.actualIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removeExistingFarmhouse(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addExistingFarmhouse">+ 添加</el-button>
               </div>
-              <div class="form-item">
-                <label class="form-label">经营模式</label>
-                <el-select v-model="specialtyForm.mode" placeholder="请选择" class="form-select">
-                  <el-option label="自主经营" value="self" />
-                  <el-option label="合作社" value="cooperative" />
-                  <el-option label="企业带动" value="enterprise" />
-                </el-select>
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">现有特色产业（采摘园）</div>
+              <template v-for="(item, index) in existingPickingGardenList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">采摘园名称</label>
+                    <el-input v-model="item.name" placeholder="请输入名称" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">采摘项占地（亩）</label>
+                    <el-input v-model="item.pickingArea" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">采摘项目</label>
+                    <el-input v-model="item.pickingItems" placeholder="请输入采摘项目" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">采摘季节</label>
+                    <el-select v-model="item.pickingSeason" placeholder="请选择" class="form-select">
+                      <el-option v-for="season in pickingSeasons" :key="season.value" :label="season.label" :value="season.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">采摘价格</label>
+                    <el-input v-model="item.pickingPrice" placeholder="请输入价格" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*实际收入</label>
+                    <el-input v-model="item.actualIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removeExistingPickingGarden(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addExistingPickingGarden">+ 添加</el-button>
               </div>
-              <div class="form-item">
-                <label class="form-label">年收入（元）</label>
-                <el-input v-model="specialtyForm.income" placeholder="请输入收入" class="form-input" />
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">田园综合体（现有）</div>
+              <template v-for="(item, index) in existingPastoralComplexList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">田园综合体名称</label>
+                    <el-input v-model="item.name" placeholder="请输入名称" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">占地（亩）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">住宿可容纳人数</label>
+                    <el-input v-model="item.accommodationCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">餐饮可容纳人数</label>
+                    <el-input v-model="item.cateringCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">特色菜品</label>
+                    <el-input v-model="item.specialDishes" placeholder="请输入特色菜品" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*实际收入</label>
+                    <el-input v-model="item.actualIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removeExistingPastoralComplex(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addExistingPastoralComplex">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">游乐设施（现有）</div>
+              <template v-for="(item, index) in existingAmusementList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">游乐设施名称</label>
+                    <el-input v-model="item.name" placeholder="请输入名称" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">占地（亩）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">可接待游客数量</label>
+                    <el-input v-model="item.visitorCapacity" placeholder="请输入数量" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*实际收入</label>
+                    <el-input v-model="item.actualIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removeExistingAmusement(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addExistingAmusement">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">特色农副产品（现有）</div>
+              <template v-for="(item, index) in existingAgriculturalList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">农副产种类</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in agriculturalTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">产量</label>
+                    <el-input v-model="item.output" placeholder="请输入产量" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">单位</label>
+                    <el-select v-model="item.unit" placeholder="请选择" class="form-select">
+                      <el-option v-for="unit in units" :key="unit.value" :label="unit.label" :value="unit.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*实际收入</label>
+                    <el-input v-model="item.actualIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removeExistingAgricultural(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addExistingAgricultural">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">大棚经济（现有）</div>
+              <template v-for="(item, index) in existingGreenhouseList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">大棚类型</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in greenhouseTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">占地（亩）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">可接待游客数</label>
+                    <el-input v-model="item.visitorCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*实际收入</label>
+                    <el-input v-model="item.actualIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removeExistingGreenhouse(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addExistingGreenhouse">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="section-divider">规划特色产业</div>
+            
+            <div class="specialty-section">
+              <div class="specialty-subtitle">规划特色产业（农/牧家乐）</div>
+              <template v-for="(item, index) in plannedFarmhouseList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">类型</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in farmhouseTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">名称</label>
+                    <el-input v-model="item.name" placeholder="请输入名称" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*住宿可容纳人数</label>
+                    <el-input v-model="item.accommodationCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*餐饮可容纳人数</label>
+                    <el-input v-model="item.cateringCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*特色菜品</label>
+                    <el-input v-model="item.specialDishes" placeholder="请输入特色菜品" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">特色采摘</label>
+                    <el-input v-model="item.specialPicking" placeholder="请输入特色采摘" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">占地（亩）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*预计收入</label>
+                    <el-input v-model="item.estimatedIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removePlannedFarmhouse(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addPlannedFarmhouse">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">规划特色产业（采摘园）</div>
+              <template v-for="(item, index) in plannedPickingGardenList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">采摘园名称</label>
+                    <el-input v-model="item.name" placeholder="请输入名称" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">采摘项占地（亩）</label>
+                    <el-input v-model="item.pickingArea" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">采摘项目</label>
+                    <el-input v-model="item.pickingItems" placeholder="请输入采摘项目" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">采摘季节</label>
+                    <el-select v-model="item.pickingSeason" placeholder="请选择" class="form-select">
+                      <el-option v-for="season in pickingSeasons" :key="season.value" :label="season.label" :value="season.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">采摘价格</label>
+                    <el-input v-model="item.pickingPrice" placeholder="请输入价格" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*预计收入</label>
+                    <el-input v-model="item.estimatedIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removePlannedPickingGarden(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addPlannedPickingGarden">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">田园综合体（规划）</div>
+              <template v-for="(item, index) in plannedPastoralComplexList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">田园综合体名称</label>
+                    <el-input v-model="item.name" placeholder="请输入名称" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">占地（亩）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">住宿可容纳人数</label>
+                    <el-input v-model="item.accommodationCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">餐饮可容纳人数</label>
+                    <el-input v-model="item.cateringCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">特色菜品</label>
+                    <el-input v-model="item.specialDishes" placeholder="请输入特色菜品" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*预计收入</label>
+                    <el-input v-model="item.estimatedIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removePlannedPastoralComplex(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addPlannedPastoralComplex">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">游乐设施（规划）</div>
+              <template v-for="(item, index) in plannedAmusementList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">游乐设施名称</label>
+                    <el-input v-model="item.name" placeholder="请输入名称" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">占地（亩）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">可接待游客数量</label>
+                    <el-input v-model="item.visitorCapacity" placeholder="请输入数量" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*预计收入</label>
+                    <el-input v-model="item.estimatedIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removePlannedAmusement(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addPlannedAmusement">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">特色农副产品（规划）</div>
+              <template v-for="(item, index) in plannedAgriculturalList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">农副产种类</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in agriculturalTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">产量</label>
+                    <el-input v-model="item.output" placeholder="请输入产量" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">单位</label>
+                    <el-select v-model="item.unit" placeholder="请选择" class="form-select">
+                      <el-option v-for="unit in units" :key="unit.value" :label="unit.label" :value="unit.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*预计收入</label>
+                    <el-input v-model="item.estimatedIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removePlannedAgricultural(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addPlannedAgricultural">+ 添加</el-button>
+              </div>
+            </div>
+
+            <div class="specialty-section">
+              <div class="specialty-subtitle">大棚经济（规划）</div>
+              <template v-for="(item, index) in plannedGreenhouseList" :key="item.id">
+                <div class="specialty-row">
+                  <div class="specialty-item">
+                    <label class="form-label">大棚类型</label>
+                    <el-select v-model="item.type" placeholder="请选择" class="form-select">
+                      <el-option v-for="type in greenhouseTypes" :key="type.value" :label="type.label" :value="type.value" />
+                    </el-select>
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">占地（亩）</label>
+                    <el-input v-model="item.area" placeholder="请输入面积" class="form-input" />
+                  </div>
+                  <div class="specialty-item">
+                    <label class="form-label">可接待游客数</label>
+                    <el-input v-model="item.visitorCapacity" placeholder="请输入人数" class="form-input" />
+                  </div>
+                  <div class="specialty-item required">
+                    <label class="form-label">*预计收入</label>
+                    <el-input v-model="item.estimatedIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="specialty-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removePlannedGreenhouse(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="specialty-add-btn">
+                <el-button type="primary" @click="addPlannedGreenhouse">+ 添加</el-button>
               </div>
             </div>
           </div>
@@ -1204,24 +1882,354 @@ const removeMember = (index) => {
   memberList.value.splice(index, 1)
 }
 
-const farmingForm = reactive({
-  cultivatedArea: '',
-  mainCrop: '',
-  cropArea: '',
-  output: ''
-})
+const existingAgricultureList = ref([])
+const plannedAgricultureList = ref([])
 
-const breedingForm = reactive({
+const cropTypes = [
+  { label: '粮食作物', value: 'grain' },
+  { label: '经济作物', value: 'economic' },
+  { label: '蔬菜', value: 'vegetable' },
+  { label: '水果', value: 'fruit' },
+  { label: '其他', value: 'other' }
+]
+
+const cropNames = [
+  { label: '小麦', value: 'wheat' },
+  { label: '玉米', value: 'corn' },
+  { label: '水稻', value: 'rice' },
+  { label: '大豆', value: 'soybean' },
+  { label: '棉花', value: 'cotton' },
+  { label: '油菜', value: 'rape' },
+  { label: '蔬菜', value: 'vegetable' },
+  { label: '水果', value: 'fruit' },
+  { label: '其他', value: 'other' }
+]
+
+const units = [
+  { label: '亩', value: 'mu' },
+  { label: '公顷', value: 'hectare' },
+  { label: '平方米', value: 'square_meter' }
+]
+
+const createExistingAgriculture = () => ({
+  id: Date.now(),
   type: '',
-  quantity: '',
-  slaughter: ''
+  name: '',
+  area: '',
+  unit: '',
+  actualIncome: ''
 })
 
-const specialtyForm = reactive({
+const createPlannedAgriculture = () => ({
+  id: Date.now(),
+  type: '',
   name: '',
-  mode: '',
-  income: ''
+  area: '',
+  unit: '',
+  estimatedPrice: '',
+  estimatedIncome: ''
 })
+
+const addExistingAgriculture = () => {
+  existingAgricultureList.value.push(createExistingAgriculture())
+}
+
+const removeExistingAgriculture = (index) => {
+  existingAgricultureList.value.splice(index, 1)
+}
+
+const addPlannedAgriculture = () => {
+  plannedAgricultureList.value.push(createPlannedAgriculture())
+}
+
+const removePlannedAgriculture = (index) => {
+  plannedAgricultureList.value.splice(index, 1)
+}
+
+const existingBreedingFacilityList = ref([])
+const existingBreedingList = ref([])
+const plannedBreedingFacilityList = ref([])
+const plannedBreedingList = ref([])
+
+const shedStructures = [
+  { label: '砖混结构', value: 'brick_concrete' },
+  { label: '钢结构', value: 'steel' },
+  { label: '木结构', value: 'wood' },
+  { label: '其他', value: 'other' }
+]
+
+const breedingTypes = [
+  { label: '畜牧', value: 'livestock' },
+  { label: '家禽', value: 'poultry' },
+  { label: '水产', value: 'aquatic' },
+  { label: '其他', value: 'other' }
+]
+
+const breedingNames = [
+  { label: '牛', value: 'cattle' },
+  { label: '羊', value: 'sheep' },
+  { label: '猪', value: 'pig' },
+  { label: '鸡', value: 'chicken' },
+  { label: '鸭', value: 'duck' },
+  { label: '鹅', value: 'goose' },
+  { label: '鱼', value: 'fish' },
+  { label: '其他', value: 'other' }
+]
+
+const breedingUnits = [
+  { label: '头', value: 'head' },
+  { label: '只', value: 'piece' },
+  { label: '羽', value: 'feather' },
+  { label: '尾', value: 'tail' },
+  { label: '头/只', value: 'head_piece' }
+]
+
+const breedingInfo = [
+  { label: '能繁', value: 'breeding' },
+  { label: '育肥', value: 'fattening' },
+  { label: '种畜', value: 'breeding_stock' },
+  { label: '其他', value: 'other' }
+]
+
+const createBreedingFacility = () => ({
+  id: Date.now(),
+  structure: '',
+  area: ''
+})
+
+const createExistingBreeding = () => ({
+  id: Date.now(),
+  type: '',
+  name: '',
+  breedingInfo: '',
+  quantity: '',
+  unit: '',
+  actualIncome: ''
+})
+
+const createPlannedBreeding = () => ({
+  id: Date.now(),
+  type: '',
+  name: '',
+  breedingInfo: '',
+  quantity: '',
+  unit: '',
+  estimatedPrice: '',
+  estimatedIncome: ''
+})
+
+const addExistingBreedingFacility = () => {
+  existingBreedingFacilityList.value.push(createBreedingFacility())
+}
+
+const removeExistingBreedingFacility = (index) => {
+  existingBreedingFacilityList.value.splice(index, 1)
+}
+
+const addExistingBreeding = () => {
+  existingBreedingList.value.push(createExistingBreeding())
+}
+
+const removeExistingBreeding = (index) => {
+  existingBreedingList.value.splice(index, 1)
+}
+
+const addPlannedBreedingFacility = () => {
+  plannedBreedingFacilityList.value.push(createBreedingFacility())
+}
+
+const removePlannedBreedingFacility = (index) => {
+  plannedBreedingFacilityList.value.splice(index, 1)
+}
+
+const addPlannedBreeding = () => {
+  plannedBreedingList.value.push(createPlannedBreeding())
+}
+
+const removePlannedBreeding = (index) => {
+  plannedBreedingList.value.splice(index, 1)
+}
+
+const existingFarmhouseList = ref([])
+const existingPickingGardenList = ref([])
+const existingPastoralComplexList = ref([])
+const existingAmusementList = ref([])
+const existingAgriculturalList = ref([])
+const existingGreenhouseList = ref([])
+
+const plannedFarmhouseList = ref([])
+const plannedPickingGardenList = ref([])
+const plannedPastoralComplexList = ref([])
+const plannedAmusementList = ref([])
+const plannedAgriculturalList = ref([])
+const plannedGreenhouseList = ref([])
+
+const farmhouseTypes = [
+  { label: '农家乐', value: 'farmhouse' },
+  { label: '牧家乐', value: 'pastoral' }
+]
+
+const agriculturalTypes = [
+  { label: '蔬菜', value: 'vegetable' },
+  { label: '水果', value: 'fruit' },
+  { label: '杂粮', value: 'grain' },
+  { label: '畜禽', value: 'livestock' },
+  { label: '水产', value: 'aquatic' },
+  { label: '其他', value: 'other' }
+]
+
+const greenhouseTypes = [
+  { label: '日光温室', value: 'solar' },
+  { label: '塑料大棚', value: 'plastic' },
+  { label: '智能温室', value: 'smart' },
+  { label: '其他', value: 'other' }
+]
+
+const pickingSeasons = [
+  { label: '春季', value: 'spring' },
+  { label: '夏季', value: 'summer' },
+  { label: '秋季', value: 'autumn' },
+  { label: '冬季', value: 'winter' },
+  { label: '全年', value: 'all' }
+]
+
+const createFarmhouse = () => ({
+  id: Date.now(),
+  type: '',
+  name: '',
+  accommodationCapacity: '',
+  cateringCapacity: '',
+  specialDishes: '',
+  specialPicking: '',
+  area: '',
+  actualIncome: ''
+})
+
+const createPickingGarden = () => ({
+  id: Date.now(),
+  name: '',
+  pickingArea: '',
+  pickingItems: '',
+  pickingSeason: '',
+  pickingPrice: '',
+  actualIncome: ''
+})
+
+const createPastoralComplex = () => ({
+  id: Date.now(),
+  name: '',
+  area: '',
+  accommodationCapacity: '',
+  cateringCapacity: '',
+  specialDishes: '',
+  actualIncome: ''
+})
+
+const createAmusement = () => ({
+  id: Date.now(),
+  name: '',
+  area: '',
+  visitorCapacity: '',
+  actualIncome: ''
+})
+
+const createAgricultural = () => ({
+  id: Date.now(),
+  type: '',
+  output: '',
+  unit: '',
+  actualIncome: ''
+})
+
+const createGreenhouse = () => ({
+  id: Date.now(),
+  type: '',
+  area: '',
+  visitorCapacity: '',
+  actualIncome: ''
+})
+
+const createPlannedFarmhouse = () => ({
+  id: Date.now(),
+  type: '',
+  name: '',
+  accommodationCapacity: '',
+  cateringCapacity: '',
+  specialDishes: '',
+  specialPicking: '',
+  area: '',
+  estimatedIncome: ''
+})
+
+const createPlannedPickingGarden = () => ({
+  id: Date.now(),
+  name: '',
+  pickingArea: '',
+  pickingItems: '',
+  pickingSeason: '',
+  pickingPrice: '',
+  estimatedIncome: ''
+})
+
+const createPlannedPastoralComplex = () => ({
+  id: Date.now(),
+  name: '',
+  area: '',
+  accommodationCapacity: '',
+  cateringCapacity: '',
+  specialDishes: '',
+  estimatedIncome: ''
+})
+
+const createPlannedAmusement = () => ({
+  id: Date.now(),
+  name: '',
+  area: '',
+  visitorCapacity: '',
+  estimatedIncome: ''
+})
+
+const createPlannedAgricultural = () => ({
+  id: Date.now(),
+  type: '',
+  output: '',
+  unit: '',
+  estimatedIncome: ''
+})
+
+const createPlannedGreenhouse = () => ({
+  id: Date.now(),
+  type: '',
+  area: '',
+  visitorCapacity: '',
+  estimatedIncome: ''
+})
+
+const addExistingFarmhouse = () => existingFarmhouseList.value.push(createFarmhouse())
+const removeExistingFarmhouse = (index) => existingFarmhouseList.value.splice(index, 1)
+const addExistingPickingGarden = () => existingPickingGardenList.value.push(createPickingGarden())
+const removeExistingPickingGarden = (index) => existingPickingGardenList.value.splice(index, 1)
+const addExistingPastoralComplex = () => existingPastoralComplexList.value.push(createPastoralComplex())
+const removeExistingPastoralComplex = (index) => existingPastoralComplexList.value.splice(index, 1)
+const addExistingAmusement = () => existingAmusementList.value.push(createAmusement())
+const removeExistingAmusement = (index) => existingAmusementList.value.splice(index, 1)
+const addExistingAgricultural = () => existingAgriculturalList.value.push(createAgricultural())
+const removeExistingAgricultural = (index) => existingAgriculturalList.value.splice(index, 1)
+const addExistingGreenhouse = () => existingGreenhouseList.value.push(createGreenhouse())
+const removeExistingGreenhouse = (index) => existingGreenhouseList.value.splice(index, 1)
+
+const addPlannedFarmhouse = () => plannedFarmhouseList.value.push(createPlannedFarmhouse())
+const removePlannedFarmhouse = (index) => plannedFarmhouseList.value.splice(index, 1)
+const addPlannedPickingGarden = () => plannedPickingGardenList.value.push(createPlannedPickingGarden())
+const removePlannedPickingGarden = (index) => plannedPickingGardenList.value.splice(index, 1)
+const addPlannedPastoralComplex = () => plannedPastoralComplexList.value.push(createPlannedPastoralComplex())
+const removePlannedPastoralComplex = (index) => plannedPastoralComplexList.value.splice(index, 1)
+const addPlannedAmusement = () => plannedAmusementList.value.push(createPlannedAmusement())
+const removePlannedAmusement = (index) => plannedAmusementList.value.splice(index, 1)
+const addPlannedAgricultural = () => plannedAgriculturalList.value.push(createPlannedAgricultural())
+const removePlannedAgricultural = (index) => plannedAgriculturalList.value.splice(index, 1)
+const addPlannedGreenhouse = () => plannedGreenhouseList.value.push(createPlannedGreenhouse())
+const removePlannedGreenhouse = (index) => plannedGreenhouseList.value.splice(index, 1)
 
 const yardForm = reactive({
   area: '',
@@ -1892,5 +2900,132 @@ const handleSubmit = () => {
 
 .member-delete-btn:hover {
   color: #ef4444;
+}
+
+.agriculture-section {
+  margin-bottom: 20px;
+}
+
+.agriculture-row {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  padding: 15px;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.agriculture-item {
+  flex: 1;
+  min-width: 120px;
+}
+
+.agriculture-item.delete-col {
+  flex: none;
+  width: auto;
+}
+
+.agriculture-add-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.delete-btn {
+  color: #f56c6c;
+  font-size: 20px;
+}
+
+.delete-btn:hover {
+  color: #ef4444;
+}
+
+.breeding-section {
+  margin-bottom: 20px;
+}
+
+.breeding-facility-row {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  padding: 15px;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.breeding-facility-item {
+  flex: 1;
+  min-width: 150px;
+}
+
+.breeding-facility-item.delete-col {
+  flex: none;
+  width: auto;
+}
+
+.breeding-row {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  padding: 15px;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.breeding-item {
+  flex: 1;
+  min-width: 100px;
+}
+
+.breeding-item.delete-col {
+  flex: none;
+  width: auto;
+}
+
+.breeding-add-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.specialty-section {
+  margin-bottom: 20px;
+}
+
+.specialty-subtitle {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.specialty-row {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  padding: 15px;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.specialty-item {
+  flex: 1;
+  min-width: 100px;
+}
+
+.specialty-item.delete-col {
+  flex: none;
+  width: auto;
+}
+
+.specialty-add-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
 }
 </style>
