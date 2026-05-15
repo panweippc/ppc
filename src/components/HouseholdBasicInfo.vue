@@ -2041,27 +2041,29 @@
                 <td>是否外出务工</td>
                 <td colspan="7"></td>
               </tr>
-              <tr v-for="(member, index) in memberList" :key="index">
-                <td></td>
-                <td>{{ member.name || '-' }}</td>
-                <td>{{ member.gender === 'male' ? '男' : member.gender === 'female' ? '女' : '-' }}</td>
-                <td>{{ member.nation || '-' }}</td>
-                <td>{{ member.politicalStatus || '-' }}</td>
-                <td>{{ member.idCard || '-' }}</td>
-                <td>{{ member.phone || '-' }}</td>
-                <td>{{ member.relation || '-' }}</td>
-                <td>{{ member.militaryService || '-' }}</td>
-                <td>{{ member.healthStatus || '-' }}</td>
-                <td>{{ member.education || '-' }}</td>
-                <td>{{ member.studentStatus || '-' }}</td>
-                <td>{{ member.school || '-' }}</td>
-                <td>{{ member.hasEducationSubsidy === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.educationSubsidyType || '-' }}</td>
-                <td>{{ member.schoolReason || '-' }}</td>
-                <td>{{ member.canSpeakMandarin === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.isOutWorker === 'yes' ? '是' : '否' }}</td>
-                <td colspan="7"></td>
-              </tr>
+              <template v-for="(member, index) in memberList" :key="index">
+                <tr>
+                  <td></td>
+                  <td>{{ member.name || '-' }}</td>
+                  <td>{{ member.gender === 'male' ? '男' : member.gender === 'female' ? '女' : '-' }}</td>
+                  <td>{{ member.nation || '-' }}</td>
+                  <td>{{ member.politicalStatus || '-' }}</td>
+                  <td>{{ member.idCard || '-' }}</td>
+                  <td>{{ member.phone || '-' }}</td>
+                  <td>{{ member.relation || '-' }}</td>
+                  <td>{{ member.militaryService || '-' }}</td>
+                  <td>{{ member.healthStatus || '-' }}</td>
+                  <td>{{ member.education || '-' }}</td>
+                  <td>{{ member.studentStatus || '-' }}</td>
+                  <td>{{ member.school || '-' }}</td>
+                  <td>{{ member.hasEducationSubsidy === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.educationSubsidyType || '-' }}</td>
+                  <td>{{ member.schoolReason || '-' }}</td>
+                  <td>{{ member.canSpeakMandarin === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.isOutWorker === 'yes' ? '是' : '否' }}</td>
+                  <td colspan="7"></td>
+                </tr>
+              </template>
               <tr>
                 <td></td>
                 <td>是否国外务工</td>
@@ -2084,28 +2086,30 @@
                 <td>备注</td>
                 <td colspan="5"></td>
               </tr>
-              <tr v-for="(member, index) in memberList" :key="'detail-' + index">
-                <td></td>
-                <td>{{ member.isForeignWorker === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.skill || '-' }}</td>
-                <td>{{ member.outArea || '-' }}</td>
-                <td>{{ member.isKeyPerson === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.isRelocated === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.isSpecialSupport === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.hasRuralInsurance === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.hasUrbanInsurance === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.hasAccidentInsurance === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.hasPension === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.hasMedical === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.hasCommercialMedical === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.hasCriticalIllness === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.hasMedicalAid === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.hasHealthAid === 'yes' ? '是' : '否' }}</td>
-                <td>{{ member.bankCard || '-' }}</td>
-                <td>{{ member.bankName || '-' }}</td>
-                <td>{{ member.remark || '-' }}</td>
-                <td colspan="5"></td>
-              </tr>
+              <template v-for="(member, index) in memberList" :key="'detail-' + index">
+                <tr>
+                  <td></td>
+                  <td>{{ member.isForeignWorker === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.skill || '-' }}</td>
+                  <td>{{ member.outArea || '-' }}</td>
+                  <td>{{ member.isKeyPerson === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.isRelocated === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.isSpecialSupport === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasRuralInsurance === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasUrbanInsurance === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasAccidentInsurance === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasPension === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasMedical === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasCommercialMedical === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasCriticalIllness === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasMedicalAid === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasHealthAid === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.bankCard || '-' }}</td>
+                  <td>{{ member.bankName || '-' }}</td>
+                  <td>{{ member.remark || '-' }}</td>
+                  <td colspan="5"></td>
+                </tr>
+              </template>
             </tbody>
           </table>
           
