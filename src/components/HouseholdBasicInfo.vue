@@ -178,10 +178,22 @@
 
         <div class="table-panel">
           <div class="table-header">
-            <el-button type="primary" @click="handleAdd">
-              <el-icon><Plus /></el-icon>
-              增加
-            </el-button>
+            <div class="add-button-wrapper">
+              <el-button type="primary" @click="showYearSelector = !showYearSelector">
+                <el-icon><Plus /></el-icon>
+                增加
+              </el-button>
+              <div v-show="showYearSelector" class="year-dropdown">
+                <div 
+                  v-for="year in availableYears" 
+                  :key="year" 
+                  class="year-item"
+                  @click="selectYear(year)"
+                >
+                  {{ year }}年
+                </div>
+              </div>
+            </div>
           </div>
           <el-table :data="paginatedData" border>
             <el-table-column prop="village" label="行政村" />
@@ -218,86 +230,745 @@
       </div>
     </div>
 
-    <el-dialog v-model="dialogVisible" title="户基本信息" width="80%" class="dialog-container">
+    <el-dialog v-model="showYearSelector" title="选择年度" width="200px" class="year-select-dialog">
+      <div class="year-select-container">
+        <div 
+          v-for="year in availableYears" 
+          :key="year" 
+          class="year-option"
+          @click="selectYear(year)"
+        >
+          {{ year }}年
+        </div>
+      </div>
+    </el-dialog>
+
+    <el-dialog v-model="dialogVisible" :title="`数据信息 - (${selectedYear}年)`" width="90%" class="dialog-container">
       <div class="form-container">
-        <div class="form-row">
-          <div class="form-item">
-            <label class="form-label">行政村</label>
-            <el-select v-model="formData.village" placeholder="请选择" class="form-select">
-              <el-option v-for="village in villages" :key="village.id" :label="village.name" :value="village.name" />
-            </el-select>
-          </div>
-          <div class="form-item">
-            <label class="form-label">自然组</label>
-            <el-input v-model="formData.naturalGroup" placeholder="请输入自然组" class="form-input" />
-          </div>
-          <div class="form-item">
-            <label class="form-label">户号</label>
-            <el-input v-model="formData.householdNo" placeholder="请输入户号" class="form-input" />
+        <div class="tabs-wrapper">
+          <div 
+            v-for="tab in tabs" 
+            :key="tab.key" 
+            class="tab-item"
+            :class="{ active: activeTab === tab.key }"
+            @click="activeTab = tab.key"
+          >
+            {{ tab.label }}
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-item">
-            <label class="form-label">姓名</label>
-            <el-input v-model="formData.name" placeholder="请输入姓名" class="form-input" />
+        
+        <div class="tab-content">
+          <div v-show="activeTab === 'basic'" class="basic-info-form">
+            <div class="form-row">
+              <div class="form-item required">
+                <label class="form-label">*所在村</label>
+                <el-select v-model="formData.village" placeholder="请选择" class="form-select">
+                  <el-option v-for="village in villages" :key="village.id" :label="village.name" :value="village.name" />
+                </el-select>
+              </div>
+              <div class="form-item required">
+                <label class="form-label">*户号</label>
+                <el-input v-model="formData.householdNo" placeholder="请输入户号" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">户主姓名</label>
+                <el-input v-model="formData.name" placeholder="请输入户主姓名" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">家庭人口数</label>
+                <el-select v-model="formData.familyMembers" placeholder="请选择" class="form-select">
+                  <el-option v-for="n in 20" :key="n" :label="n" :value="n" />
+                </el-select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">家庭劳动力数</label>
+                <el-select v-model="formData.workforce" placeholder="请选择" class="form-select">
+                  <el-option v-for="n in 10" :key="n" :label="n" :value="n" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">是否整户无劳动力</label>
+                <el-select v-model="formData.isWholeFamilyUnemployed" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">户类型</label>
+                <el-select v-model="formData.householdType" placeholder="请选择" class="form-select">
+                  <el-option label="一般户" value="general" />
+                  <el-option label="脱贫户" value="poverty" />
+                  <el-option label="监测户" value="monitor" />
+                  <el-option label="边缘户" value="edge" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">户联系电话</label>
+                <el-input v-model="formData.phone" placeholder="请输入联系电话" class="form-input" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">是否享受兜底政策</label>
+                <el-select v-model="formData.hasSocialSecurity" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">兜底等级</label>
+                <el-select v-model="formData.socialSecurityLevel" placeholder="请选择" class="form-select">
+                  <el-option label="无" value="none" />
+                  <el-option label="A" value="A" />
+                  <el-option label="B" value="B" />
+                  <el-option label="C" value="C" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">主要燃料类型</label>
+                <el-select v-model="formData.fuelType" placeholder="请选择" class="form-select">
+                  <el-option label="柴草" value="firewood" />
+                  <el-option label="煤炭" value="coal" />
+                  <el-option label="液化气" value="gas" />
+                  <el-option label="电" value="electric" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">是否解决安全饮用水</label>
+                <el-select v-model="formData.hasSafeWater" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">是否有创业致富带头人带动</label>
+                <el-select v-model="formData.hasLeader带动" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">是否有龙头企业带动</label>
+                <el-select v-model="formData.hasEnterprise" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">入户路类型</label>
+                <el-select v-model="formData.roadType" placeholder="请选择" class="form-select">
+                  <el-option label="硬化路" value="paved" />
+                  <el-option label="土路" value="dirt" />
+                  <el-option label="砂石路" value="gravel" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">与村主干路距离（m）</label>
+                <el-input v-model="formData.roadDistance" placeholder="请输入距离" class="form-input" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">是否通广播电视</label>
+                <el-select v-model="formData.hasTV" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">是否通生活用电</label>
+                <el-select v-model="formData.hasElectricity" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">是否通生产用电</label>
+                <el-select v-model="formData.hasProductionElectricity" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">是否参与合作社</label>
+                <el-select v-model="formData.inCooperative" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">是否有项目需求</label>
+                <el-select v-model="formData.hasProjectDemand" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">风险是否已消除</label>
+                <el-select v-model="formData.riskEliminated" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">识别监测时间</label>
+                <el-date-picker v-model="formData.monitorDate" type="date" placeholder="请选择日期" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">消除监测时间</label>
+                <el-date-picker v-model="formData.eliminateDate" type="date" placeholder="请选择日期" class="form-input" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">银行卡卡号</label>
+                <el-input v-model="formData.bankCard" placeholder="请输入银行卡号" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">开户银行</label>
+                <el-input v-model="formData.bankName" placeholder="请输入开户银行" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">备注</label>
+                <el-input v-model="formData.remark" placeholder="暂无" class="form-input" />
+              </div>
+            </div>
+            <div class="section-divider">产权信息</div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">房屋结构</label>
+                <el-select v-model="formData.houseStructure" placeholder="请选择" class="form-select">
+                  <el-option label="土木结构" value="earth" />
+                  <el-option label="砖木结构" value="brick" />
+                  <el-option label="砖混结构" value="concrete" />
+                  <el-option label="木结构" value="wood" />
+                  <el-option label="混木结构" value="mixed" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">住房面积（㎡）</label>
+                <el-input v-model="formData.houseArea" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">安全等级</label>
+                <el-select v-model="formData.safetyLevel" placeholder="请选择" class="form-select">
+                  <el-option label="A" value="A" />
+                  <el-option label="B" value="B" />
+                  <el-option label="C" value="C" />
+                  <el-option label="D" value="D" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">是否享受危房改造</label>
+                <el-select v-model="formData.hasHouseRenovation" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">是否危房户</label>
+                <el-select v-model="formData.isDangerousHouse" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">是否有卫生厕所</label>
+                <el-select v-model="formData.hasToilet" placeholder="请选择" class="form-select">
+                  <el-option label="是" value="yes" />
+                  <el-option label="否" value="no" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">耕地面积（亩）</label>
+                <el-input v-model="formData.cultivatedArea" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">林地面积（亩）</label>
+                <el-input v-model="formData.forestArea" placeholder="请输入面积" class="form-input" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">草牧场面积（亩）</label>
+                <el-input v-model="formData.pastureArea" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">水面面积（亩）</label>
+                <el-input v-model="formData.waterArea" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">林果面积（亩）</label>
+                <el-input v-model="formData.fruitArea" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">退耕还林面积（亩）</label>
+                <el-input v-model="formData.returnFarmlandArea" placeholder="请输入面积" class="form-input" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">青贮窖面积（m³）</label>
+                <el-input v-model="formData.siloArea" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">储草棚面积（㎡）</label>
+                <el-input v-model="formData.grassShedArea" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">保鲜库面积（㎡）</label>
+                <el-input v-model="formData.coldStorageArea" placeholder="请输入面积" class="form-input" />
+              </div>
+            </div>
+            <div class="section-divider">车辆信息</div>
+            <div class="vehicle-table">
+              <el-table :data="vehicleList" border :show-header="true" class="vehicle-table-inner">
+                <el-table-column label="车辆类型">
+                  <template #default="scope">
+                    <el-select v-model="scope.row.type" placeholder="请选择" class="form-select-small">
+                      <el-option label="轿车" value="car" />
+                      <el-option label="货车" value="truck" />
+                      <el-option label="摩托车" value="motorcycle" />
+                      <el-option label="拖拉机" value="tractor" />
+                      <el-option label="其他" value="other" />
+                    </el-select>
+                  </template>
+                </el-table-column>
+                <el-table-column label="车辆数量">
+                  <template #default="scope">
+                    <el-input v-model="scope.row.quantity" placeholder="数量" class="form-input-small" />
+                  </template>
+                </el-table-column>
+                <el-table-column label="车辆来源">
+                  <template #default="scope">
+                    <el-select v-model="scope.row.source" placeholder="请选择" class="form-select-small">
+                      <el-option label="购买" value="purchase" />
+                      <el-option label="捐赠" value="donation" />
+                      <el-option label="帮扶" value="support" />
+                      <el-option label="其他" value="other" />
+                    </el-select>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作">
+                  <template #default="scope">
+                    <el-button type="text" @click="removeVehicle(scope.$index)">删除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div class="vehicle-add-btn">
+                <el-button type="primary" @click="addVehicle">+ 添加</el-button>
+              </div>
+            </div>
+            <div class="section-divider">愿景目标与其他产业需求</div>
+            <div class="vision-section">
+              <RichTextEditor v-model="formData.vision" />
+            </div>
           </div>
-          <div class="form-item">
-            <label class="form-label">身份证号</label>
-            <el-input v-model="formData.idCard" placeholder="请输入身份证号" class="form-input" />
+          
+          <div v-show="activeTab === 'members'" class="members-form">
+            <div v-if="memberList.length === 0" class="member-add-btn">
+              <el-button type="primary" @click="addMember">+ 添加</el-button>
+            </div>
+            <template v-for="(member, index) in memberList" :key="member.id">
+              <div class="member-card">
+                <div class="member-header">
+                  <span class="member-title">成员{{ index + 1 }}</span>
+                  <el-button 
+                    type="text" 
+                    class="member-delete-btn"
+                    @click="removeMember(index)"
+                  >
+                    <el-icon><Delete /></el-icon>
+                  </el-button>
+                </div>
+                <div class="form-row">
+                  <div class="form-item required">
+                    <label class="form-label">*姓名</label>
+                    <el-input v-model="member.name" placeholder="请输入姓名" class="form-input" />
+                  </div>
+                  <div class="form-item required">
+                    <label class="form-label">*性别</label>
+                    <el-select v-model="member.gender" placeholder="请选择" class="form-select">
+                      <el-option label="男" value="male" />
+                      <el-option label="女" value="female" />
+                    </el-select>
+                  </div>
+                  <div class="form-item required">
+                    <label class="form-label">*民族</label>
+                    <el-select v-model="member.ethnicity" placeholder="请选择" class="form-select">
+                      <el-option label="汉族" value="han" />
+                      <el-option label="蒙古族" value="mongolian" />
+                      <el-option label="回族" value="hui" />
+                      <el-option label="藏族" value="tibetan" />
+                      <el-option label="维吾尔族" value="uyghur" />
+                      <el-option label="其他" value="other" />
+                    </el-select>
+                  </div>
+                  <div class="form-item required">
+                    <label class="form-label">*政治面貌</label>
+                    <el-select v-model="member.politicalStatus" placeholder="请选择" class="form-select">
+                      <el-option label="中共党员" value="party_member" />
+                      <el-option label="共青团员" value="league_member" />
+                      <el-option label="群众" value="mass" />
+                      <el-option label="其他" value="other" />
+                    </el-select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-item required">
+                    <label class="form-label">*身份证号</label>
+                    <el-input v-model="member.idCard" placeholder="请输入身份证号" class="form-input" />
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">联系方式</label>
+                    <el-input v-model="member.phone" placeholder="请输入联系方式" class="form-input" />
+                  </div>
+                  <div class="form-item required">
+                    <label class="form-label">*与户主关系</label>
+                    <el-select v-model="member.relation" placeholder="请选择" class="form-select">
+                      <el-option label="户主" value="head" />
+                      <el-option label="配偶" value="spouse" />
+                      <el-option label="子女" value="child" />
+                      <el-option label="父母" value="parent" />
+                      <el-option label="其他" value="other" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">兵役状况</label>
+                    <el-select v-model="member.militaryStatus" placeholder="请选择" class="form-select">
+                      <el-option label="未服兵役" value="not_served" />
+                      <el-option label="服现役" value="active" />
+                      <el-option label="退役军人" value="veteran" />
+                    </el-select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-item">
+                    <label class="form-label">健康状况</label>
+                    <el-select v-model="member.healthStatus" placeholder="请选择" class="form-select">
+                      <el-option label="健康" value="healthy" />
+                      <el-option label="一般" value="normal" />
+                      <el-option label="残疾" value="disabled" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">文化程度</label>
+                    <el-select v-model="member.educationLevel" placeholder="请选择" class="form-select">
+                      <el-option label="未上学" value="none" />
+                      <el-option label="小学" value="primary" />
+                      <el-option label="初中" value="junior" />
+                      <el-option label="高中/中专" value="senior" />
+                      <el-option label="大专" value="college" />
+                      <el-option label="本科" value="bachelor" />
+                      <el-option label="研究生及以上" value="graduate" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">在校生状况</label>
+                    <el-select v-model="member.studentStatus" placeholder="请选择" class="form-select">
+                      <el-option label="否" value="no" />
+                      <el-option label="小学生" value="primary_student" />
+                      <el-option label="初中生" value="junior_student" />
+                      <el-option label="高中生" value="senior_student" />
+                      <el-option label="大学生" value="college_student" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">就读学校</label>
+                    <el-input v-model="member.school" placeholder="请输入就读学校" class="form-input" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-item">
+                    <label class="form-label">是否享受教育补贴</label>
+                    <el-select v-model="member.hasEducationSubsidy" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">教育补贴类型</label>
+                    <el-input v-model="member.subsidyType" placeholder="请输入补贴类型" class="form-input" />
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">义务教育阶段未上学原因</label>
+                    <el-input v-model="member.notAttendReason" placeholder="请输入原因" class="form-input" />
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否会讲普通话</label>
+                    <el-select v-model="member.speakMandarin" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-item">
+                    <label class="form-label">是否国外务工</label>
+                    <el-select v-model="member.overseasWorker" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">劳动技能</label>
+                    <el-select v-model="member.laborSkill" placeholder="请选择" class="form-select">
+                      <el-option label="普通劳动力" value="general" />
+                      <el-option label="专业技能" value="professional" />
+                      <el-option label="无劳动能力" value="none" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">技能类型</label>
+                    <el-select v-model="member.skillType" placeholder="请选择" class="form-select">
+                      <el-option label="农业" value="agriculture" />
+                      <el-option label="工业" value="industry" />
+                      <el-option label="服务业" value="service" />
+                      <el-option label="其他" value="other" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否外出务工</label>
+                    <el-select v-model="member.migrantWorker" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-item">
+                    <label class="form-label">外出区域</label>
+                    <el-select v-model="member.migrantArea" placeholder="请选择" class="form-select">
+                      <el-option label="请选择" value="" />
+                      <el-option label="省内" value="province" />
+                      <el-option label="省外" value="out_province" />
+                      <el-option label="国外" value="abroad" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否参加城乡居民（职工）基本养老保险</label>
+                    <el-select v-model="member.basicPension" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否参加城乡居民（职工）基本医疗保险</label>
+                    <el-select v-model="member.basicMedical" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否参加大病保险</label>
+                    <el-select v-model="member.criticalIllnessInsurance" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-item">
+                    <label class="form-label">是否为重点人群</label>
+                    <el-select v-model="member.keyPerson" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否享受城乡居民最低生活保障</label>
+                    <el-select v-model="member.urbanMinimumLiving" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否特困供养人员</label>
+                    <el-select v-model="member.specialSupport" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否异地扶贫搬迁（同步搬迁）人口</label>
+                    <el-select v-model="member.povertyRelocation" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-item">
+                    <label class="form-label">是否享受农村居民最低生活保障</label>
+                    <el-select v-model="member.ruralMinimumLiving" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否享受人身意外保险补贴</label>
+                    <el-select v-model="member.accidentInsuranceSubsidy" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否接受医疗救助</label>
+                    <el-select v-model="member.medicalAssistance" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">是否参加商业补充医疗保险</label>
+                    <el-select v-model="member.commercialMedical" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-item">
+                    <label class="form-label">是否接受其他健康扶贫</label>
+                    <el-select v-model="member.healthPoverty" placeholder="请选择" class="form-select">
+                      <el-option label="是" value="yes" />
+                      <el-option label="否" value="no" />
+                    </el-select>
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">银行卡号</label>
+                    <el-input v-model="member.bankCard" placeholder="请输入银行卡号" class="form-input" />
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">开户银行</label>
+                    <el-input v-model="member.bankName" placeholder="请输入开户银行" class="form-input" />
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">备注</label>
+                    <el-input v-model="member.remark" placeholder="暂无" class="form-input" />
+                  </div>
+                </div>
+              </div>
+              <div class="member-add-btn">
+                <el-button type="primary" @click="addMember">+ 添加</el-button>
+              </div>
+            </template>
           </div>
-          <div class="form-item">
-            <label class="form-label">联系方式</label>
-            <el-input v-model="formData.phone" placeholder="请输入联系方式" class="form-input" />
+          
+          <div v-show="activeTab === 'farming'" class="farming-form">
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">耕地面积（亩）</label>
+                <el-input v-model="farmingForm.cultivatedArea" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">主要种植作物</label>
+                <el-input v-model="farmingForm.mainCrop" placeholder="请输入作物名称" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">种植面积（亩）</label>
+                <el-input v-model="farmingForm.cropArea" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">产量（公斤）</label>
+                <el-input v-model="farmingForm.output" placeholder="请输入产量" class="form-input" />
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-item">
-            <label class="form-label">是否为重点人群</label>
-            <el-select v-model="formData.isKeyPerson" placeholder="请选择" class="form-select">
-              <el-option label="是" value="yes" />
-              <el-option label="否" value="no" />
-            </el-select>
+          
+          <div v-show="activeTab === 'breeding'" class="breeding-form">
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">养殖类型</label>
+                <el-select v-model="breedingForm.type" placeholder="请选择" class="form-select">
+                  <el-option label="牛" value="cattle" />
+                  <el-option label="羊" value="sheep" />
+                  <el-option label="猪" value="pig" />
+                  <el-option label="家禽" value="poultry" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">数量</label>
+                <el-input v-model="breedingForm.quantity" placeholder="请输入数量" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">出栏量</label>
+                <el-input v-model="breedingForm.slaughter" placeholder="请输入出栏量" class="form-input" />
+              </div>
+            </div>
           </div>
-          <div class="form-item">
-            <label class="form-label">是否低于监测参考人均收入</label>
-            <el-select v-model="formData.isBelowIncome" placeholder="请选择" class="form-select">
-              <el-option label="是" value="yes" />
-              <el-option label="否" value="no" />
-            </el-select>
+          
+          <div v-show="activeTab === 'specialty'" class="specialty-form">
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">特色产业名称</label>
+                <el-input v-model="specialtyForm.name" placeholder="请输入产业名称" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">经营模式</label>
+                <el-select v-model="specialtyForm.mode" placeholder="请选择" class="form-select">
+                  <el-option label="自主经营" value="self" />
+                  <el-option label="合作社" value="cooperative" />
+                  <el-option label="企业带动" value="enterprise" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">年收入（元）</label>
+                <el-input v-model="specialtyForm.income" placeholder="请输入收入" class="form-input" />
+              </div>
+            </div>
           </div>
-          <div class="form-item">
-            <label class="form-label">是否低于上年度监测参考人均收入</label>
-            <el-select v-model="formData.isBelowLastYearIncome" placeholder="请选择" class="form-select">
-              <el-option label="是" value="yes" />
-              <el-option label="否" value="no" />
-            </el-select>
+          
+          <div v-show="activeTab === 'yard'" class="yard-form">
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">庭院面积（㎡）</label>
+                <el-input v-model="yardForm.area" placeholder="请输入面积" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">利用类型</label>
+                <el-select v-model="yardForm.type" placeholder="请选择" class="form-select">
+                  <el-option label="种植" value="planting" />
+                  <el-option label="养殖" value="breeding" />
+                  <el-option label="加工" value="processing" />
+                </el-select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">年收入（元）</label>
+                <el-input v-model="yardForm.income" placeholder="请输入收入" class="form-input" />
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-item">
-            <label class="form-label">是否发生突发事件</label>
-            <el-select v-model="formData.hasEmergency" placeholder="请选择" class="form-select">
-              <el-option label="是" value="yes" />
-              <el-option label="否" value="no" />
-            </el-select>
-          </div>
-          <div class="form-item">
-            <label class="form-label">帮扶干部姓名</label>
-            <el-input v-model="formData.helperName" placeholder="请输入帮扶干部姓名" class="form-input" />
-          </div>
-          <div class="form-item">
-            <label class="form-label">户类型</label>
-            <el-select v-model="formData.householdType" placeholder="请选择" class="form-select">
-              <el-option label="一般农户" value="general" />
-              <el-option label="脱贫户" value="poverty" />
-              <el-option label="监测户" value="monitor" />
-            </el-select>
+          
+          <div v-show="activeTab === 'finance'" class="finance-form">
+            <div class="form-row">
+              <div class="form-item">
+                <label class="form-label">家庭年收入（元）</label>
+                <el-input v-model="financeForm.annualIncome" placeholder="请输入年收入" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">家庭年支出（元）</label>
+                <el-input v-model="financeForm.annualExpense" placeholder="请输入年支出" class="form-input" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">人均纯收入（元）</label>
+                <el-input v-model="financeForm.perCapitaIncome" placeholder="请输入人均收入" class="form-input" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit">确定</el-button>
+        <el-button @click="dialogVisible = false">关闭</el-button>
+        <el-button type="primary" @click="handleSubmit">确认</el-button>
       </template>
     </el-dialog>
 
@@ -349,7 +1020,8 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { Search, Refresh, Plus, ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
+import { Search, Refresh, Plus, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Delete } from '@element-plus/icons-vue'
+import RichTextEditor from './RichTextEditor.vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 const searchKeyword = ref('')
@@ -416,21 +1088,166 @@ const dialogVisible = ref(false)
 const viewDialogVisible = ref(false)
 const isEdit = ref(false)
 const editId = ref(null)
+const showYearSelector = ref(false)
+const selectedYear = ref(new Date().getFullYear())
+const activeTab = ref('basic')
+
+const availableYears = computed(() => {
+  const currentYear = new Date().getFullYear()
+  return Array.from({ length: 10 }, (_, i) => currentYear - i)
+})
+
+const tabs = [
+  { key: 'basic', label: '基本信息' },
+  { key: 'members', label: '成员信息' },
+  { key: 'farming', label: '种植业' },
+  { key: 'breeding', label: '养殖业' },
+  { key: 'specialty', label: '特色产业' },
+  { key: 'yard', label: '庭院经济' },
+  { key: 'finance', label: '家庭收支情况' }
+]
 
 const formData = reactive({
   village: '',
   naturalGroup: '',
   householdNo: '',
   name: '',
+  familyMembers: '',
+  workforce: '',
+  isWholeFamilyUnemployed: '',
+  householdType: '',
+  phone: '',
+  hasSocialSecurity: '',
+  socialSecurityLevel: '',
+  fuelType: '',
+  hasSafeWater: '',
+  hasLeader带动: '',
+  hasEnterprise: '',
+  roadType: '',
+  roadDistance: '',
+  hasTV: '',
+  hasElectricity: '',
+  hasProductionElectricity: '',
+  inCooperative: '',
+  hasProjectDemand: '',
+  riskEliminated: '',
+  monitorDate: '',
+  eliminateDate: '',
+  bankCard: '',
+  bankName: '',
+  remark: '',
+  houseStructure: '',
+  houseArea: '',
+  safetyLevel: '',
+  hasHouseRenovation: '',
+  isDangerousHouse: '',
+  hasToilet: '',
+  cultivatedArea: '',
+  forestArea: '',
+  pastureArea: '',
+  waterArea: '',
+  fruitArea: '',
+  returnFarmlandArea: '',
+  siloArea: '',
+  grassShedArea: '',
+  coldStorageArea: '',
+  vision: ''
+})
+
+const memberList = ref([])
+
+const createEmptyMember = () => ({
+  id: Date.now(),
+  name: '',
+  gender: '',
+  ethnicity: '',
+  politicalStatus: '',
   idCard: '',
   phone: '',
-  isKeyPerson: '',
-  isBelowIncome: '',
-  isBelowLastYearIncome: '',
-  hasEmergency: '',
-  helperName: '',
-  householdType: ''
+  relation: '',
+  militaryStatus: '',
+  healthStatus: '',
+  educationLevel: '',
+  studentStatus: '',
+  school: '',
+  hasEducationSubsidy: '',
+  subsidyType: '',
+  notAttendReason: '',
+  speakMandarin: '',
+  overseasWorker: '',
+  laborSkill: '',
+  skillType: '',
+  migrantWorker: '',
+  migrantArea: '',
+  basicPension: '',
+  basicMedical: '',
+  criticalIllnessInsurance: '',
+  keyPerson: '',
+  urbanMinimumLiving: '',
+  specialSupport: '',
+  povertyRelocation: '',
+  ruralMinimumLiving: '',
+  accidentInsuranceSubsidy: '',
+  medicalAssistance: '',
+  commercialMedical: '',
+  healthPoverty: '',
+  bankCard: '',
+  bankName: '',
+  remark: ''
 })
+
+const addMember = () => {
+  memberList.value.push(createEmptyMember())
+}
+
+const removeMember = (index) => {
+  memberList.value.splice(index, 1)
+}
+
+const farmingForm = reactive({
+  cultivatedArea: '',
+  mainCrop: '',
+  cropArea: '',
+  output: ''
+})
+
+const breedingForm = reactive({
+  type: '',
+  quantity: '',
+  slaughter: ''
+})
+
+const specialtyForm = reactive({
+  name: '',
+  mode: '',
+  income: ''
+})
+
+const yardForm = reactive({
+  area: '',
+  type: '',
+  income: ''
+})
+
+const financeForm = reactive({
+  annualIncome: '',
+  annualExpense: '',
+  perCapitaIncome: ''
+})
+
+const vehicleList = ref([
+  { type: '', quantity: '', source: '' }
+])
+
+const addVehicle = () => {
+  vehicleList.value.push({ type: '', quantity: '', source: '' })
+}
+
+const removeVehicle = (index) => {
+  if (vehicleList.value.length > 1) {
+    vehicleList.value.splice(index, 1)
+  }
+}
 
 const viewData = reactive({
   village: '',
@@ -482,11 +1299,18 @@ const handleReset = () => {
   searchForm.householdType = ''
 }
 
-const handleAdd = () => {
+const selectYear = (year) => {
+  selectedYear.value = year
+  showYearSelector.value = false
   isEdit.value = false
   editId.value = null
   resetFormData()
+  activeTab.value = 'basic'
   dialogVisible.value = true
+}
+
+const handleAdd = () => {
+  showYearSelector.value = true
 }
 
 const handleView = (row) => {
@@ -906,5 +1730,167 @@ const handleSubmit = () => {
 .view-value {
   flex: 1;
   margin-right: 20px;
+}
+
+.add-button-wrapper {
+  position: relative;
+}
+
+.year-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background-color: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  min-width: 100px;
+}
+
+.year-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.year-item:hover {
+  background-color: #f5f7fa;
+}
+
+.year-select-dialog {
+  .el-dialog__body {
+    padding: 0;
+  }
+}
+
+.year-select-container {
+  padding: 10px 0;
+}
+
+.year-option {
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.year-option:hover {
+  background-color: #f5f7fa;
+}
+
+.tabs-wrapper {
+  display: flex;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  overflow-x: auto;
+}
+
+.tab-item {
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  margin-right: 20px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab-item.active {
+  color: #1890ff;
+  border-bottom-color: #1890ff;
+  font-weight: 500;
+}
+
+.tab-item:hover {
+  color: #1890ff;
+}
+
+.tab-content {
+  min-height: 300px;
+}
+
+.section-divider {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  margin: 20px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e8e8e8;
+  text-align: center;
+}
+
+.form-item.required .form-label::before {
+  content: '*';
+  color: #f56c6c;
+  margin-right: 4px;
+}
+
+.form-input-small,
+.form-select-small {
+  width: 120px;
+}
+
+.vehicle-table {
+  margin-bottom: 20px;
+}
+
+.vehicle-table-inner {
+  margin-bottom: 15px;
+}
+
+.vehicle-add-btn {
+  display: flex;
+  justify-content: center;
+}
+
+.vision-section {
+  margin-bottom: 20px;
+}
+
+.vision-textarea {
+  width: 100%;
+  resize: none;
+}
+
+.member-add-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.member-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #fff;
+}
+
+.member-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #e8e8e8;
+}
+
+.member-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.member-delete-btn {
+  color: #f56c6c;
+}
+
+.member-delete-btn:hover {
+  color: #ef4444;
 }
 </style>

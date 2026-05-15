@@ -8,8 +8,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "3.4.21",
-    "element-plus": "2.6.3"
+    "@tiptap/pm": "^3.23.4",
+    "@tiptap/starter-kit": "^3.23.4",
+    "@tiptap/vue-3": "^3.23.4",
+    "element-plus": "2.6.3",
+    "vue": "3.4.21"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "5.0.4",
