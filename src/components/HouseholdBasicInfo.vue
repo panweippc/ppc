@@ -2234,7 +2234,7 @@
           <table class="report-table">
             <tbody>
               <tr>
-                <td rowspan="6" class="section-title">规划产业</td>
+                <td rowspan="12" class="section-title">规划产业</td>
                 <td rowspan="3">种植</td>
                 <td rowspan="2">粮食作物</td>
                 <td>种植名称</td>
@@ -2282,7 +2282,7 @@
                 <td colspan="3"></td>
               </tr>
               <tr>
-                <td rowspan="3">养殖</td>
+                <td rowspan="4">养殖</td>
                 <td rowspan="2">畜牧</td>
                 <td>养殖名称</td>
                 <td>类型</td>
@@ -2302,11 +2302,298 @@
                 <td colspan="18"></td>
               </tr>
               <tr>
-                <td colspan="7"></td>
-                <td colspan="18"></td>
+                <td rowspan="2">小五金</td>
+                <td>养殖名称</td>
+                <td>养殖数量</td>
+                <td>预计单价</td>
+                <td>预计收入</td>
+                <td colspan="20"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.plannedHardwareName || '-' }}</td>
+                <td>{{ viewData.plannedHardwareCount || '-' }}</td>
+                <td>{{ viewData.plannedHardwarePrice || '-' }}</td>
+                <td>{{ viewData.plannedHardwareIncome || '-' }}</td>
+                <td colspan="20"></td>
+              </tr>
+              <tr>
+                <td rowspan="3">养殖设施</td>
+                <td>棚圈结构</td>
+                <td colspan="24"></td>
+              </tr>
+              <tr>
+                <td>棚圈面积（平方米）</td>
+                <td colspan="24"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.plannedShedStructure || '-' }}</td>
+                <td>{{ viewData.plannedShedArea || '-' }}</td>
+                <td colspan="23"></td>
+              </tr>
+              <tr>
+                <td>庭院经济</td>
+                <td>类型</td>
+                <td>名称</td>
+                <td>面积/数量</td>
+                <td>单位</td>
+                <td>预计收入</td>
+                <td>类型</td>
+                <td>名称</td>
+                <td>面积/数量</td>
+                <td>单位</td>
+                <td>预计收入</td>
+                <td>类型</td>
+                <td>名称</td>
+                <td>面积/数量</td>
+                <td>单位</td>
+                <td>预计收入</td>
+                <td colspan="10"></td>
               </tr>
             </tbody>
           </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="4" class="section-title">补贴信息</td>
+                <td>补贴类型</td>
+                <td>补贴项目</td>
+                <td>补贴确认时间</td>
+                <td>补贴领取金额</td>
+                <td>补贴类型</td>
+                <td>补贴项目</td>
+                <td>补贴确认时间</td>
+                <td>补贴领取金额</td>
+                <td>补贴类型</td>
+                <td>补贴项目</td>
+                <td>补贴确认时间</td>
+                <td>补贴领取金额</td>
+                <td>补贴类型</td>
+                <td>补贴项目</td>
+                <td>补贴确认时间</td>
+                <td>补贴领取金额</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.subsidyType1 || '-' }}</td>
+                <td>{{ viewData.subsidyItem1 || '-' }}</td>
+                <td>{{ viewData.subsidyDate1 || '-' }}</td>
+                <td>{{ viewData.subsidyAmount1 || '-' }}</td>
+                <td>{{ viewData.subsidyType2 || '-' }}</td>
+                <td>{{ viewData.subsidyItem2 || '-' }}</td>
+                <td>{{ viewData.subsidyDate2 || '-' }}</td>
+                <td>{{ viewData.subsidyAmount2 || '-' }}</td>
+                <td>{{ viewData.subsidyType3 || '-' }}</td>
+                <td>{{ viewData.subsidyItem3 || '-' }}</td>
+                <td>{{ viewData.subsidyDate3 || '-' }}</td>
+                <td>{{ viewData.subsidyAmount3 || '-' }}</td>
+                <td>{{ viewData.subsidyType4 || '-' }}</td>
+                <td>{{ viewData.subsidyItem4 || '-' }}</td>
+                <td>{{ viewData.subsidyDate4 || '-' }}</td>
+                <td>{{ viewData.subsidyAmount4 || '-' }}</td>
+                <td colspan="9"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="4" class="section-title">帮扶措施</td>
+                <td>帮扶项目</td>
+                <td colspan="5">{{ viewData.helpProject1 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpProject2 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpProject3 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpProject4 || '-' }}</td>
+                <td colspan="3"></td>
+              </tr>
+              <tr>
+                <td>帮扶开始时间</td>
+                <td colspan="5">{{ viewData.helpStartDate1 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpStartDate2 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpStartDate3 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpStartDate4 || '-' }}</td>
+                <td colspan="3"></td>
+              </tr>
+              <tr>
+                <td>帮扶结束时间</td>
+                <td colspan="5">{{ viewData.helpEndDate1 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpEndDate2 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpEndDate3 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpEndDate4 || '-' }}</td>
+                <td colspan="3"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="4" class="section-title">家庭收支情况</td>
+                <td colspan="8">家庭年收入（元）</td>
+                <td colspan="8">家庭年支出（元）</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td>工资性收入（元）</td>
+                <td>生产经营性收入（元）</td>
+                <td>财产性收入（元）</td>
+                <td>资产收益扶贫分红收入（元）</td>
+                <td>其他财产性收入（元）</td>
+                <td>转移性收入（元）</td>
+                <td>计划生育金（元）</td>
+                <td>低保金（元）</td>
+                <td>特困供养金（元）</td>
+                <td>养老保险金（元）</td>
+                <td>生态补偿金（元）</td>
+                <td>其他转移性收入（元）</td>
+                <td>其他收入（元）</td>
+                <td>种植业支出（元）</td>
+                <td>养殖业支出（元）</td>
+                <td>家庭经营性支出（元）</td>
+                <td>其他支出（元）</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.wageIncome || '-' }}</td>
+                <td>{{ viewData.productionIncome || '-' }}</td>
+                <td>{{ viewData.propertyIncome || '-' }}</td>
+                <td>{{ viewData.assetIncome || '-' }}</td>
+                <td>{{ viewData.otherPropertyIncome || '-' }}</td>
+                <td>{{ viewData.transferIncome || '-' }}</td>
+                <td>{{ viewData.birthBonus || '-' }}</td>
+                <td>{{ viewData.lowIncomeAllowance || '-' }}</td>
+                <td>{{ viewData.specialSupportFund || '-' }}</td>
+                <td>{{ viewData.pension || '-' }}</td>
+                <td>{{ viewData.ecologicalCompensation || '-' }}</td>
+                <td>{{ viewData.otherTransferIncome || '-' }}</td>
+                <td>{{ viewData.otherIncome || '-' }}</td>
+                <td>{{ viewData.plantingExpense || '-' }}</td>
+                <td>{{ viewData.breedingExpense || '-' }}</td>
+                <td>{{ viewData.operatingExpense || '-' }}</td>
+                <td>{{ viewData.otherExpense || '-' }}</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td>家庭纯收入（元）</td>
+                <td>家庭人均纯收入（元）</td>
+                <td>理赔收入（元）</td>
+                <td>合规自付刚性支出（元）</td>
+                <td>监测参考收入（元）</td>
+                <td>监测参考人均纯收入（元）</td>
+                <td>产业规划总收入（元）</td>
+                <td>产业规划人均收入（元）</td>
+                <td colspan="17"></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>{{ viewData.netIncome || '-' }}</td>
+                <td>{{ viewData.perCapitaIncome || '-' }}</td>
+                <td>{{ viewData.claimIncome || '-' }}</td>
+                <td>{{ viewData.rigidExpense || '-' }}</td>
+                <td>{{ viewData.monitoringIncome || '-' }}</td>
+                <td>{{ viewData.monitoringPerCapitaIncome || '-' }}</td>
+                <td>{{ viewData.industryPlanIncome || '-' }}</td>
+                <td>{{ viewData.industryPlanPerCapitaIncome || '-' }}</td>
+                <td colspan="17"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="10" class="section-title">产业收支情况</td>
+                <td>年度</td>
+                <td>类别</td>
+                <td>种植业</td>
+                <td>养殖业</td>
+                <td>特色产业</td>
+                <td>庭院经济</td>
+                <td>合计</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td rowspan="4">2026</td>
+                <td>上年度预计收入（元）</td>
+                <td>{{ viewData.industry2026PlanIncome || '0' }}</td>
+                <td>{{ viewData.breeding2026PlanIncome || '0' }}</td>
+                <td>{{ viewData.special2026PlanIncome || '0' }}</td>
+                <td>{{ viewData.yard2026PlanIncome || '0' }}</td>
+                <td>{{ viewData.total2026PlanIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>实际收入（元）</td>
+                <td>{{ viewData.industry2026ActualIncome || '0' }}</td>
+                <td>{{ viewData.breeding2026ActualIncome || '0' }}</td>
+                <td>{{ viewData.special2026ActualIncome || '0' }}</td>
+                <td>{{ viewData.yard2026ActualIncome || '0' }}</td>
+                <td>{{ viewData.total2026ActualIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>规划完成率（%）</td>
+                <td>{{ viewData.industry2026Rate || '0' }}</td>
+                <td>{{ viewData.breeding2026Rate || '0' }}</td>
+                <td>{{ viewData.special2026Rate || '0' }}</td>
+                <td>{{ viewData.yard2026Rate || '0' }}</td>
+                <td>{{ viewData.total2026Rate || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>上年度预计收入（元）</td>
+                <td>{{ viewData.industry2025PlanIncome || '0' }}</td>
+                <td>{{ viewData.breeding2025PlanIncome || '0' }}</td>
+                <td>{{ viewData.special2025PlanIncome || '0' }}</td>
+                <td>{{ viewData.yard2025PlanIncome || '0' }}</td>
+                <td>{{ viewData.total2025PlanIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td rowspan="4">2025</td>
+                <td>上年度预计收入（元）</td>
+                <td>{{ viewData.industry2025PrevPlanIncome || '0' }}</td>
+                <td>{{ viewData.breeding2025PrevPlanIncome || '0' }}</td>
+                <td>{{ viewData.special2025PrevPlanIncome || '0' }}</td>
+                <td>{{ viewData.yard2025PrevPlanIncome || '0' }}</td>
+                <td>{{ viewData.total2025PrevPlanIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>实际收入（元）</td>
+                <td>{{ viewData.industry2025ActualIncome || '0' }}</td>
+                <td>{{ viewData.breeding2025ActualIncome || '0' }}</td>
+                <td>{{ viewData.special2025ActualIncome || '0' }}</td>
+                <td>{{ viewData.yard2025ActualIncome || '0' }}</td>
+                <td>{{ viewData.total2025ActualIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>实际完成率（%）</td>
+                <td>{{ viewData.industry2025ActualRate || '0' }}</td>
+                <td>{{ viewData.breeding2025ActualRate || '0' }}</td>
+                <td>{{ viewData.special2025ActualRate || '0' }}</td>
+                <td>{{ viewData.yard2025ActualRate || '0' }}</td>
+                <td>{{ viewData.total2025ActualRate || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>规划完成率（%）</td>
+                <td>{{ viewData.industry2025PlanRate || '0' }}</td>
+                <td>{{ viewData.breeding2025PlanRate || '0' }}</td>
+                <td>{{ viewData.special2025PlanRate || '0' }}</td>
+                <td>{{ viewData.yard2025PlanRate || '0' }}</td>
+                <td>{{ viewData.total2025PlanRate || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div class="report-footer">
+            <el-button type="primary" @click="handlePrint">打印</el-button>
+            <el-button @click="handleExport">导出</el-button>
+          </div>
         </div>
         
         <template #footer>
@@ -3038,6 +3325,28 @@ const handleAdd = () => {
 const handleView = (row) => {
   Object.assign(viewData, row)
   viewDialogVisible.value = true
+}
+
+const handlePrint = () => {
+  window.print()
+}
+
+const handleExport = () => {
+  const content = document.querySelector('.report-content').innerHTML
+  const blob = new Blob([`<html><head><style>
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background-color: #f5f5f5; font-weight: bold; }
+    .section-title { background-color: #f9f9f9; font-weight: bold; }
+  </style></head><body>${content}</body></html>`], { type: 'text/html' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `户基本信息_${viewData.name || '详情'}.html`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 const handleEdit = (row) => {
@@ -3898,5 +4207,14 @@ const handleSubmit = () => {
   font-weight: bold;
   white-space: nowrap;
   width: 80px;
+}
+
+.report-footer {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e8e8e8;
 }
 </style>
