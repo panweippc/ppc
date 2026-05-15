@@ -1676,18 +1676,138 @@
           </div>
           
           <div v-show="activeTab === 'finance'" class="finance-form">
-            <div class="form-row">
-              <div class="form-item">
-                <label class="form-label">家庭年收入（元）</label>
-                <el-input v-model="financeForm.annualIncome" placeholder="请输入年收入" class="form-input" />
+            <div class="finance-section">
+              <div class="finance-row">
+                <div class="finance-item computed">
+                  <label class="form-label">家庭年收入</label>
+                  <el-input :value="computedFinance.annualIncome" disabled class="form-input computed-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">工资性收入</label>
+                  <el-input v-model="financeForm.wageIncome" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">生产经营性收入</label>
+                  <el-input v-model="financeForm.productionIncome" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item computed">
+                  <label class="form-label">财产性收入</label>
+                  <el-input :value="computedFinance.propertyIncome" disabled class="form-input computed-input" />
+                </div>
               </div>
-              <div class="form-item">
-                <label class="form-label">家庭年支出（元）</label>
-                <el-input v-model="financeForm.annualExpense" placeholder="请输入年支出" class="form-input" />
+              
+              <div class="finance-row">
+                <div class="finance-item">
+                  <label class="form-label">资产收益扶贫分红收入</label>
+                  <el-input v-model="financeForm.assetIncome" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">其他财产性收入</label>
+                  <el-input v-model="financeForm.otherPropertyIncome" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item computed">
+                  <label class="form-label">转移性收入</label>
+                  <el-input :value="computedFinance.transferIncome" disabled class="form-input computed-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">计划生育金</label>
+                  <el-input v-model="financeForm.birthBonus" placeholder="请输入" class="form-input" />
+                </div>
               </div>
-              <div class="form-item">
-                <label class="form-label">人均纯收入（元）</label>
-                <el-input v-model="financeForm.perCapitaIncome" placeholder="请输入人均收入" class="form-input" />
+              
+              <div class="finance-row">
+                <div class="finance-item">
+                  <label class="form-label">低保金</label>
+                  <el-input v-model="financeForm.lowIncomeAllowance" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">特困供养金</label>
+                  <el-input v-model="financeForm.specialSupportFund" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item computed">
+                  <label class="form-label">养老保险金</label>
+                  <el-input :value="computedFinance.pension" disabled class="form-input computed-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">生态补偿金</label>
+                  <el-input v-model="financeForm.ecologicalCompensation" placeholder="请输入" class="form-input" />
+                </div>
+              </div>
+              
+              <div class="finance-row">
+                <div class="finance-item">
+                  <label class="form-label">其他转移性收入</label>
+                  <el-input v-model="financeForm.otherTransferIncome" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">其他收入</label>
+                  <el-input v-model="financeForm.otherIncome" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item computed">
+                  <label class="form-label">家庭年支出</label>
+                  <el-input :value="computedFinance.annualExpense" disabled class="form-input computed-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">种植业支出</label>
+                  <el-input v-model="financeForm.plantingExpense" placeholder="请输入" class="form-input" />
+                </div>
+              </div>
+              
+              <div class="finance-row">
+                <div class="finance-item">
+                  <label class="form-label">养殖业支出</label>
+                  <el-input v-model="financeForm.breedingExpense" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">家庭经营性支出</label>
+                  <el-input v-model="financeForm.operatingExpense" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">其他支出</label>
+                  <el-input v-model="financeForm.otherExpense" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item computed">
+                  <label class="form-label">家庭纯收入</label>
+                  <el-input :value="computedFinance.netIncome" disabled class="form-input computed-input" />
+                </div>
+              </div>
+              
+              <div class="finance-row">
+                <div class="finance-item computed">
+                  <label class="form-label">家庭人均纯收入</label>
+                  <el-input :value="computedFinance.perCapitaIncome" disabled class="form-input computed-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">理赔收入</label>
+                  <el-input v-model="financeForm.claimIncome" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">合规自付刚性支出</label>
+                  <el-input v-model="financeForm.rigidExpense" placeholder="请输入" class="form-input" />
+                </div>
+                <div class="finance-item computed">
+                  <label class="form-label">监测参考收入</label>
+                  <el-input :value="computedFinance.monitoringIncome" disabled class="form-input computed-input" />
+                </div>
+              </div>
+              
+              <div class="finance-row">
+                <div class="finance-item computed">
+                  <label class="form-label">监测参考人均纯收入</label>
+                  <el-input :value="computedFinance.monitoringPerCapitaIncome" disabled class="form-input computed-input" />
+                </div>
+                <div class="finance-item computed">
+                  <label class="form-label">产业规划总收入</label>
+                  <el-input :value="computedFinance.industryPlanIncome" disabled class="form-input computed-input" />
+                </div>
+                <div class="finance-item computed">
+                  <label class="form-label">产业规划人均收入</label>
+                  <el-input :value="computedFinance.industryPlanPerCapitaIncome" disabled class="form-input computed-input" />
+                </div>
+                <div class="finance-item">
+                  <label class="form-label">备注</label>
+                  <el-input v-model="financeForm.remark" placeholder="请输入备注" class="form-input" />
+                </div>
               </div>
             </div>
           </div>
@@ -2336,9 +2456,53 @@ const addPlannedYard = () => plannedYardList.value.push(createPlannedYard())
 const removePlannedYard = (index) => plannedYardList.value.splice(index, 1)
 
 const financeForm = reactive({
-  annualIncome: '',
-  annualExpense: '',
-  perCapitaIncome: ''
+  wageIncome: '',
+  productionIncome: '',
+  assetIncome: '',
+  otherPropertyIncome: '',
+  birthBonus: '',
+  lowIncomeAllowance: '',
+  specialSupportFund: '',
+  pension: '',
+  ecologicalCompensation: '',
+  otherTransferIncome: '',
+  otherIncome: '',
+  plantingExpense: '',
+  breedingExpense: '',
+  operatingExpense: '',
+  otherExpense: '',
+  claimIncome: '',
+  rigidExpense: '',
+  remark: '暂无'
+})
+
+const computedFinance = computed(() => {
+  const num = (val) => parseFloat(val) || 0
+  const propertyIncome = num(financeForm.assetIncome) + num(financeForm.otherPropertyIncome)
+  const transferIncome = num(financeForm.birthBonus) + num(financeForm.lowIncomeAllowance) + num(financeForm.specialSupportFund) + num(financeForm.pension) + num(financeForm.ecologicalCompensation) + num(financeForm.otherTransferIncome)
+  const annualIncome = num(financeForm.wageIncome) + num(financeForm.productionIncome) + propertyIncome + transferIncome + num(financeForm.otherIncome)
+  const annualExpense = num(financeForm.plantingExpense) + num(financeForm.breedingExpense) + num(financeForm.operatingExpense) + num(financeForm.otherExpense)
+  const netIncome = annualIncome - annualExpense
+  const householdSize = memberList.value.length || 1
+  const perCapitaIncome = householdSize > 0 ? (netIncome / householdSize).toFixed(2) : '0'
+  const monitoringIncome = '0'
+  const monitoringPerCapitaIncome = '0'
+  const industryPlanIncome = '0'
+  const industryPlanPerCapitaIncome = '0'
+  
+  return {
+    propertyIncome: propertyIncome.toFixed(2),
+    transferIncome: transferIncome.toFixed(2),
+    pension: num(financeForm.pension).toFixed(2),
+    annualIncome: annualIncome.toFixed(2),
+    annualExpense: annualExpense.toFixed(2),
+    netIncome: netIncome.toFixed(2),
+    perCapitaIncome,
+    monitoringIncome,
+    monitoringPerCapitaIncome,
+    industryPlanIncome,
+    industryPlanPerCapitaIncome
+  }
 })
 
 const vehicleList = ref([
@@ -3175,5 +3339,32 @@ const handleSubmit = () => {
   display: flex;
   justify-content: center;
   margin-bottom: 15px;
+}
+
+.finance-section {
+  margin-bottom: 20px;
+}
+
+.finance-row {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+
+.finance-item {
+  flex: 1;
+  min-width: 150px;
+}
+
+.finance-item.computed {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.computed-input {
+  background-color: #e8e8e8 !important;
+  color: #666 !important;
 }
 </style>
