@@ -3347,24 +3347,41 @@ const handleSubmit = () => {
 
 .finance-row {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   align-items: flex-end;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .finance-item {
-  flex: 1;
-  min-width: 150px;
+  flex: 0 0 calc(25% - 15px);
+  width: calc(25% - 15px);
+}
+
+.finance-item .form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #606266;
+  font-size: 14px;
+}
+
+.finance-item .form-input {
+  width: 100%;
+  height: 36px;
+  box-sizing: border-box;
 }
 
 .finance-item.computed {
   background-color: #f5f5f5;
-  padding: 10px;
+  padding: 12px;
   border-radius: 4px;
 }
 
 .computed-input {
   background-color: #e8e8e8 !important;
   color: #666 !important;
+  width: 100%;
+  height: 36px;
+  box-sizing: border-box;
 }
 </style>
