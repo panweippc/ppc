@@ -1590,22 +1590,87 @@
           </div>
           
           <div v-show="activeTab === 'yard'" class="yard-form">
-            <div class="form-row">
-              <div class="form-item">
-                <label class="form-label">庭院面积（㎡）</label>
-                <el-input v-model="yardForm.area" placeholder="请输入面积" class="form-input" />
+            <div class="yard-section">
+              <div class="section-divider">现有庭院经济</div>
+              <template v-for="(item, index) in existingYardList" :key="item.id">
+                <div class="yard-row">
+                  <div class="yard-item required">
+                    <label class="form-label">*庭院经济大类</label>
+                    <el-select v-model="item.category" placeholder="请选择" class="form-select">
+                      <el-option v-for="cat in yardCategories" :key="cat.value" :label="cat.label" :value="cat.value" />
+                    </el-select>
+                  </div>
+                  <div class="yard-item">
+                    <label class="form-label">名称</label>
+                    <el-select v-model="item.name" placeholder="请选择" class="form-select">
+                      <el-option v-for="name in yardNames" :key="name.value" :label="name.label" :value="name.value" />
+                    </el-select>
+                  </div>
+                  <div class="yard-item">
+                    <label class="form-label">面积/数量</label>
+                    <el-input v-model="item.amount" placeholder="请输入面积/数量" class="form-input" />
+                  </div>
+                  <div class="yard-item">
+                    <label class="form-label">单位</label>
+                    <el-select v-model="item.unit" placeholder="请选择" class="form-select">
+                      <el-option v-for="unit in yardUnits" :key="unit.value" :label="unit.label" :value="unit.value" />
+                    </el-select>
+                  </div>
+                  <div class="yard-item">
+                    <label class="form-label">实际收入</label>
+                    <el-input v-model="item.actualIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="yard-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removeExistingYard(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="yard-add-btn">
+                <el-button type="primary" @click="addExistingYard">+ 添加</el-button>
               </div>
-              <div class="form-item">
-                <label class="form-label">利用类型</label>
-                <el-select v-model="yardForm.type" placeholder="请选择" class="form-select">
-                  <el-option label="种植" value="planting" />
-                  <el-option label="养殖" value="breeding" />
-                  <el-option label="加工" value="processing" />
-                </el-select>
-              </div>
-              <div class="form-item">
-                <label class="form-label">年收入（元）</label>
-                <el-input v-model="yardForm.income" placeholder="请输入收入" class="form-input" />
+            </div>
+
+            <div class="yard-section">
+              <div class="section-divider">规划庭院经济</div>
+              <template v-for="(item, index) in plannedYardList" :key="item.id">
+                <div class="yard-row">
+                  <div class="yard-item">
+                    <label class="form-label">庭院经济大类</label>
+                    <el-select v-model="item.category" placeholder="请选择" class="form-select">
+                      <el-option v-for="cat in yardCategories" :key="cat.value" :label="cat.label" :value="cat.value" />
+                    </el-select>
+                  </div>
+                  <div class="yard-item">
+                    <label class="form-label">名称</label>
+                    <el-select v-model="item.name" placeholder="请选择" class="form-select">
+                      <el-option v-for="name in yardNames" :key="name.value" :label="name.label" :value="name.value" />
+                    </el-select>
+                  </div>
+                  <div class="yard-item">
+                    <label class="form-label">面积/数量</label>
+                    <el-input v-model="item.amount" placeholder="请输入面积/数量" class="form-input" />
+                  </div>
+                  <div class="yard-item">
+                    <label class="form-label">单位</label>
+                    <el-select v-model="item.unit" placeholder="请选择" class="form-select">
+                      <el-option v-for="unit in yardUnits" :key="unit.value" :label="unit.label" :value="unit.value" />
+                    </el-select>
+                  </div>
+                  <div class="yard-item">
+                    <label class="form-label">预计收入</label>
+                    <el-input v-model="item.estimatedIncome" placeholder="请输入收入" class="form-input" />
+                  </div>
+                  <div class="yard-item delete-col">
+                    <el-button type="text" class="delete-btn" @click="removePlannedYard(index)">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <div class="yard-add-btn">
+                <el-button type="primary" @click="addPlannedYard">+ 添加</el-button>
               </div>
             </div>
           </div>
@@ -2215,11 +2280,60 @@ const removePlannedAgricultural = (index) => plannedAgriculturalList.value.splic
 const addPlannedGreenhouse = () => plannedGreenhouseList.value.push(createPlannedGreenhouse())
 const removePlannedGreenhouse = (index) => plannedGreenhouseList.value.splice(index, 1)
 
-const yardForm = reactive({
-  area: '',
-  type: '',
-  income: ''
+const existingYardList = ref([])
+const plannedYardList = ref([])
+
+const yardCategories = [
+  { label: '小养殖', value: 'small_breeding' },
+  { label: '小种植', value: 'small_planting' },
+  { label: '小手工业', value: 'small_industry' },
+  { label: '其他', value: 'other' }
+]
+
+const yardNames = [
+  { label: '鸡', value: 'chicken' },
+  { label: '鸭', value: 'duck' },
+  { label: '鹅', value: 'goose' },
+  { label: '猪', value: 'pig' },
+  { label: '羊', value: 'sheep' },
+  { label: '蔬菜', value: 'vegetable' },
+  { label: '水果', value: 'fruit' },
+  { label: '花卉', value: 'flower' },
+  { label: '其他', value: 'other' }
+]
+
+const yardUnits = [
+  { label: '头', value: 'head' },
+  { label: '只', value: 'piece' },
+  { label: '羽', value: 'feather' },
+  { label: '尾', value: 'tail' },
+  { label: '株', value: 'plant' },
+  { label: '平方米', value: 'square_meter' },
+  { label: '亩', value: 'mu' }
+]
+
+const createExistingYard = () => ({
+  id: Date.now(),
+  category: '',
+  name: '',
+  amount: '',
+  unit: '',
+  actualIncome: ''
 })
+
+const createPlannedYard = () => ({
+  id: Date.now(),
+  category: '',
+  name: '',
+  amount: '',
+  unit: '',
+  estimatedIncome: ''
+})
+
+const addExistingYard = () => existingYardList.value.push(createExistingYard())
+const removeExistingYard = (index) => existingYardList.value.splice(index, 1)
+const addPlannedYard = () => plannedYardList.value.push(createPlannedYard())
+const removePlannedYard = (index) => plannedYardList.value.splice(index, 1)
 
 const financeForm = reactive({
   annualIncome: '',
@@ -3027,6 +3141,37 @@ const handleSubmit = () => {
 }
 
 .specialty-add-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.yard-section {
+  margin-bottom: 20px;
+}
+
+.yard-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-end;
+  padding: 15px;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.yard-item {
+  flex: 0 0 calc(16.666% - 12px);
+  min-width: 120px;
+}
+
+.yard-item.delete-col {
+  flex: none;
+  width: auto;
+}
+
+.yard-add-btn {
   display: flex;
   justify-content: center;
   margin-bottom: 15px;
