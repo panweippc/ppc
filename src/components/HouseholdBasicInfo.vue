@@ -589,19 +589,19 @@
                     <el-icon><Delete /></el-icon>
                   </el-button>
                 </div>
-                <div class="form-row">
-                  <div class="form-item required">
+                <div class="member-form">
+                  <div class="member-item required">
                     <label class="form-label">*姓名</label>
                     <el-input v-model="member.name" placeholder="请输入姓名" class="form-input" />
                   </div>
-                  <div class="form-item required">
+                  <div class="member-item required">
                     <label class="form-label">*性别</label>
                     <el-select v-model="member.gender" placeholder="请选择" class="form-select">
                       <el-option label="男" value="male" />
                       <el-option label="女" value="female" />
                     </el-select>
                   </div>
-                  <div class="form-item required">
+                  <div class="member-item required">
                     <label class="form-label">*民族</label>
                     <el-select v-model="member.ethnicity" placeholder="请选择" class="form-select">
                       <el-option label="汉族" value="han" />
@@ -612,7 +612,7 @@
                       <el-option label="其他" value="other" />
                     </el-select>
                   </div>
-                  <div class="form-item required">
+                  <div class="member-item required">
                     <label class="form-label">*政治面貌</label>
                     <el-select v-model="member.politicalStatus" placeholder="请选择" class="form-select">
                       <el-option label="中共党员" value="party_member" />
@@ -621,17 +621,15 @@
                       <el-option label="其他" value="other" />
                     </el-select>
                   </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-item required">
+                  <div class="member-item required">
                     <label class="form-label">*身份证号</label>
                     <el-input v-model="member.idCard" placeholder="请输入身份证号" class="form-input" />
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">联系方式</label>
                     <el-input v-model="member.phone" placeholder="请输入联系方式" class="form-input" />
                   </div>
-                  <div class="form-item required">
+                  <div class="member-item required">
                     <label class="form-label">*与户主关系</label>
                     <el-select v-model="member.relation" placeholder="请选择" class="form-select">
                       <el-option label="户主" value="head" />
@@ -641,7 +639,7 @@
                       <el-option label="其他" value="other" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">兵役状况</label>
                     <el-select v-model="member.militaryStatus" placeholder="请选择" class="form-select">
                       <el-option label="未服兵役" value="not_served" />
@@ -649,9 +647,7 @@
                       <el-option label="退役军人" value="veteran" />
                     </el-select>
                   </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">健康状况</label>
                     <el-select v-model="member.healthStatus" placeholder="请选择" class="form-select">
                       <el-option label="健康" value="healthy" />
@@ -659,7 +655,7 @@
                       <el-option label="残疾" value="disabled" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">文化程度</label>
                     <el-select v-model="member.educationLevel" placeholder="请选择" class="form-select">
                       <el-option label="未上学" value="none" />
@@ -671,7 +667,7 @@
                       <el-option label="研究生及以上" value="graduate" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">在校生状况</label>
                     <el-select v-model="member.studentStatus" placeholder="请选择" class="form-select">
                       <el-option label="否" value="no" />
@@ -681,44 +677,40 @@
                       <el-option label="大学生" value="college_student" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">就读学校</label>
                     <el-input v-model="member.school" placeholder="请输入就读学校" class="form-input" />
                   </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否享受教育补贴</label>
                     <el-select v-model="member.hasEducationSubsidy" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">教育补贴类型</label>
                     <el-input v-model="member.subsidyType" placeholder="请输入补贴类型" class="form-input" />
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">义务教育阶段未上学原因</label>
                     <el-input v-model="member.notAttendReason" placeholder="请输入原因" class="form-input" />
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否会讲普通话</label>
                     <el-select v-model="member.speakMandarin" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否国外务工</label>
                     <el-select v-model="member.overseasWorker" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">劳动技能</label>
                     <el-select v-model="member.laborSkill" placeholder="请选择" class="form-select">
                       <el-option label="普通劳动力" value="general" />
@@ -726,7 +718,7 @@
                       <el-option label="无劳动能力" value="none" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">技能类型</label>
                     <el-select v-model="member.skillType" placeholder="请选择" class="form-select">
                       <el-option label="农业" value="agriculture" />
@@ -735,16 +727,14 @@
                       <el-option label="其他" value="other" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否外出务工</label>
                     <el-select v-model="member.migrantWorker" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">外出区域</label>
                     <el-select v-model="member.migrantArea" placeholder="请选择" class="form-select">
                       <el-option label="请选择" value="" />
@@ -753,105 +743,99 @@
                       <el-option label="国外" value="abroad" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否参加城乡居民（职工）基本养老保险</label>
                     <el-select v-model="member.basicPension" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否参加城乡居民（职工）基本医疗保险</label>
                     <el-select v-model="member.basicMedical" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否参加大病保险</label>
                     <el-select v-model="member.criticalIllnessInsurance" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否为重点人群</label>
                     <el-select v-model="member.keyPerson" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否享受城乡居民最低生活保障</label>
                     <el-select v-model="member.urbanMinimumLiving" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否特困供养人员</label>
                     <el-select v-model="member.specialSupport" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否异地扶贫搬迁（同步搬迁）人口</label>
                     <el-select v-model="member.povertyRelocation" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否享受农村居民最低生活保障</label>
                     <el-select v-model="member.ruralMinimumLiving" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否享受人身意外保险补贴</label>
                     <el-select v-model="member.accidentInsuranceSubsidy" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否接受医疗救助</label>
                     <el-select v-model="member.medicalAssistance" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否参加商业补充医疗保险</label>
                     <el-select v-model="member.commercialMedical" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">是否接受其他健康扶贫</label>
                     <el-select v-model="member.healthPoverty" placeholder="请选择" class="form-select">
                       <el-option label="是" value="yes" />
                       <el-option label="否" value="no" />
                     </el-select>
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">银行卡号</label>
                     <el-input v-model="member.bankCard" placeholder="请输入银行卡号" class="form-input" />
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">开户银行</label>
                     <el-input v-model="member.bankName" placeholder="请输入开户银行" class="form-input" />
                   </div>
-                  <div class="form-item">
+                  <div class="member-item">
                     <label class="form-label">备注</label>
                     <el-input v-model="member.remark" placeholder="暂无" class="form-input" />
                   </div>
@@ -2892,6 +2876,20 @@ const handleSubmit = () => {
   font-size: 14px;
   font-weight: bold;
   color: #333;
+  text-align: center;
+  flex: 1;
+  margin-right: 20px;
+}
+
+.member-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.member-item {
+  flex: 0 0 calc(25% - 12px);
+  min-width: 150px;
 }
 
 .member-delete-btn {
@@ -2908,6 +2906,7 @@ const handleSubmit = () => {
 
 .agriculture-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 15px;
   align-items: flex-end;
   padding: 15px;
@@ -2917,7 +2916,7 @@ const handleSubmit = () => {
 }
 
 .agriculture-item {
-  flex: 1;
+  flex: 0 0 calc(16.666% - 12px);
   min-width: 120px;
 }
 
@@ -2947,6 +2946,7 @@ const handleSubmit = () => {
 
 .breeding-facility-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 15px;
   align-items: flex-end;
   padding: 15px;
@@ -2956,7 +2956,7 @@ const handleSubmit = () => {
 }
 
 .breeding-facility-item {
-  flex: 1;
+  flex: 0 0 calc(50% - 7px);
   min-width: 150px;
 }
 
@@ -2967,6 +2967,7 @@ const handleSubmit = () => {
 
 .breeding-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 15px;
   align-items: flex-end;
   padding: 15px;
@@ -2976,7 +2977,7 @@ const handleSubmit = () => {
 }
 
 .breeding-item {
-  flex: 1;
+  flex: 0 0 calc(14.285% - 13px);
   min-width: 100px;
 }
 
@@ -3001,10 +3002,12 @@ const handleSubmit = () => {
   margin-bottom: 10px;
   padding-bottom: 5px;
   border-bottom: 1px solid #e8e8e8;
+  text-align: center;
 }
 
 .specialty-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 15px;
   align-items: flex-end;
   padding: 15px;
@@ -3014,8 +3017,8 @@ const handleSubmit = () => {
 }
 
 .specialty-item {
-  flex: 1;
-  min-width: 100px;
+  flex: 0 0 calc(16.666% - 12px);
+  min-width: 120px;
 }
 
 .specialty-item.delete-col {
