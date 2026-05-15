@@ -99,6 +99,11 @@
           </tr>
         </tbody>
       </table>
+      <div class="horizontal-scroll-bar">
+        <div class="scroll-track">
+          <div class="scroll-thumb"></div>
+        </div>
+      </div>
       
       <div class="pagination">
         <span class="page-info">共 {{ tableData.length }} 条</span>
@@ -333,10 +338,17 @@
         <el-button @click="showFilterMemberSelector = false">关闭</el-button>
       </template>
     </el-dialog>
+
+    <div class="back-to-top" @click="scrollToTop">
+      <el-button type="primary" size="small" round>
+        <el-icon><ArrowUp /></el-icon>
+      </el-button>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ArrowUp } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { addChangeRecord } from '../store/changeRecords'
@@ -525,6 +537,10 @@ const handleSubmit = () => {
   })
   
   ElMessage.success('新增成功，变动记录已同步到党员基础信息')
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 </script>
 
@@ -846,5 +862,50 @@ const handleSubmit = () => {
   margin-top: 20px;
   padding-top: 15px;
   border-top: 1px solid #e0e0e0;
+}
+
+.table-container {
+  position: relative;
+  overflow-x: auto;
+}
+
+.data-table {
+  min-width: 100%;
+}
+
+.horizontal-scroll-bar {
+  height: 16px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e8e8e8;
+  position: relative;
+}
+
+.scroll-track {
+  height: 6px;
+  background-color: #e8e8e8;
+  border-radius: 3px;
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+.scroll-thumb {
+  height: 100%;
+  background-color: #c0c4cc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.scroll-thumb:hover {
+  background-color: #909399;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 100;
 }
 </style>

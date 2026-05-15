@@ -88,6 +88,11 @@
           </tr>
         </tbody>
       </table>
+      <div class="horizontal-scroll-bar">
+        <div class="scroll-track">
+          <div class="scroll-thumb"></div>
+        </div>
+      </div>
       <div class="pagination-wrapper">
         <el-pagination
           :current-page="currentPage"
@@ -448,6 +453,12 @@
         </div>
       </template>
     </el-dialog>
+
+    <div class="back-to-top" @click="scrollToTop">
+      <el-button type="primary" size="small" round>
+        <el-icon><ArrowUp /></el-icon>
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -455,6 +466,7 @@
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { groupOptions } from '../store/organization'
+import { ArrowUp } from '@element-plus/icons-vue'
 
 const searchForm = reactive({
   village: '',
@@ -735,6 +747,10 @@ const handleSubmit = () => {
     ElMessage.success('新增成功')
   }
   dialogVisible.value = false
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 </script>
 
@@ -1262,5 +1278,50 @@ const handleSubmit = () => {
   background: #fafafa;
   border-radius: 8px;
   text-align: center;
+}
+
+.table-section {
+  position: relative;
+  overflow-x: auto;
+}
+
+.data-table {
+  min-width: 100%;
+}
+
+.horizontal-scroll-bar {
+  height: 16px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e8e8e8;
+  position: relative;
+}
+
+.scroll-track {
+  height: 6px;
+  background-color: #e8e8e8;
+  border-radius: 3px;
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+.scroll-thumb {
+  height: 100%;
+  background-color: #c0c4cc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.scroll-thumb:hover {
+  background-color: #909399;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 100;
 }
 </style>

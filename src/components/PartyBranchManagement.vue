@@ -1,29 +1,35 @@
 <template>
   <div class="branch-management">
-    <div class="left-panel">
-      <div class="search-box">
-        <input 
-          type="text" 
-          v-model="searchKeyword" 
-          placeholder="搜索" 
-          class="search-input"
-          @keyup.enter="handleSearch"
-        />
-        <button class="search-btn" @click="handleSearch">
-          <span class="search-icon">C</span>
-        </button>
-      </div>
-      <div class="branch-tree">
-        <div 
-          v-for="branch in branchList" 
-          :key="branch.id" 
-          class="tree-item"
-          :class="{ active: selectedBranch?.id === branch.id }"
-          @click="selectBranch(branch)"
-        >
-          {{ branch.name }}
+    <div class="left-panel" :class="{ collapsed: sidebarCollapsed }">
+      <div class="sidebar-content">
+        <div class="search-box">
+          <input 
+            type="text" 
+            v-model="searchKeyword" 
+            placeholder="搜索" 
+            class="search-input"
+            @keyup.enter="handleSearch"
+          />
+          <button class="search-btn" @click="handleSearch">
+            <span class="search-icon">C</span>
+          </button>
+        </div>
+        <div class="branch-tree">
+          <div 
+            v-for="branch in branchList" 
+            :key="branch.id" 
+            class="tree-item"
+            :class="{ active: selectedBranch?.id === branch.id }"
+            @click="selectBranch(branch)"
+          >
+            {{ branch.name }}
+          </div>
         </div>
       </div>
+      <button class="sidebar-toggle" @click="toggleSidebar">
+        <el-icon v-if="sidebarCollapsed"><ArrowRight /></el-icon>
+        <el-icon v-else><ArrowLeft /></el-icon>
+      </button>
     </div>
     
     <div class="right-panel">
@@ -64,6 +70,11 @@
             </tr>
           </tbody>
         </table>
+        <div class="horizontal-scroll-bar">
+          <div class="scroll-track">
+            <div class="scroll-thumb"></div>
+          </div>
+        </div>
         
         <div class="pagination" v-if="total > 0">
           <button 
@@ -209,6 +220,12 @@
         <el-button @click="handleCloseView">关闭</el-button>
       </template>
     </el-dialog>
+
+    <div class="back-to-top" @click="scrollToTop">
+      <el-button type="primary" size="small" round>
+        <el-icon><ArrowUp /></el-icon>
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -216,9 +233,15 @@
 import { ref, computed } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { villageOptions } from '../store/organization'
+import { ArrowUp, ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 
 const searchKeyword = ref('')
 const selectedBranch = ref(null)
+const sidebarCollapsed = ref(false)
+
+const toggleSidebar = () => {
+  sidebarCollapsed.value = !sidebarCollapsed.value
+}
 const dialogVisible = ref(false)
 const viewDialogVisible = ref(false)
 const dialogTitle = ref('新增党支部')
@@ -375,6 +398,10 @@ const nextPage = () => {
     currentPage.value++
   }
 }
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 </script>
 
 <style scoped>
@@ -389,6 +416,37 @@ const nextPage = () => {
   background-color: #f8f9fa;
   display: flex;
   flex-direction: column;
+  position: relative;
+  transition: width 0.3s ease;
+}
+
+.left-panel.collapsed {
+  width: 24px;
+}
+
+.left-panel.collapsed .sidebar-content {
+  display: none;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 48px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0 4px 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.sidebar-toggle:hover {
+  background-color: #f5f5f5;
 }
 
 .search-box {
@@ -684,5 +742,50 @@ const nextPage = () => {
 
 .history-table tbody tr:hover {
   background-color: #fafafa;
+}
+
+.table-container {
+  position: relative;
+  overflow-x: auto;
+}
+
+.data-table {
+  min-width: 100%;
+}
+
+.horizontal-scroll-bar {
+  height: 16px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e8e8e8;
+  position: relative;
+}
+
+.scroll-track {
+  height: 6px;
+  background-color: #e8e8e8;
+  border-radius: 3px;
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+.scroll-thumb {
+  height: 100%;
+  background-color: #c0c4cc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.scroll-thumb:hover {
+  background-color: #909399;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 100;
 }
 </style>

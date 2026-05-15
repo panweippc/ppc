@@ -55,23 +55,30 @@
           新增
         </el-button>
       </div>
-      <el-table :data="paginatedData" border>
-        <el-table-column prop="topic" label="会议主题" sortable />
-        <el-table-column prop="type" label="会议类型" sortable />
-        <el-table-column prop="host" label="主持人" sortable />
-        <el-table-column prop="location" label="地点" sortable />
-        <el-table-column prop="date" label="时间" sortable />
-        <el-table-column prop="participants" label="参会人数" />
-        <el-table-column label="操作">
-          <template #default="scope">
-            <div class="action-buttons">
-              <el-button type="primary" size="small" plain @click="handleView(scope.row)">查看</el-button>
-              <el-button type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div class="table-scroll-wrapper">
+        <el-table :data="paginatedData" border>
+          <el-table-column prop="topic" label="会议主题" sortable />
+          <el-table-column prop="type" label="会议类型" sortable />
+          <el-table-column prop="host" label="主持人" sortable />
+          <el-table-column prop="location" label="地点" sortable />
+          <el-table-column prop="date" label="时间" sortable />
+          <el-table-column prop="participants" label="参会人数" />
+          <el-table-column label="操作">
+            <template #default="scope">
+              <div class="action-buttons">
+                <el-button type="primary" size="small" plain @click="handleView(scope.row)">查看</el-button>
+                <el-button type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+                <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="horizontal-scroll-bar">
+          <div class="scroll-track">
+            <div class="scroll-thumb"></div>
+          </div>
+        </div>
+      </div>
       <div v-if="paginatedData.length === 0" class="empty-data">
         <div class="empty-icon">📋</div>
         <p>暂无数据</p>
@@ -289,12 +296,18 @@
         <el-button @click="viewDialogVisible = false">关闭</el-button>
       </template>
     </el-dialog>
+
+    <div class="back-to-top" @click="scrollToTop">
+      <el-button type="primary" size="small" round>
+        <el-icon><ArrowUp /></el-icon>
+      </el-button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { Search, Refresh, Plus } from '@element-plus/icons-vue'
+import { Search, Refresh, Plus, ArrowUp } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 const searchForm = reactive({
@@ -476,6 +489,10 @@ const handleSubmit = () => {
     ElMessage.success('新增成功')
   }
   dialogVisible.value = false
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 </script>
 
@@ -808,5 +825,50 @@ const handleSubmit = () => {
   border-radius: 4px;
   min-height: 60px;
   white-space: pre-wrap;
+}
+
+.table-scroll-wrapper {
+  position: relative;
+  overflow-x: auto;
+}
+
+.table-scroll-wrapper :deep(.el-table) {
+  min-width: 100%;
+}
+
+.horizontal-scroll-bar {
+  height: 16px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e8e8e8;
+  position: relative;
+}
+
+.scroll-track {
+  height: 6px;
+  background-color: #e8e8e8;
+  border-radius: 3px;
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+.scroll-thumb {
+  height: 100%;
+  background-color: #c0c4cc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.scroll-thumb:hover {
+  background-color: #909399;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 100;
 }
 </style>

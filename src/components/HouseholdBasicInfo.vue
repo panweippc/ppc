@@ -33,7 +33,8 @@
           </div>
         </div>
         <button class="sidebar-toggle" @click="toggleSidebar">
-          <el-icon>{{ sidebarCollapsed ? <ArrowRight /> : <ArrowLeft /> }}</el-icon>
+          <el-icon v-if="sidebarCollapsed"><ArrowRight /></el-icon>
+          <el-icon v-else><ArrowLeft /></el-icon>
         </button>
       </div>
 
@@ -92,7 +93,8 @@
         <div class="search-panel">
           <div class="search-header">
             <button class="collapse-btn" @click="toggleSearchPanel">
-              <el-icon>{{ searchPanelExpanded ? <ArrowUp /> : <ArrowDown /> }}</el-icon>
+              <el-icon v-if="searchPanelExpanded"><ArrowUp /></el-icon>
+              <el-icon v-else><ArrowDown /></el-icon>
             </button>
           </div>
           <div v-show="searchPanelExpanded" class="search-content">
@@ -185,12 +187,11 @@
             <el-table-column prop="village" label="行政村" />
             <el-table-column prop="naturalGroup" label="自然组" />
             <el-table-column prop="householdNo" label="户号" />
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="300">
               <template #default="scope">
                 <div class="action-buttons">
-                  <el-button type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
-                  <el-button type="primary" size="small" icon="eye" @click="handleView(scope.row)"></el-button>
-                  <el-button type="primary" size="small" icon="edit" @click="handleEdit(scope.row)"></el-button>
+                  <el-button type="primary" size="small" icon="edit" @click="handleEdit(scope.row)">编辑</el-button>
+                  <el-button type="primary" size="small" icon="eye" @click="handleView(scope.row)">查看</el-button>
                   <el-button type="primary" size="small" @click="handleSubsidy(scope.row)">补贴</el-button>
                   <el-button type="primary" size="small" @click="handleHelp(scope.row)">帮扶</el-button>
                   <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
@@ -602,10 +603,14 @@ const handleSubmit = () => {
 }
 
 .left-sidebar.collapsed {
-  width: 0;
+  width: 24px;
   padding: 0;
   overflow: hidden;
   border-right: none;
+}
+
+.left-sidebar.collapsed .sidebar-content {
+  display: none;
 }
 
 .sidebar-content {
@@ -821,12 +826,22 @@ const handleSubmit = () => {
 
 .action-buttons {
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 1px;
+  flex-wrap: nowrap;
+}
+
+.action-buttons .divider {
+  color: #999;
+  margin: 0 1px;
+  font-size: 12px;
 }
 
 .action-buttons :deep(.el-button) {
-  padding: 4px 8px;
-  font-size: 12px;
+  padding: 3px 6px;
+  font-size: 11px;
+  border-radius: 2px;
+  margin: 0;
 }
 
 .pagination-wrapper {

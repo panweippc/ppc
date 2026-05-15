@@ -67,23 +67,30 @@
           新增
         </el-button>
       </div>
-      <el-table :data="paginatedData" border>
-        <el-table-column prop="villageGroup" label="帮扶村组" sortable />
-        <el-table-column prop="name" label="姓名" sortable />
-        <el-table-column prop="gender" label="性别" sortable />
-        <el-table-column prop="ethnicity" label="民族" sortable />
-        <el-table-column prop="idCard" label="身份证号" />
-        <el-table-column prop="position" label="职务" />
-        <el-table-column label="操作">
-          <template #default="scope">
-            <div class="action-buttons">
-              <el-button type="primary" size="small" plain @click="handleView(scope.row)">查看</el-button>
-              <el-button type="primary" size="small" plain @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div class="table-scroll-wrapper">
+        <el-table :data="paginatedData" border>
+          <el-table-column prop="villageGroup" label="帮扶村组" sortable />
+          <el-table-column prop="name" label="姓名" sortable />
+          <el-table-column prop="gender" label="性别" sortable />
+          <el-table-column prop="ethnicity" label="民族" sortable />
+          <el-table-column prop="idCard" label="身份证号" />
+          <el-table-column prop="position" label="职务" />
+          <el-table-column label="操作">
+            <template #default="scope">
+              <div class="action-buttons">
+                <el-button type="primary" size="small" plain @click="handleView(scope.row)">查看</el-button>
+                <el-button type="primary" size="small" plain @click="handleEdit(scope.row)">编辑</el-button>
+                <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="horizontal-scroll-bar">
+          <div class="scroll-track">
+            <div class="scroll-thumb"></div>
+          </div>
+        </div>
+      </div>
       <div v-if="paginatedData.length === 0" class="empty-data">
         <div class="empty-icon">📋</div>
         <p>暂无数据</p>
@@ -1225,5 +1232,43 @@ const handleSubmit = () => {
 .view-item {
   margin-right: 30px;
   font-size: 14px;
+}
+
+.table-scroll-wrapper {
+  position: relative;
+  overflow-x: auto;
+}
+
+.table-scroll-wrapper :deep(.el-table) {
+  min-width: 100%;
+}
+
+.horizontal-scroll-bar {
+  height: 16px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e8e8e8;
+  position: relative;
+}
+
+.scroll-track {
+  height: 6px;
+  background-color: #e8e8e8;
+  border-radius: 3px;
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+.scroll-thumb {
+  height: 100%;
+  background-color: #c0c4cc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.scroll-thumb:hover {
+  background-color: #909399;
 }
 </style>
