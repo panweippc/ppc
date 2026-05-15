@@ -577,7 +577,7 @@
             <div v-if="memberList.length === 0" class="member-add-btn">
               <el-button type="primary" @click="addMember">+ 添加</el-button>
             </div>
-            <div v-for="(member, index) in memberList" :key="member.id" class="member-wrapper">
+            <template v-for="(member, index) in memberList" :key="member.id">
               <div class="member-card">
                 <div class="member-header">
                   <span class="member-title">成员{{ index + 1 }}</span>
@@ -844,13 +844,13 @@
               <div class="member-add-btn">
                 <el-button type="primary" @click="addMember">+ 添加</el-button>
               </div>
-            </div>
+            </template>
           </div>
           
           <div v-show="activeTab === 'farming'" class="farming-form">
             <div class="agriculture-section">
               <div class="section-divider">现有农业</div>
-              <div v-for="(item, index) in existingAgricultureList" :key="item.id" class="agriculture-wrapper">
+              <template v-for="(item, index) in existingAgricultureList" :key="item.id">
                 <div class="agriculture-row">
                   <div class="agriculture-item required">
                     <label class="form-label">*类型</label>
@@ -896,7 +896,7 @@
 
             <div class="agriculture-section">
               <div class="section-divider">规划农业</div>
-              <div v-for="(item, index) in plannedAgricultureList" :key="item.id" class="agriculture-wrapper">
+              <template v-for="(item, index) in plannedAgricultureList" :key="item.id">
                 <div class="agriculture-row">
                   <div class="agriculture-item required">
                     <label class="form-label">*类型</label>
@@ -948,7 +948,7 @@
           <div v-show="activeTab === 'breeding'" class="breeding-form">
             <div class="breeding-section">
               <div class="section-divider">养殖设施(现有)</div>
-              <div v-for="(item, index) in existingBreedingFacilityList" :key="item.id" class="breeding-wrapper">
+              <template v-for="(item, index) in existingBreedingFacilityList" :key="item.id">
                 <div class="breeding-facility-row">
                   <div class="breeding-facility-item required">
                     <label class="form-label">*棚圈结构</label>
@@ -978,7 +978,7 @@
 
             <div class="breeding-section">
               <div class="section-divider">现有养殖</div>
-              <div v-for="(item, index) in existingBreedingList" :key="item.id" class="breeding-wrapper">
+              <template v-for="(item, index) in existingBreedingList" :key="item.id">
                 <div class="breeding-row">
                   <div class="breeding-item">
                     <label class="form-label">类型</label>
@@ -1030,7 +1030,7 @@
 
             <div class="breeding-section">
               <div class="section-divider">养殖设施(规划)</div>
-              <div v-for="(item, index) in plannedBreedingFacilityList" :key="item.id" class="breeding-wrapper">
+              <template v-for="(item, index) in plannedBreedingFacilityList" :key="item.id">
                 <div class="breeding-facility-row">
                   <div class="breeding-facility-item required">
                     <label class="form-label">*棚圈结构</label>
@@ -1060,7 +1060,7 @@
 
             <div class="breeding-section">
               <div class="section-divider">规划养殖</div>
-              <div v-for="(item, index) in plannedBreedingList" :key="item.id" class="breeding-wrapper">
+              <template v-for="(item, index) in plannedBreedingList" :key="item.id">
                 <div class="breeding-row">
                   <div class="breeding-item">
                     <label class="form-label">类型</label>
@@ -1120,7 +1120,7 @@
             
             <div class="specialty-section">
               <div class="specialty-subtitle">现有特色产业（农/牧家乐）</div>
-              <div v-for="(item, index) in existingFarmhouseList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in existingFarmhouseList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">类型</label>
@@ -1170,7 +1170,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">现有特色产业（采摘园）</div>
-              <div v-for="(item, index) in existingPickingGardenList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in existingPickingGardenList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">采摘园名称</label>
@@ -1212,7 +1212,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">田园综合体（现有）</div>
-              <div v-for="(item, index) in existingPastoralComplexList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in existingPastoralComplexList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">田园综合体名称</label>
@@ -1252,7 +1252,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">游乐设施（现有）</div>
-              <div v-for="(item, index) in existingAmusementList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in existingAmusementList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">游乐设施名称</label>
@@ -1284,7 +1284,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">特色农副产品（现有）</div>
-              <div v-for="(item, index) in existingAgriculturalList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in existingAgriculturalList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">农副产种类</label>
@@ -1320,7 +1320,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">大棚经济（现有）</div>
-              <div v-for="(item, index) in existingGreenhouseList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in existingGreenhouseList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">大棚类型</label>
@@ -1356,7 +1356,7 @@
             
             <div class="specialty-section">
               <div class="specialty-subtitle">规划特色产业（农/牧家乐）</div>
-              <div v-for="(item, index) in plannedFarmhouseList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in plannedFarmhouseList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">类型</label>
@@ -1406,7 +1406,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">规划特色产业（采摘园）</div>
-              <div v-for="(item, index) in plannedPickingGardenList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in plannedPickingGardenList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">采摘园名称</label>
@@ -1448,7 +1448,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">田园综合体（规划）</div>
-              <div v-for="(item, index) in plannedPastoralComplexList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in plannedPastoralComplexList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">田园综合体名称</label>
@@ -1488,7 +1488,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">游乐设施（规划）</div>
-              <div v-for="(item, index) in plannedAmusementList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in plannedAmusementList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">游乐设施名称</label>
@@ -1520,7 +1520,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">特色农副产品（规划）</div>
-              <div v-for="(item, index) in plannedAgriculturalList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in plannedAgriculturalList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">农副产种类</label>
@@ -1556,7 +1556,7 @@
 
             <div class="specialty-section">
               <div class="specialty-subtitle">大棚经济（规划）</div>
-              <div v-for="(item, index) in plannedGreenhouseList" :key="item.id" class="specialty-wrapper">
+              <template v-for="(item, index) in plannedGreenhouseList" :key="item.id">
                 <div class="specialty-row">
                   <div class="specialty-item">
                     <label class="form-label">大棚类型</label>
@@ -1592,7 +1592,7 @@
           <div v-show="activeTab === 'yard'" class="yard-form">
             <div class="yard-section">
               <div class="section-divider">现有庭院经济</div>
-              <div v-for="(item, index) in existingYardList" :key="item.id" class="yard-wrapper">
+              <template v-for="(item, index) in existingYardList" :key="item.id">
                 <div class="yard-row">
                   <div class="yard-item required">
                     <label class="form-label">*庭院经济大类</label>
@@ -1634,7 +1634,7 @@
 
             <div class="yard-section">
               <div class="section-divider">规划庭院经济</div>
-              <div v-for="(item, index) in plannedYardList" :key="item.id" class="yard-wrapper">
+              <template v-for="(item, index) in plannedYardList" :key="item.id">
                 <div class="yard-row">
                   <div class="yard-item">
                     <label class="form-label">庭院经济大类</label>
@@ -1861,97 +1861,738 @@
         </div>
         
         <div class="report-content">
-          <div class="info-section">
-            <h3 class="section-title">综合户籍表</h3>
-            <div class="info-grid">
-              <div class="info-item"><span class="label">村名</span><span class="value">{{ viewData.village || '-' }}</span></div>
-              <div class="info-item"><span class="label">户号</span><span class="value">{{ viewData.householdNo || '-' }}</span></div>
-              <div class="info-item"><span class="label">户名</span><span class="value">{{ viewData.name || '-' }}</span></div>
-              <div class="info-item"><span class="label">户类型</span><span class="value">{{ getHouseholdTypeName(viewData.householdType) || '-' }}</span></div>
-              <div class="info-item"><span class="label">家庭人口数</span><span class="value">{{ memberList.length || '-' }}</span></div>
-              <div class="info-item"><span class="label">家庭劳动力数</span><span class="value">{{ viewData.laborCount || '-' }}</span></div>
-              <div class="info-item"><span class="label">户联系电话</span><span class="value">{{ viewData.phone || '-' }}</span></div>
-              <div class="info-item"><span class="label">开户银行</span><span class="value">{{ viewData.bankName || '-' }}</span></div>
-              <div class="info-item"><span class="label">银行卡号</span><span class="value">{{ viewData.bankCard || '-' }}</span></div>
-              <div class="info-item"><span class="label">入户路类型</span><span class="value">{{ viewData.roadType || '-' }}</span></div>
-              <div class="info-item"><span class="label">与村干路距离(m)</span><span class="value">{{ viewData.roadDistance || '0' }}</span></div>
-              <div class="info-item"><span class="label">主要燃料类型</span><span class="value">{{ viewData.fuelType || '-' }}</span></div>
-              <div class="info-item"><span class="label">是否整户无劳动力</span><span class="value">{{ viewData.isNoLabor === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否享受兜底政策</span><span class="value">{{ viewData.isUnderPolicy === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">兜底等级</span><span class="value">{{ viewData.policyLevel || '-' }}</span></div>
-              <div class="info-item"><span class="label">识别监测时间</span><span class="value">{{ viewData.monitorTime || '-' }}</span></div>
-              <div class="info-item"><span class="label">消除监测时间</span><span class="value">{{ viewData.eliminateTime || '-' }}</span></div>
-            </div>
-          </div>
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th colspan="24" class="table-title">综合户籍表</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>村名</td>
+                <td>户号</td>
+                <td>户名</td>
+                <td>户类型</td>
+                <td>家庭人口数</td>
+                <td>家庭劳动力数</td>
+                <td>户联系电话</td>
+                <td>开户银行</td>
+                <td>银行卡号</td>
+                <td>入户路类型</td>
+                <td>与村干路距离(m)</td>
+                <td>主要燃料类型</td>
+                <td>是否整户无劳动力</td>
+                <td>是否享受兜底政策</td>
+                <td>兜底等级</td>
+                <td>识别监测时间</td>
+                <td>消除监测时间</td>
+                <td colspan="7"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.village || '-' }}</td>
+                <td>{{ viewData.householdNo || '-' }}</td>
+                <td>{{ viewData.name || '-' }}</td>
+                <td>{{ getHouseholdTypeName(viewData.householdType) || '-' }}</td>
+                <td>{{ memberList.length || '-' }}</td>
+                <td>{{ viewData.laborCount || '-' }}</td>
+                <td>{{ viewData.phone || '-' }}</td>
+                <td>{{ viewData.bankName || '-' }}</td>
+                <td>{{ viewData.bankCard || '-' }}</td>
+                <td>{{ viewData.roadType || '-' }}</td>
+                <td>{{ viewData.roadDistance || '0' }}</td>
+                <td>{{ viewData.fuelType || '-' }}</td>
+                <td>{{ viewData.isNoLabor === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.isUnderPolicy === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.policyLevel || '-' }}</td>
+                <td>{{ viewData.monitorTime || '-' }}</td>
+                <td>{{ viewData.eliminateTime || '-' }}</td>
+                <td colspan="7"></td>
+              </tr>
+            </tbody>
+          </table>
           
-          <div class="info-section">
-            <h3 class="section-title">基础信息</h3>
-            <div class="info-grid">
-              <div class="info-item"><span class="label">耕地面积（亩）</span><span class="value">{{ viewData.cultivatedLand || '-' }}</span></div>
-              <div class="info-item"><span class="label">林地面积（亩）</span><span class="value">{{ viewData.forestLand || '-' }}</span></div>
-              <div class="info-item"><span class="label">草牧场面积（亩）</span><span class="value">{{ viewData.pastureLand || '-' }}</span></div>
-              <div class="info-item"><span class="label">水面面积</span><span class="value">{{ viewData.waterArea || '-' }}</span></div>
-              <div class="info-item"><span class="label">林果面积（亩）</span><span class="value">{{ viewData.fruitLand || '-' }}</span></div>
-              <div class="info-item"><span class="label">退耕还林面积（亩）</span><span class="value">{{ viewData.grainLand || '-' }}</span></div>
-              <div class="info-item"><span class="label">青贮窖面积（立方）</span><span class="value">{{ viewData.siloArea || '-' }}</span></div>
-              <div class="info-item"><span class="label">储草棚面积（平方）</span><span class="value">{{ viewData.grassShedArea || '-' }}</span></div>
-              <div class="info-item"><span class="label">保鲜库面积（平方）</span><span class="value">{{ viewData.coldStorageArea || '-' }}</span></div>
-              <div class="info-item"><span class="label">是否有龙头企业带动</span><span class="value">{{ viewData.hasLeadingEnterprise === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否有创业致富带头人带动</span><span class="value">{{ viewData.hasLeader === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否参加合作社</span><span class="value">{{ viewData.joinCooperative === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">房屋结构</span><span class="value">{{ viewData.houseStructure || '-' }}</span></div>
-              <div class="info-item"><span class="label">住房面积</span><span class="value">{{ viewData.houseArea || '-' }}</span></div>
-              <div class="info-item"><span class="label">安全等级</span><span class="value">{{ viewData.safetyLevel || '-' }}</span></div>
-              <div class="info-item"><span class="label">是否享受危房改造</span><span class="value">{{ viewData.hasHouseRenovation === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否危房户</span><span class="value">{{ viewData.isDangerousHouse === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">风险是否已消除</span><span class="value">{{ viewData.riskEliminated === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否解决安全饮水</span><span class="value">{{ viewData.safeWater === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否有卫生厕所</span><span class="value">{{ viewData.hasToilet === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否通广播电视</span><span class="value">{{ viewData.hasTV === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否通生活用电</span><span class="value">{{ viewData.hasElectricity === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否通生产用电</span><span class="value">{{ viewData.hasProductionElectricity === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">是否有项目需求</span><span class="value">{{ viewData.hasProjectDemand === 'yes' ? '是' : '否' }}</span></div>
-              <div class="info-item"><span class="label">愿景目标与产业需求</span><span class="value">{{ viewData.vision || '-' }}</span></div>
-            </div>
-          </div>
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="3" class="section-title">基础信息</td>
+                <td>耕地面积（亩）</td>
+                <td>林地面积（亩）</td>
+                <td>草牧场面积（亩）</td>
+                <td>水面面积</td>
+                <td>林果面积（亩）</td>
+                <td>退耕还林面积（亩）</td>
+                <td>青贮窖面积（立方）</td>
+                <td>储草棚面积（平方）</td>
+                <td>保鲜库面积（平方）</td>
+                <td>是否有龙头企业带动</td>
+                <td>是否有创业致富带头人带动</td>
+                <td>是否参加合作社</td>
+                <td>房屋结构</td>
+                <td>住房面积</td>
+                <td>安全等级</td>
+                <td>是否享受危房改造</td>
+                <td>是否危房户</td>
+                <td>风险是否已消除</td>
+                <td>是否解决安全饮水</td>
+                <td>是否有卫生厕所</td>
+                <td>是否通广播电视</td>
+                <td>是否通生活用电</td>
+                <td>是否通生产用电</td>
+                <td>是否有项目需求</td>
+                <td>愿景目标与产业需求</td>
+              </tr>
+              <tr>
+                <td>{{ viewData.cultivatedLand || '-' }}</td>
+                <td>{{ viewData.forestLand || '-' }}</td>
+                <td>{{ viewData.pastureLand || '-' }}</td>
+                <td>{{ viewData.waterArea || '-' }}</td>
+                <td>{{ viewData.fruitLand || '-' }}</td>
+                <td>{{ viewData.grainLand || '-' }}</td>
+                <td>{{ viewData.siloArea || '-' }}</td>
+                <td>{{ viewData.grassShedArea || '-' }}</td>
+                <td>{{ viewData.coldStorageArea || '-' }}</td>
+                <td>{{ viewData.hasLeadingEnterprise === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.hasLeader === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.joinCooperative === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.houseStructure || '-' }}</td>
+                <td>{{ viewData.houseArea || '-' }}</td>
+                <td>{{ viewData.safetyLevel || '-' }}</td>
+                <td>{{ viewData.hasHouseRenovation === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.isDangerousHouse === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.riskEliminated === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.safeWater === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.hasToilet === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.hasTV === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.hasElectricity === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.hasProductionElectricity === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.hasProjectDemand === 'yes' ? '是' : '否' }}</td>
+                <td>{{ viewData.vision || '-' }}</td>
+              </tr>
+            </tbody>
+          </table>
           
-          <div class="info-section">
-            <h3 class="section-title">户车辆信息</h3>
-            <div class="info-grid">
-              <div class="info-item"><span class="label">车辆类型</span><span class="value">{{ viewData.vehicleType || '-' }}</span></div>
-              <div class="info-item"><span class="label">车辆来源</span><span class="value">{{ viewData.vehicleSource || '-' }}</span></div>
-              <div class="info-item"><span class="label">车辆数量</span><span class="value">{{ viewData.vehicleCount || '-' }}</span></div>
-            </div>
-          </div>
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="4" class="section-title">户车辆信息</td>
+                <td>车辆类型</td>
+                <td>车辆来源</td>
+                <td>车辆数量</td>
+                <td colspan="22"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.vehicleType || '-' }}</td>
+                <td>{{ viewData.vehicleSource || '-' }}</td>
+                <td>{{ viewData.vehicleCount || '-' }}</td>
+                <td colspan="22"></td>
+              </tr>
+            </tbody>
+          </table>
           
-          <div class="info-section">
-            <h3 class="section-title">驻村干部</h3>
-            <div class="info-grid">
-              <div class="info-item"><span class="label">姓名</span><span class="value">{{ viewData.helperName || '-' }}</span></div>
-              <div class="info-item"><span class="label">单位</span><span class="value">{{ viewData.helperUnit || '-' }}</span></div>
-              <div class="info-item"><span class="label">联系方式</span><span class="value">{{ viewData.helperPhone || '-' }}</span></div>
-              <div class="info-item"><span class="label">负责时间</span><span class="value">{{ viewData.helperTime || '-' }}</span></div>
-            </div>
-          </div>
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="2" class="section-title">驻村干部</td>
+                <td>姓名</td>
+                <td>单位</td>
+                <td>联系方式</td>
+                <td>负责时间</td>
+                <td rowspan="2" class="section-title">村干部</td>
+                <td>姓名</td>
+                <td>单位</td>
+                <td>联系方式</td>
+                <td>负责时间</td>
+                <td colspan="15"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.helperName || '-' }}</td>
+                <td>{{ viewData.helperUnit || '-' }}</td>
+                <td>{{ viewData.helperPhone || '-' }}</td>
+                <td>{{ viewData.helperTime || '-' }}</td>
+                <td>{{ viewData.villageOfficialName || '-' }}</td>
+                <td>{{ viewData.villageOfficialUnit || '-' }}</td>
+                <td>{{ viewData.villageOfficialPhone || '-' }}</td>
+                <td>{{ viewData.villageOfficialTime || '-' }}</td>
+                <td colspan="15"></td>
+              </tr>
+            </tbody>
+          </table>
           
-          <div class="info-section">
-            <h3 class="section-title">村干部</h3>
-            <div class="info-grid">
-              <div class="info-item"><span class="label">姓名</span><span class="value">{{ viewData.villageOfficialName || '-' }}</span></div>
-              <div class="info-item"><span class="label">单位</span><span class="value">{{ viewData.villageOfficialUnit || '-' }}</span></div>
-              <div class="info-item"><span class="label">联系方式</span><span class="value">{{ viewData.villageOfficialPhone || '-' }}</span></div>
-              <div class="info-item"><span class="label">负责时间</span><span class="value">{{ viewData.villageOfficialTime || '-' }}</span></div>
-            </div>
-          </div>
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="4" class="section-title">成员信息</td>
+                <td>姓名</td>
+                <td>性别</td>
+                <td>民族</td>
+                <td>政治面貌</td>
+                <td>身份证号</td>
+                <td>联系方式</td>
+                <td>与户主关系</td>
+                <td>兵役状况</td>
+                <td>健康状况</td>
+                <td>文化程度</td>
+                <td>在校生状况</td>
+                <td>就读学校</td>
+                <td>是否享受教育补贴</td>
+                <td>教育补贴类型</td>
+                <td>义务教育阶段未上学原因</td>
+                <td>是否会讲普通话</td>
+                <td>是否外出务工</td>
+                <td colspan="7"></td>
+              </tr>
+              <template v-for="(member, index) in memberList" :key="index">
+                <tr>
+                  <td></td>
+                  <td>{{ member.name || '-' }}</td>
+                  <td>{{ member.gender === 'male' ? '男' : member.gender === 'female' ? '女' : '-' }}</td>
+                  <td>{{ member.nation || '-' }}</td>
+                  <td>{{ member.politicalStatus || '-' }}</td>
+                  <td>{{ member.idCard || '-' }}</td>
+                  <td>{{ member.phone || '-' }}</td>
+                  <td>{{ member.relation || '-' }}</td>
+                  <td>{{ member.militaryService || '-' }}</td>
+                  <td>{{ member.healthStatus || '-' }}</td>
+                  <td>{{ member.education || '-' }}</td>
+                  <td>{{ member.studentStatus || '-' }}</td>
+                  <td>{{ member.school || '-' }}</td>
+                  <td>{{ member.hasEducationSubsidy === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.educationSubsidyType || '-' }}</td>
+                  <td>{{ member.schoolReason || '-' }}</td>
+                  <td>{{ member.canSpeakMandarin === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.isOutWorker === 'yes' ? '是' : '否' }}</td>
+                  <td colspan="7"></td>
+                </tr>
+              </template>
+              <tr>
+                <td></td>
+                <td>是否国外务工</td>
+                <td>劳动技能</td>
+                <td>外出区域</td>
+                <td>是否为重点人群</td>
+                <td>是否易地扶贫搬迁人口</td>
+                <td>是否特困供养人员</td>
+                <td>是否享受农村居民最低生活保障</td>
+                <td>是否享受城乡居民最低生活保障</td>
+                <td>是否享受人身意外保险补贴</td>
+                <td>是否参加城乡居民基本养老保险</td>
+                <td>是否参加城乡居民基本医疗保险</td>
+                <td>是否参加商业补充医疗保险</td>
+                <td>是否参加大病保险</td>
+                <td>是否接受医疗救助</td>
+                <td>是否接受其他健康扶贫</td>
+                <td>银行卡号</td>
+                <td>开户银行</td>
+                <td>备注</td>
+                <td colspan="5"></td>
+              </tr>
+              <template v-for="(member, index) in memberList" :key="'detail-' + index">
+                <tr>
+                  <td></td>
+                  <td>{{ member.isForeignWorker === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.skill || '-' }}</td>
+                  <td>{{ member.outArea || '-' }}</td>
+                  <td>{{ member.isKeyPerson === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.isRelocated === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.isSpecialSupport === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasRuralInsurance === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasUrbanInsurance === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasAccidentInsurance === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasPension === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasMedical === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasCommercialMedical === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasCriticalIllness === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasMedicalAid === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.hasHealthAid === 'yes' ? '是' : '否' }}</td>
+                  <td>{{ member.bankCard || '-' }}</td>
+                  <td>{{ member.bankName || '-' }}</td>
+                  <td>{{ member.remark || '-' }}</td>
+                  <td colspan="5"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
           
-          <div class="info-section">
-            <h3 class="section-title">成员变动</h3>
-            <div class="info-grid">
-              <div class="info-item"><span class="label">成员姓名</span><span class="value">{{ viewData.changeMemberName || '-' }}</span></div>
-              <div class="info-item"><span class="label">变动类型</span><span class="value">{{ viewData.changeType || '-' }}</span></div>
-              <div class="info-item"><span class="label">变动时间</span><span class="value">{{ viewData.changeTime || '-' }}</span></div>
-            </div>
-          </div>
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="2" class="section-title">成员变动</td>
+                <td>成员姓名</td>
+                <td>变动类型</td>
+                <td>变动时间</td>
+                <td colspan="22"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.changeMemberName || '-' }}</td>
+                <td>{{ viewData.changeType || '-' }}</td>
+                <td>{{ viewData.changeTime || '-' }}</td>
+                <td colspan="22"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="10" class="section-title">现有产业</td>
+                <td rowspan="4">种植</td>
+                <td rowspan="2">粮食作物</td>
+                <td>种植名称</td>
+                <td>种植面积（亩）</td>
+                <td>实际收入</td>
+                <td rowspan="2">经济作物</td>
+                <td>种植名称</td>
+                <td>种植面积（亩）</td>
+                <td>实际收入</td>
+                <td rowspan="2">林下经济</td>
+                <td>种植名称</td>
+                <td>种植面积（亩）</td>
+                <td>实际收入</td>
+                <td rowspan="2">中草药</td>
+                <td>种植名称</td>
+                <td>种植面积（亩）</td>
+                <td>实际收入</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.grainCropName || '-' }}</td>
+                <td>{{ viewData.grainCropArea || '-' }}</td>
+                <td>{{ viewData.grainCropIncome || '-' }}</td>
+                <td>{{ viewData.economicCropName || '-' }}</td>
+                <td>{{ viewData.economicCropArea || '-' }}</td>
+                <td>{{ viewData.economicCropIncome || '-' }}</td>
+                <td>{{ viewData.underforestName || '-' }}</td>
+                <td>{{ viewData.underforestArea || '-' }}</td>
+                <td>{{ viewData.underforestIncome || '-' }}</td>
+                <td>{{ viewData.herbName || '-' }}</td>
+                <td>{{ viewData.herbArea || '-' }}</td>
+                <td>{{ viewData.herbIncome || '-' }}</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td colspan="15"></td>
+                <td colspan="10"></td>
+              </tr>
+              <tr>
+                <td colspan="15"></td>
+                <td colspan="10"></td>
+              </tr>
+              <tr>
+                <td rowspan="3">养殖</td>
+                <td rowspan="2">畜牧</td>
+                <td>养殖名称</td>
+                <td>类型</td>
+                <td>养殖数量</td>
+                <td>单位</td>
+                <td>实际收入</td>
+                <td colspan="20"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.livestockName || '-' }}</td>
+                <td>{{ viewData.livestockType || '-' }}</td>
+                <td>{{ viewData.livestockCount || '-' }}</td>
+                <td>{{ viewData.livestockUnit || '-' }}</td>
+                <td>{{ viewData.livestockIncome || '-' }}</td>
+                <td colspan="20"></td>
+              </tr>
+              <tr>
+                <td colspan="6"></td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td rowspan="3">养殖设施</td>
+                <td>棚圈结构</td>
+                <td colspan="24"></td>
+              </tr>
+              <tr>
+                <td>棚圈面积（平方米）</td>
+                <td colspan="24"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.shedStructure || '-' }}</td>
+                <td>{{ viewData.shedArea || '-' }}</td>
+                <td colspan="23"></td>
+              </tr>
+              <tr>
+                <td>庭院经济</td>
+                <td>类型</td>
+                <td>名称</td>
+                <td>面积/数量</td>
+                <td>单位</td>
+                <td>实际收入</td>
+                <td>类型</td>
+                <td>名称</td>
+                <td>面积/数量</td>
+                <td>单位</td>
+                <td>实际收入</td>
+                <td>类型</td>
+                <td>名称</td>
+                <td>面积/数量</td>
+                <td>单位</td>
+                <td>实际收入</td>
+                <td colspan="10"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="12" class="section-title">规划产业</td>
+                <td rowspan="3">种植</td>
+                <td rowspan="2">粮食作物</td>
+                <td>种植名称</td>
+                <td>种植面积（亩）</td>
+                <td>预计单价</td>
+                <td>预计收入</td>
+                <td rowspan="2">经济作物</td>
+                <td>种植名称</td>
+                <td>种植面积（亩）</td>
+                <td>预计单价</td>
+                <td>预计收入</td>
+                <td rowspan="2">林下经济</td>
+                <td>种植名称</td>
+                <td>种植面积（亩）</td>
+                <td>预计单价</td>
+                <td>预计收入</td>
+                <td rowspan="2">中草药</td>
+                <td>种植名称</td>
+                <td>种植面积（亩）</td>
+                <td>预计单价</td>
+                <td>预计收入</td>
+                <td colspan="4"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.plannedGrainName || '-' }}</td>
+                <td>{{ viewData.plannedGrainArea || '-' }}</td>
+                <td>{{ viewData.plannedGrainPrice || '-' }}</td>
+                <td>{{ viewData.plannedGrainIncome || '-' }}</td>
+                <td>{{ viewData.plannedEconomicName || '-' }}</td>
+                <td>{{ viewData.plannedEconomicArea || '-' }}</td>
+                <td>{{ viewData.plannedEconomicPrice || '-' }}</td>
+                <td>{{ viewData.plannedEconomicIncome || '-' }}</td>
+                <td>{{ viewData.plannedUnderforestName || '-' }}</td>
+                <td>{{ viewData.plannedUnderforestArea || '-' }}</td>
+                <td>{{ viewData.plannedUnderforestPrice || '-' }}</td>
+                <td>{{ viewData.plannedUnderforestIncome || '-' }}</td>
+                <td>{{ viewData.plannedHerbName || '-' }}</td>
+                <td>{{ viewData.plannedHerbArea || '-' }}</td>
+                <td>{{ viewData.plannedHerbPrice || '-' }}</td>
+                <td>{{ viewData.plannedHerbIncome || '-' }}</td>
+                <td colspan="4"></td>
+              </tr>
+              <tr>
+                <td colspan="22"></td>
+                <td colspan="3"></td>
+              </tr>
+              <tr>
+                <td rowspan="4">养殖</td>
+                <td rowspan="2">畜牧</td>
+                <td>养殖名称</td>
+                <td>类型</td>
+                <td>养殖数量</td>
+                <td>单位</td>
+                <td>预计单价</td>
+                <td>预计收入</td>
+                <td colspan="18"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.plannedLivestockName || '-' }}</td>
+                <td>{{ viewData.plannedLivestockType || '-' }}</td>
+                <td>{{ viewData.plannedLivestockCount || '-' }}</td>
+                <td>{{ viewData.plannedLivestockUnit || '-' }}</td>
+                <td>{{ viewData.plannedLivestockPrice || '-' }}</td>
+                <td>{{ viewData.plannedLivestockIncome || '-' }}</td>
+                <td colspan="18"></td>
+              </tr>
+              <tr>
+                <td rowspan="2">小五金</td>
+                <td>养殖名称</td>
+                <td>养殖数量</td>
+                <td>预计单价</td>
+                <td>预计收入</td>
+                <td colspan="20"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.plannedHardwareName || '-' }}</td>
+                <td>{{ viewData.plannedHardwareCount || '-' }}</td>
+                <td>{{ viewData.plannedHardwarePrice || '-' }}</td>
+                <td>{{ viewData.plannedHardwareIncome || '-' }}</td>
+                <td colspan="20"></td>
+              </tr>
+              <tr>
+                <td rowspan="3">养殖设施</td>
+                <td>棚圈结构</td>
+                <td colspan="24"></td>
+              </tr>
+              <tr>
+                <td>棚圈面积（平方米）</td>
+                <td colspan="24"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.plannedShedStructure || '-' }}</td>
+                <td>{{ viewData.plannedShedArea || '-' }}</td>
+                <td colspan="23"></td>
+              </tr>
+              <tr>
+                <td>庭院经济</td>
+                <td>类型</td>
+                <td>名称</td>
+                <td>面积/数量</td>
+                <td>单位</td>
+                <td>预计收入</td>
+                <td>类型</td>
+                <td>名称</td>
+                <td>面积/数量</td>
+                <td>单位</td>
+                <td>预计收入</td>
+                <td>类型</td>
+                <td>名称</td>
+                <td>面积/数量</td>
+                <td>单位</td>
+                <td>预计收入</td>
+                <td colspan="10"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="4" class="section-title">补贴信息</td>
+                <td>补贴类型</td>
+                <td>补贴项目</td>
+                <td>补贴确认时间</td>
+                <td>补贴领取金额</td>
+                <td>补贴类型</td>
+                <td>补贴项目</td>
+                <td>补贴确认时间</td>
+                <td>补贴领取金额</td>
+                <td>补贴类型</td>
+                <td>补贴项目</td>
+                <td>补贴确认时间</td>
+                <td>补贴领取金额</td>
+                <td>补贴类型</td>
+                <td>补贴项目</td>
+                <td>补贴确认时间</td>
+                <td>补贴领取金额</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.subsidyType1 || '-' }}</td>
+                <td>{{ viewData.subsidyItem1 || '-' }}</td>
+                <td>{{ viewData.subsidyDate1 || '-' }}</td>
+                <td>{{ viewData.subsidyAmount1 || '-' }}</td>
+                <td>{{ viewData.subsidyType2 || '-' }}</td>
+                <td>{{ viewData.subsidyItem2 || '-' }}</td>
+                <td>{{ viewData.subsidyDate2 || '-' }}</td>
+                <td>{{ viewData.subsidyAmount2 || '-' }}</td>
+                <td>{{ viewData.subsidyType3 || '-' }}</td>
+                <td>{{ viewData.subsidyItem3 || '-' }}</td>
+                <td>{{ viewData.subsidyDate3 || '-' }}</td>
+                <td>{{ viewData.subsidyAmount3 || '-' }}</td>
+                <td>{{ viewData.subsidyType4 || '-' }}</td>
+                <td>{{ viewData.subsidyItem4 || '-' }}</td>
+                <td>{{ viewData.subsidyDate4 || '-' }}</td>
+                <td>{{ viewData.subsidyAmount4 || '-' }}</td>
+                <td colspan="9"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="4" class="section-title">帮扶措施</td>
+                <td>帮扶项目</td>
+                <td colspan="5">{{ viewData.helpProject1 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpProject2 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpProject3 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpProject4 || '-' }}</td>
+                <td colspan="3"></td>
+              </tr>
+              <tr>
+                <td>帮扶开始时间</td>
+                <td colspan="5">{{ viewData.helpStartDate1 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpStartDate2 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpStartDate3 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpStartDate4 || '-' }}</td>
+                <td colspan="3"></td>
+              </tr>
+              <tr>
+                <td>帮扶结束时间</td>
+                <td colspan="5">{{ viewData.helpEndDate1 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpEndDate2 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpEndDate3 || '-' }}</td>
+                <td colspan="5">{{ viewData.helpEndDate4 || '-' }}</td>
+                <td colspan="3"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="4" class="section-title">家庭收支情况</td>
+                <td colspan="8">家庭年收入（元）</td>
+                <td colspan="8">家庭年支出（元）</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td>工资性收入（元）</td>
+                <td>生产经营性收入（元）</td>
+                <td>财产性收入（元）</td>
+                <td>资产收益扶贫分红收入（元）</td>
+                <td>其他财产性收入（元）</td>
+                <td>转移性收入（元）</td>
+                <td>计划生育金（元）</td>
+                <td>低保金（元）</td>
+                <td>特困供养金（元）</td>
+                <td>养老保险金（元）</td>
+                <td>生态补偿金（元）</td>
+                <td>其他转移性收入（元）</td>
+                <td>其他收入（元）</td>
+                <td>种植业支出（元）</td>
+                <td>养殖业支出（元）</td>
+                <td>家庭经营性支出（元）</td>
+                <td>其他支出（元）</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td>{{ viewData.wageIncome || '-' }}</td>
+                <td>{{ viewData.productionIncome || '-' }}</td>
+                <td>{{ viewData.propertyIncome || '-' }}</td>
+                <td>{{ viewData.assetIncome || '-' }}</td>
+                <td>{{ viewData.otherPropertyIncome || '-' }}</td>
+                <td>{{ viewData.transferIncome || '-' }}</td>
+                <td>{{ viewData.birthBonus || '-' }}</td>
+                <td>{{ viewData.lowIncomeAllowance || '-' }}</td>
+                <td>{{ viewData.specialSupportFund || '-' }}</td>
+                <td>{{ viewData.pension || '-' }}</td>
+                <td>{{ viewData.ecologicalCompensation || '-' }}</td>
+                <td>{{ viewData.otherTransferIncome || '-' }}</td>
+                <td>{{ viewData.otherIncome || '-' }}</td>
+                <td>{{ viewData.plantingExpense || '-' }}</td>
+                <td>{{ viewData.breedingExpense || '-' }}</td>
+                <td>{{ viewData.operatingExpense || '-' }}</td>
+                <td>{{ viewData.otherExpense || '-' }}</td>
+                <td colspan="9"></td>
+              </tr>
+              <tr>
+                <td>家庭纯收入（元）</td>
+                <td>家庭人均纯收入（元）</td>
+                <td>理赔收入（元）</td>
+                <td>合规自付刚性支出（元）</td>
+                <td>监测参考收入（元）</td>
+                <td>监测参考人均纯收入（元）</td>
+                <td>产业规划总收入（元）</td>
+                <td>产业规划人均收入（元）</td>
+                <td colspan="17"></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>{{ viewData.netIncome || '-' }}</td>
+                <td>{{ viewData.perCapitaIncome || '-' }}</td>
+                <td>{{ viewData.claimIncome || '-' }}</td>
+                <td>{{ viewData.rigidExpense || '-' }}</td>
+                <td>{{ viewData.monitoringIncome || '-' }}</td>
+                <td>{{ viewData.monitoringPerCapitaIncome || '-' }}</td>
+                <td>{{ viewData.industryPlanIncome || '-' }}</td>
+                <td>{{ viewData.industryPlanPerCapitaIncome || '-' }}</td>
+                <td colspan="17"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="report-table">
+            <tbody>
+              <tr>
+                <td rowspan="10" class="section-title">产业收支情况</td>
+                <td>年度</td>
+                <td>类别</td>
+                <td>种植业</td>
+                <td>养殖业</td>
+                <td>特色产业</td>
+                <td>庭院经济</td>
+                <td>合计</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td rowspan="4">2026</td>
+                <td>上年度预计收入（元）</td>
+                <td>{{ viewData.industry2026PlanIncome || '0' }}</td>
+                <td>{{ viewData.breeding2026PlanIncome || '0' }}</td>
+                <td>{{ viewData.special2026PlanIncome || '0' }}</td>
+                <td>{{ viewData.yard2026PlanIncome || '0' }}</td>
+                <td>{{ viewData.total2026PlanIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>实际收入（元）</td>
+                <td>{{ viewData.industry2026ActualIncome || '0' }}</td>
+                <td>{{ viewData.breeding2026ActualIncome || '0' }}</td>
+                <td>{{ viewData.special2026ActualIncome || '0' }}</td>
+                <td>{{ viewData.yard2026ActualIncome || '0' }}</td>
+                <td>{{ viewData.total2026ActualIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>规划完成率（%）</td>
+                <td>{{ viewData.industry2026Rate || '0' }}</td>
+                <td>{{ viewData.breeding2026Rate || '0' }}</td>
+                <td>{{ viewData.special2026Rate || '0' }}</td>
+                <td>{{ viewData.yard2026Rate || '0' }}</td>
+                <td>{{ viewData.total2026Rate || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>上年度预计收入（元）</td>
+                <td>{{ viewData.industry2025PlanIncome || '0' }}</td>
+                <td>{{ viewData.breeding2025PlanIncome || '0' }}</td>
+                <td>{{ viewData.special2025PlanIncome || '0' }}</td>
+                <td>{{ viewData.yard2025PlanIncome || '0' }}</td>
+                <td>{{ viewData.total2025PlanIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td rowspan="4">2025</td>
+                <td>上年度预计收入（元）</td>
+                <td>{{ viewData.industry2025PrevPlanIncome || '0' }}</td>
+                <td>{{ viewData.breeding2025PrevPlanIncome || '0' }}</td>
+                <td>{{ viewData.special2025PrevPlanIncome || '0' }}</td>
+                <td>{{ viewData.yard2025PrevPlanIncome || '0' }}</td>
+                <td>{{ viewData.total2025PrevPlanIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>实际收入（元）</td>
+                <td>{{ viewData.industry2025ActualIncome || '0' }}</td>
+                <td>{{ viewData.breeding2025ActualIncome || '0' }}</td>
+                <td>{{ viewData.special2025ActualIncome || '0' }}</td>
+                <td>{{ viewData.yard2025ActualIncome || '0' }}</td>
+                <td>{{ viewData.total2025ActualIncome || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>实际完成率（%）</td>
+                <td>{{ viewData.industry2025ActualRate || '0' }}</td>
+                <td>{{ viewData.breeding2025ActualRate || '0' }}</td>
+                <td>{{ viewData.special2025ActualRate || '0' }}</td>
+                <td>{{ viewData.yard2025ActualRate || '0' }}</td>
+                <td>{{ viewData.total2025ActualRate || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+              <tr>
+                <td>规划完成率（%）</td>
+                <td>{{ viewData.industry2025PlanRate || '0' }}</td>
+                <td>{{ viewData.breeding2025PlanRate || '0' }}</td>
+                <td>{{ viewData.special2025PlanRate || '0' }}</td>
+                <td>{{ viewData.yard2025PlanRate || '0' }}</td>
+                <td>{{ viewData.total2025PlanRate || '0' }}</td>
+                <td colspan="19"></td>
+              </tr>
+            </tbody>
+          </table>
           
           <div class="report-footer">
             <el-button type="primary" @click="handlePrint">打印</el-button>
@@ -3579,42 +4220,5 @@ const handleSubmit = () => {
   margin-top: 20px;
   padding-top: 15px;
   border-top: 1px solid #e8e8e8;
-}
-
-.member-section {
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-}
-
-.member-section .section-title {
-  background-color: #f9f9f9;
-  font-weight: bold;
-  padding: 8px;
-  text-align: center;
-}
-
-.member-card {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-.member-card:last-child {
-  border-bottom: none;
-}
-
-.member-title {
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.member-info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.member-info span {
-  flex: 0 0 calc(20% - 12px);
-  font-size: 12px;
 }
 </style>
