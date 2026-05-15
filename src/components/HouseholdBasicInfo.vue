@@ -2018,100 +2018,49 @@
             </tbody>
           </table>
           
-          <table class="report-table">
-            <tbody>
-              <tr>
-                <td rowspan="4" class="section-title">成员信息</td>
-                <td>姓名</td>
-                <td>性别</td>
-                <td>民族</td>
-                <td>政治面貌</td>
-                <td>身份证号</td>
-                <td>联系方式</td>
-                <td>与户主关系</td>
-                <td>兵役状况</td>
-                <td>健康状况</td>
-                <td>文化程度</td>
-                <td>在校生状况</td>
-                <td>就读学校</td>
-                <td>是否享受教育补贴</td>
-                <td>教育补贴类型</td>
-                <td>义务教育阶段未上学原因</td>
-                <td>是否会讲普通话</td>
-                <td>是否外出务工</td>
-                <td colspan="7"></td>
-              </tr>
-              <template v-for="(member, index) in memberList" :key="index">
-                <tr>
-                  <td></td>
-                  <td>{{ member.name || '-' }}</td>
-                  <td>{{ member.gender === 'male' ? '男' : member.gender === 'female' ? '女' : '-' }}</td>
-                  <td>{{ member.nation || '-' }}</td>
-                  <td>{{ member.politicalStatus || '-' }}</td>
-                  <td>{{ member.idCard || '-' }}</td>
-                  <td>{{ member.phone || '-' }}</td>
-                  <td>{{ member.relation || '-' }}</td>
-                  <td>{{ member.militaryService || '-' }}</td>
-                  <td>{{ member.healthStatus || '-' }}</td>
-                  <td>{{ member.education || '-' }}</td>
-                  <td>{{ member.studentStatus || '-' }}</td>
-                  <td>{{ member.school || '-' }}</td>
-                  <td>{{ member.hasEducationSubsidy === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.educationSubsidyType || '-' }}</td>
-                  <td>{{ member.schoolReason || '-' }}</td>
-                  <td>{{ member.canSpeakMandarin === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.isOutWorker === 'yes' ? '是' : '否' }}</td>
-                  <td colspan="7"></td>
-                </tr>
-              </template>
-              <tr>
-                <td></td>
-                <td>是否国外务工</td>
-                <td>劳动技能</td>
-                <td>外出区域</td>
-                <td>是否为重点人群</td>
-                <td>是否易地扶贫搬迁人口</td>
-                <td>是否特困供养人员</td>
-                <td>是否享受农村居民最低生活保障</td>
-                <td>是否享受城乡居民最低生活保障</td>
-                <td>是否享受人身意外保险补贴</td>
-                <td>是否参加城乡居民基本养老保险</td>
-                <td>是否参加城乡居民基本医疗保险</td>
-                <td>是否参加商业补充医疗保险</td>
-                <td>是否参加大病保险</td>
-                <td>是否接受医疗救助</td>
-                <td>是否接受其他健康扶贫</td>
-                <td>银行卡号</td>
-                <td>开户银行</td>
-                <td>备注</td>
-                <td colspan="5"></td>
-              </tr>
-              <template v-for="(member, index) in memberList" :key="'detail-' + index">
-                <tr>
-                  <td></td>
-                  <td>{{ member.isForeignWorker === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.skill || '-' }}</td>
-                  <td>{{ member.outArea || '-' }}</td>
-                  <td>{{ member.isKeyPerson === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.isRelocated === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.isSpecialSupport === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.hasRuralInsurance === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.hasUrbanInsurance === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.hasAccidentInsurance === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.hasPension === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.hasMedical === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.hasCommercialMedical === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.hasCriticalIllness === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.hasMedicalAid === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.hasHealthAid === 'yes' ? '是' : '否' }}</td>
-                  <td>{{ member.bankCard || '-' }}</td>
-                  <td>{{ member.bankName || '-' }}</td>
-                  <td>{{ member.remark || '-' }}</td>
-                  <td colspan="5"></td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
+          <div class="member-section">
+            <div class="section-title">成员信息</div>
+            <div v-for="(member, index) in memberList" :key="index" class="member-card">
+              <div class="member-title">成员{{ index + 1 }}</div>
+              <div class="member-info">
+                <span>姓名：{{ member.name || '-' }}</span>
+                <span>性别：{{ member.gender === 'male' ? '男' : member.gender === 'female' ? '女' : '-' }}</span>
+                <span>民族：{{ member.nation || '-' }}</span>
+                <span>政治面貌：{{ member.politicalStatus || '-' }}</span>
+                <span>身份证号：{{ member.idCard || '-' }}</span>
+                <span>联系方式：{{ member.phone || '-' }}</span>
+                <span>与户主关系：{{ member.relation || '-' }}</span>
+                <span>兵役状况：{{ member.militaryService || '-' }}</span>
+                <span>健康状况：{{ member.healthStatus || '-' }}</span>
+                <span>文化程度：{{ member.education || '-' }}</span>
+                <span>在校生状况：{{ member.studentStatus || '-' }}</span>
+                <span>就读学校：{{ member.school || '-' }}</span>
+                <span>教育补贴：{{ member.hasEducationSubsidy === 'yes' ? '是' : '否' }}</span>
+                <span>补贴类型：{{ member.educationSubsidyType || '-' }}</span>
+                <span>未上学原因：{{ member.schoolReason || '-' }}</span>
+                <span>普通话：{{ member.canSpeakMandarin === 'yes' ? '是' : '否' }}</span>
+                <span>外出务工：{{ member.isOutWorker === 'yes' ? '是' : '否' }}</span>
+                <span>国外务工：{{ member.isForeignWorker === 'yes' ? '是' : '否' }}</span>
+                <span>劳动技能：{{ member.skill || '-' }}</span>
+                <span>外出区域：{{ member.outArea || '-' }}</span>
+                <span>重点人群：{{ member.isKeyPerson === 'yes' ? '是' : '否' }}</span>
+                <span>易地搬迁：{{ member.isRelocated === 'yes' ? '是' : '否' }}</span>
+                <span>特困供养：{{ member.isSpecialSupport === 'yes' ? '是' : '否' }}</span>
+                <span>养老保险：{{ member.hasPension === 'yes' ? '是' : '否' }}</span>
+                <span>医疗保险：{{ member.hasMedical === 'yes' ? '是' : '否' }}</span>
+                <span>低保：{{ member.hasRuralInsurance === 'yes' ? '是' : '否' }}</span>
+                <span>城乡低保：{{ member.hasUrbanInsurance === 'yes' ? '是' : '否' }}</span>
+                <span>意外保险：{{ member.hasAccidentInsurance === 'yes' ? '是' : '否' }}</span>
+                <span>商业医疗：{{ member.hasCommercialMedical === 'yes' ? '是' : '否' }}</span>
+                <span>大病保险：{{ member.hasCriticalIllness === 'yes' ? '是' : '否' }}</span>
+                <span>医疗救助：{{ member.hasMedicalAid === 'yes' ? '是' : '否' }}</span>
+                <span>健康扶贫：{{ member.hasHealthAid === 'yes' ? '是' : '否' }}</span>
+                <span>银行卡号：{{ member.bankCard || '-' }}</span>
+                <span>开户银行：{{ member.bankName || '-' }}</span>
+                <span>备注：{{ member.remark || '-' }}</span>
+              </div>
+            </div>
+          </div>
           
           <table class="report-table">
             <tbody>
@@ -4220,5 +4169,42 @@ const handleSubmit = () => {
   margin-top: 20px;
   padding-top: 15px;
   border-top: 1px solid #e8e8e8;
+}
+
+.member-section {
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+}
+
+.member-section .section-title {
+  background-color: #f9f9f9;
+  font-weight: bold;
+  padding: 8px;
+  text-align: center;
+}
+
+.member-card {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.member-card:last-child {
+  border-bottom: none;
+}
+
+.member-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.member-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.member-info span {
+  flex: 0 0 calc(20% - 12px);
+  font-size: 12px;
 }
 </style>
