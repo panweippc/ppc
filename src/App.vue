@@ -89,6 +89,7 @@ import TaskTemplateManagement from './components/TaskTemplateManagement.vue'
 import PerformanceEvaluation from './components/PerformanceEvaluation.vue'
 import UserManagement from './components/UserManagement.vue'
 import RoleManagement from './components/RoleManagement.vue'
+import ComprehensiveQuery from './components/ComprehensiveQuery.vue'
 
 const activeMenu = ref('1-1')
 const currentPageTitle = ref('欢迎')
@@ -226,7 +227,7 @@ const menuItems = ref([
       { id: '12-8', name: '可视化数据展示(大屏)' }
     ]
   },
-  { id: '13', name: '综合查询' },
+  { id: '13', name: '综合查询', component: markRaw(ComprehensiveQuery) },
   {
     id: '14',
     name: '系统设置',
@@ -257,6 +258,26 @@ const handleMenuClick = (item) => {
   color: #fff;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
 }
 
 .logo-section {
