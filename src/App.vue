@@ -227,7 +227,13 @@ const menuItems = ref([
       { id: '12-8', name: '可视化数据展示(大屏)' }
     ]
   },
-  { id: '13', name: '综合查询', component: markRaw(ComprehensiveQuery) },
+  {
+    id: '13',
+    name: '综合查询',
+    children: [
+      { id: '13-1', name: '查询', component: markRaw(ComprehensiveQuery) }
+    ]
+  },
   {
     id: '14',
     name: '系统设置',
