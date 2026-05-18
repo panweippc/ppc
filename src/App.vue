@@ -278,7 +278,6 @@ const handleMenuClick = (item) => {
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
-}
 
 .logo-section {
   padding: 20px;
