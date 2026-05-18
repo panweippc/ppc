@@ -87,6 +87,8 @@ import TaskStatistics from './components/TaskStatistics.vue'
 import TaskReminderSettings from './components/TaskReminderSettings.vue'
 import TaskTemplateManagement from './components/TaskTemplateManagement.vue'
 import PerformanceEvaluation from './components/PerformanceEvaluation.vue'
+import UserManagement from './components/UserManagement.vue'
+import RoleManagement from './components/RoleManagement.vue'
 
 const activeMenu = ref('1-1')
 const currentPageTitle = ref('欢迎')
@@ -148,6 +150,14 @@ const menuItems = ref([
       { id: '3-3', name: '任务提醒设置', component: markRaw(TaskReminderSettings) },
       { id: '3-4', name: '任务模板管理', component: markRaw(TaskTemplateManagement) },
       { id: '3-5', name: '绩效评估', component: markRaw(PerformanceEvaluation) }
+    ]
+  },
+  {
+    id: '4',
+    name: '系统设置',
+    children: [
+      { id: '4-1', name: '用户管理', component: markRaw(UserManagement) },
+      { id: '4-2', name: '角色管理', component: markRaw(RoleManagement) }
     ]
   }
 ])

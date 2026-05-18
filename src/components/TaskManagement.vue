@@ -230,7 +230,7 @@
         <div v-if="editTaskForm.attachments && editTaskForm.attachments.length > 0" class="form-row">
           <div class="attachment-list">
             <div v-for="(file, index) in editTaskForm.attachments" :key="index" class="attachment-item">
-              <el-icon><File /></el-icon>
+              <el-icon><Document /></el-icon>
               <span>{{ file.name }}</span>
               <el-button type="text" size="small" @click="removeAttachment(index)">删除</el-button>
             </div>
@@ -319,7 +319,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
-import { Search, Refresh, Plus, Bell, Close, File } from '@element-plus/icons-vue'
+import { Search, Refresh, Plus, Bell, Close, Document } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 const searchForm = reactive({
