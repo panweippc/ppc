@@ -83,6 +83,10 @@ import WorkLog from './components/WorkLog.vue'
 import PartyMeetingRecord from './components/PartyMeetingRecord.vue'
 import HouseholdBasicInfo from './components/HouseholdBasicInfo.vue'
 import TaskManagement from './components/TaskManagement.vue'
+import TaskStatistics from './components/TaskStatistics.vue'
+import TaskReminderSettings from './components/TaskReminderSettings.vue'
+import TaskTemplateManagement from './components/TaskTemplateManagement.vue'
+import PerformanceEvaluation from './components/PerformanceEvaluation.vue'
 
 const activeMenu = ref('1-1')
 const currentPageTitle = ref('欢迎')
@@ -140,10 +144,10 @@ const menuItems = ref([
     name: '协同任务管理',
     children: [
       { id: '3-1', name: '任务管理', component: markRaw(TaskManagement) },
-      { id: '3-2', name: '任务统计报表' },
-      { id: '3-3', name: '任务提醒设置' },
-      { id: '3-4', name: '任务模板管理' },
-      { id: '3-5', name: '绩效评估' }
+      { id: '3-2', name: '任务统计报表', component: markRaw(TaskStatistics) },
+      { id: '3-3', name: '任务提醒设置', component: markRaw(TaskReminderSettings) },
+      { id: '3-4', name: '任务模板管理', component: markRaw(TaskTemplateManagement) },
+      { id: '3-5', name: '绩效评估', component: markRaw(PerformanceEvaluation) }
     ]
   }
 ])
