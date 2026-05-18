@@ -1862,6 +1862,140 @@
         <el-button @click="viewDialogVisible = false">关闭</el-button>
       </template>
     </el-dialog>
+
+    <el-dialog title="数据信息" v-model="subsidyDialogVisible" width="90%" class="subsidy-dialog">
+      <div class="subsidy-tabs">
+        <div 
+          v-for="tab in subsidyTabs" 
+          :key="tab.value"
+          :class="['subsidy-tab', { active: currentSubsidyTab === tab.value }]"
+          @click="currentSubsidyTab = tab.value"
+        >
+          {{ tab.label }}
+        </div>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'personnel'" class="subsidy-content">
+        <div class="search-row">
+          <el-select v-model="personnelSubsidySearch.personName" placeholder="人员姓名" class="search-input">
+            <el-option label="尽快" value="尽快" />
+            <el-option label="张三" value="张三" />
+            <el-option label="李四" value="李四" />
+          </el-select>
+          <el-select v-model="personnelSubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-select v-model="personnelSubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-date-picker v-model="personnelSubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-input v-model="personnelSubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="personnelSubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+        </div>
+
+        <el-button type="primary" class="add-btn" @click="addPersonnelSubsidy">添加</el-button>
+
+        <el-table :data="personnelSubsidyList" border class="subsidy-table">
+          <el-table-column prop="personName" label="人员姓名" />
+          <el-table-column prop="subsidyItem" label="补贴项目" />
+          <el-table-column prop="subsidyLevel" label="补贴等级" />
+          <el-table-column prop="confirmDate" label="补贴确认时间" />
+          <el-table-column prop="amount" label="补贴领取金额" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作">
+            <template #default="scope">
+              <el-button type="primary" size="small" @click="editPersonnelSubsidy(scope.row)">编辑</el-button>
+              <el-button type="danger" size="small" @click="deletePersonnelSubsidy(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="personnelSubsidyList.length"
+            :page-size="10"
+          />
+        </div>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'agriculture'" class="subsidy-content">
+        <p>农业补贴内容</p>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'animal'" class="subsidy-content">
+        <p>牧业补贴内容</p>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'machinery'" class="subsidy-content">
+        <p>农机补贴内容</p>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'medical'" class="subsidy-content">
+        <p>医疗补贴内容</p>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'householdType'" class="subsidy-content">
+        <p>户类型补贴内容</p>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'grassland'" class="subsidy-content">
+        <p>草原生态补奖资金内容</p>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'yard'" class="subsidy-content">
+        <p>庭院经济补贴内容</p>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'temporary'" class="subsidy-content">
+        <p>临时补贴内容</p>
+      </div>
+
+      <div v-show="currentSubsidyTab === 'other'" class="subsidy-content">
+        <p>其他补贴内容</p>
+      </div>
+
+      <template #footer>
+        <el-button @click="closeSubsidyDialog">关闭</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="编辑补贴" v-model="editSubsidyDialog" width="500px">
+      <el-form :model="editingSubsidy" label-width="100px">
+        <el-form-item label="人员姓名">
+          <el-input v-model="editingSubsidy.personName" />
+        </el-form-item>
+        <el-form-item label="补贴项目">
+          <el-select v-model="editingSubsidy.subsidyItem">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.label" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="补贴等级">
+          <el-select v-model="editingSubsidy.subsidyLevel">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.label" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="补贴确认时间">
+          <el-date-picker v-model="editingSubsidy.confirmDate" type="date" />
+        </el-form-item>
+        <el-form-item label="补贴领取金额">
+          <el-input v-model="editingSubsidy.amount" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="editingSubsidy.remark" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="editSubsidyDialog = false">取消</el-button>
+        <el-button type="primary" @click="saveEditSubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -2053,6 +2187,57 @@ const removeMember = (index) => {
 
 const existingAgricultureList = ref([])
 const plannedAgricultureList = ref([])
+
+const subsidyDialogVisible = ref(false)
+const currentSubsidyTab = ref('personnel')
+const currentHousehold = ref(null)
+
+const subsidyTabs = [
+  { label: '人员补贴', value: 'personnel' },
+  { label: '农业补贴', value: 'agriculture' },
+  { label: '牧业补贴', value: 'animal' },
+  { label: '农机补贴', value: 'machinery' },
+  { label: '医疗补贴', value: 'medical' },
+  { label: '户类型补贴', value: 'householdType' },
+  { label: '草原生态补奖资金', value: 'grassland' },
+  { label: '庭院经济补贴', value: 'yard' },
+  { label: '临时补贴', value: 'temporary' },
+  { label: '其他补贴', value: 'other' }
+]
+
+const personnelSubsidySearch = ref({
+  personName: '',
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const personnelSubsidyList = ref([
+  { id: 1, personName: '尽快', subsidyItem: '养老保险金', subsidyLevel: '二级', confirmDate: '2026-04-15', amount: '233', remark: '' }
+])
+
+const subsidyItems = [
+  { label: '养老保险金', value: 'pension' },
+  { label: '医疗保险金', value: 'medical' },
+  { label: '失业保险金', value: 'unemployment' },
+  { label: '工伤保险金', value: 'work_injury' },
+  { label: '生育保险金', value: 'maternity' },
+  { label: '教育补贴', value: 'education' },
+  { label: '住房补贴', value: 'housing' },
+  { label: '其他', value: 'other' }
+]
+
+const subsidyLevels = [
+  { label: '一级', value: 'level1' },
+  { label: '二级', value: 'level2' },
+  { label: '三级', value: 'level3' },
+  { label: '四级', value: 'level4' }
+]
+
+const editSubsidyDialog = ref(false)
+const editingSubsidy = ref(null)
 
 const cropTypes = [
   { label: '粮食作物', value: 'grain' },
@@ -2596,7 +2781,71 @@ const handleEdit = (row) => {
 }
 
 const handleSubsidy = (row) => {
-  ElMessage.info(`为 ${row.householdNo} 申请补贴`)
+  currentHousehold.value = row
+  subsidyDialogVisible.value = true
+}
+
+const closeSubsidyDialog = () => {
+  subsidyDialogVisible.value = false
+  currentHousehold.value = null
+  currentSubsidyTab.value = 'personnel'
+}
+
+const addPersonnelSubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    personName: personnelSubsidySearch.value.personName,
+    subsidyItem: subsidyItems.find(item => item.value === personnelSubsidySearch.value.subsidyItem)?.label || personnelSubsidySearch.value.subsidyItem,
+    subsidyLevel: subsidyLevels.find(item => item.value === personnelSubsidySearch.value.subsidyLevel)?.label || personnelSubsidySearch.value.subsidyLevel,
+    confirmDate: personnelSubsidySearch.value.confirmDate,
+    amount: personnelSubsidySearch.value.amount,
+    remark: personnelSubsidySearch.value.remark
+  }
+  personnelSubsidyList.value.push(newSubsidy)
+  personnelSubsidySearch.value = {
+    personName: '',
+    subsidyItem: '',
+    subsidyLevel: '',
+    confirmDate: '',
+    amount: '',
+    remark: ''
+  }
+  ElMessage.success('添加成功')
+}
+
+const editPersonnelSubsidy = (item) => {
+  editingSubsidy.value = { ...item }
+  editSubsidyDialog.value = true
+}
+
+const saveEditSubsidy = () => {
+  const index = personnelSubsidyList.value.findIndex(item => item.id === editingSubsidy.value.id)
+  if (index > -1) {
+    personnelSubsidyList.value[index] = { ...editingSubsidy.value }
+  }
+  editSubsidyDialog.value = false
+  editingSubsidy.value = null
+  ElMessage.success('修改成功')
+}
+
+const deletePersonnelSubsidy = (item) => {
+  ElMessageBox.confirm(
+    '确定要删除这条补贴记录吗？',
+    '删除确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  ).then(() => {
+    const index = personnelSubsidyList.value.findIndex(i => i.id === item.id)
+    if (index > -1) {
+      personnelSubsidyList.value.splice(index, 1)
+    }
+    ElMessage.success('删除成功')
+  }).catch(() => {
+    ElMessage.info('已取消删除')
+  })
 }
 
 const handleHelp = (row) => {
@@ -3366,5 +3615,67 @@ const handleSubmit = () => {
 .computed-input {
   background-color: #e8e8e8 !important;
   color: #666 !important;
+}
+
+.subsidy-dialog {
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.subsidy-tabs {
+  display: flex;
+  border-bottom: 2px solid #e8e8e8;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  overflow-x: auto;
+}
+
+.subsidy-tab {
+  padding: 8px 16px;
+  cursor: pointer;
+  color: #666;
+  font-size: 14px;
+  margin-right: 16px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.subsidy-tab:hover {
+  color: #007bff;
+}
+
+.subsidy-tab.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  font-weight: bold;
+}
+
+.subsidy-content {
+  padding: 10px;
+}
+
+.search-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.search-row .search-input {
+  width: 200px;
+}
+
+.add-btn {
+  margin-bottom: 16px;
+}
+
+.subsidy-table {
+  margin-bottom: 16px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
