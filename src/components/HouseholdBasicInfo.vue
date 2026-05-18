@@ -1898,34 +1898,85 @@
           <el-input v-model="personnelSubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
         </div>
 
-        <el-button type="primary" class="add-btn" @click="addPersonnelSubsidy">添加</el-button>
+        <div class="table-container">
+          <el-table :data="personnelSubsidyList" border class="subsidy-table">
+            <el-table-column prop="personName" label="人员姓名" />
+            <el-table-column prop="subsidyItem" label="补贴项目" />
+            <el-table-column prop="subsidyLevel" label="补贴等级" />
+            <el-table-column prop="confirmDate" label="补贴确认时间" />
+            <el-table-column prop="amount" label="补贴领取金额" />
+            <el-table-column prop="remark" label="备注" />
+            <el-table-column label="操作" fixed="right">
+              <template #default="scope">
+                <el-button type="primary" size="small" @click="editPersonnelSubsidy(scope.row)">编辑</el-button>
+                <el-button type="danger" size="small" @click="deletePersonnelSubsidy(scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column label="" fixed="right" width="80">
+              <template #header>
+                <el-button type="primary" size="small" @click="addPersonnelSubsidy">添加</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
 
-        <el-table :data="personnelSubsidyList" border class="subsidy-table">
-          <el-table-column prop="personName" label="人员姓名" />
-          <el-table-column prop="subsidyItem" label="补贴项目" />
-          <el-table-column prop="subsidyLevel" label="补贴等级" />
-          <el-table-column prop="confirmDate" label="补贴确认时间" />
-          <el-table-column prop="amount" label="补贴领取金额" />
-          <el-table-column prop="remark" label="备注" />
-          <el-table-column label="操作">
-            <template #default="scope">
-              <el-button type="primary" size="small" @click="editPersonnelSubsidy(scope.row)">编辑</el-button>
-              <el-button type="danger" size="small" @click="deletePersonnelSubsidy(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <div class="pagination">
-          <el-pagination
-            layout="prev, pager, next"
-            :total="personnelSubsidyList.length"
-            :page-size="10"
-          />
+          <div class="pagination">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="personnelSubsidyList.length"
+              :page-size="10"
+            />
+          </div>
         </div>
       </div>
 
       <div v-show="currentSubsidyTab === 'agriculture'" class="subsidy-content">
-        <p>农业补贴内容</p>
+        <div class="search-row">
+          <el-select v-model="agricultureSubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-input v-model="agricultureSubsidySearch.area" placeholder="面积（亩）" class="search-input" />
+          <el-select v-model="agricultureSubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-date-picker v-model="agricultureSubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-input v-model="agricultureSubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="agricultureSubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+        </div>
+
+        <div class="table-container">
+          <el-table :data="agricultureSubsidyList" border class="subsidy-table">
+            <el-table-column prop="subsidyItem" label="补贴项目" />
+            <el-table-column prop="area" label="面积（亩）" />
+            <el-table-column prop="subsidyLevel" label="补贴等级" />
+            <el-table-column prop="confirmDate" label="补贴确认时间" />
+            <el-table-column prop="amount" label="补贴领取金额" />
+            <el-table-column prop="remark" label="备注" />
+            <el-table-column label="操作" fixed="right">
+              <template #default="scope">
+                <el-button type="primary" size="small">编辑</el-button>
+                <el-button type="danger" size="small">删除</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column label="" fixed="right" width="80">
+              <template #header>
+                <el-button type="primary" size="small" @click="addAgricultureSubsidy">添加</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <div class="pagination">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="agricultureSubsidyList.length"
+              :page-size="10"
+            />
+          </div>
+        </div>
       </div>
 
       <div v-show="currentSubsidyTab === 'animal'" class="subsidy-content">
@@ -2217,6 +2268,17 @@ const personnelSubsidySearch = ref({
 const personnelSubsidyList = ref([
   { id: 1, personName: '尽快', subsidyItem: '养老保险金', subsidyLevel: '二级', confirmDate: '2026-04-15', amount: '233', remark: '' }
 ])
+
+const agricultureSubsidySearch = ref({
+  subsidyItem: '',
+  area: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const agricultureSubsidyList = ref([])
 
 const subsidyItems = [
   { label: '养老保险金', value: 'pension' },
@@ -2805,6 +2867,28 @@ const addPersonnelSubsidy = () => {
   personnelSubsidySearch.value = {
     personName: '',
     subsidyItem: '',
+    subsidyLevel: '',
+    confirmDate: '',
+    amount: '',
+    remark: ''
+  }
+  ElMessage.success('添加成功')
+}
+
+const addAgricultureSubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    subsidyItem: subsidyItems.find(item => item.value === agricultureSubsidySearch.value.subsidyItem)?.label || agricultureSubsidySearch.value.subsidyItem,
+    area: agricultureSubsidySearch.value.area,
+    subsidyLevel: subsidyLevels.find(item => item.value === agricultureSubsidySearch.value.subsidyLevel)?.label || agricultureSubsidySearch.value.subsidyLevel,
+    confirmDate: agricultureSubsidySearch.value.confirmDate,
+    amount: agricultureSubsidySearch.value.amount,
+    remark: agricultureSubsidySearch.value.remark
+  }
+  agricultureSubsidyList.value.push(newSubsidy)
+  agricultureSubsidySearch.value = {
+    subsidyItem: '',
+    area: '',
     subsidyLevel: '',
     confirmDate: '',
     amount: '',
