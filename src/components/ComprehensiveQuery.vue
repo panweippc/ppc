@@ -43,9 +43,9 @@
                 <div class="entry-name">查人</div>
                 <div class="entry-desc">村民、人才信息</div>
               </div>
-              <div class="entry-card" @click="switchToTab('asset')">
+              <div class="entry-card" @click="switchToTab('finance')">
                 <div class="entry-icon asset-icon">
-                  <el-icon><Home /></el-icon>
+                  <el-icon><Building /></el-icon>
                 </div>
                 <div class="entry-name">查房</div>
                 <div class="entry-desc">宅基地、资产</div>
@@ -59,7 +59,7 @@
               </div>
               <div class="entry-card" @click="switchToTab('task')">
                 <div class="entry-icon task-icon">
-                  <el-icon><ListChecks /></el-icon>
+                  <el-icon><List /></el-icon>
                 </div>
                 <div class="entry-name">查事</div>
                 <div class="entry-desc">任务、项目</div>
@@ -79,7 +79,7 @@
                 class="history-tag"
                 @click="searchKeyword = item; handleGlobalSearch()"
               >
-                <el-icon><History /></el-icon>
+                <el-icon><Clock /></el-icon>
                 {{ item }}
               </span>
             </div>
@@ -486,7 +486,7 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { Search, User, Home, Wallet, ListChecks, History, ArrowRight } from '@element-plus/icons-vue'
+import { Search, User, House, Wallet, List, Clock, ArrowRight } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 const activeTab = ref('global')
@@ -527,8 +527,8 @@ const searchSuggestions = computed(() => {
   const keyword = searchKeyword.value.toLowerCase()
   const suggestions = [
     { id: 1, text: '张三', type: '村民', icon: User },
-    { id: 2, text: '张三家', type: '家庭', icon: Home },
-    { id: 3, text: '张三负责的工程', type: '项目', icon: ListChecks },
+    { id: 2, text: '张三家', type: '家庭', icon: House },
+    { id: 3, text: '张三负责的工程', type: '项目', icon: List },
     { id: 4, text: '张三的补贴记录', type: '补贴', icon: Wallet }
   ]
   return suggestions.filter(item => item.text.toLowerCase().includes(keyword))
@@ -727,7 +727,7 @@ const handleGlobalSearch = () => {
     {
       type: 'asset',
       label: '资产',
-      icon: Home,
+      icon: House,
       items: [
         { id: 3, title: '张三家宅基地', desc: '塔拉村一组，面积120平米' }
       ]
@@ -743,7 +743,7 @@ const handleGlobalSearch = () => {
     {
       type: 'task',
       label: '任务',
-      icon: ListChecks,
+      icon: List,
       items: [
         { id: 5, title: '张三参与的公益岗', desc: '值班任务，进行中' }
       ]
