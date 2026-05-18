@@ -192,10 +192,47 @@ const menuItems = ref([
   },
   {
     id: '9',
+    name: '人才管理',
+    children: [
+      { id: '9-1', name: '人才管理' }
+    ]
+  },
+  {
+    id: '10',
+    name: '文化建设',
+    children: [
+      { id: '10-1', name: '内容发布' }
+    ]
+  },
+  {
+    id: '11',
+    name: '统一导入',
+    children: [
+      { id: '11-1', name: '统一导入' },
+      { id: '11-2', name: '下载区划字典' }
+    ]
+  },
+  {
+    id: '12',
+    name: '数据分析中心',
+    children: [
+      { id: '12-1', name: '村集体信息统计' },
+      { id: '12-2', name: '村民信息统计' },
+      { id: '12-3', name: '监测预警统计' },
+      { id: '12-4', name: '收支管理分析' },
+      { id: '12-5', name: '项目库统计' },
+      { id: '12-6', name: '扶贫资产统计' },
+      { id: '12-7', name: '外出人员统计' },
+      { id: '12-8', name: '可视化数据展示(大屏)' }
+    ]
+  },
+  { id: '13', name: '综合查询' },
+  {
+    id: '14',
     name: '系统设置',
     children: [
-      { id: '9-1', name: '用户管理', component: markRaw(UserManagement) },
-      { id: '9-2', name: '角色管理', component: markRaw(RoleManagement) }
+      { id: '14-1', name: '用户管理', component: markRaw(UserManagement) },
+      { id: '14-2', name: '角色管理', component: markRaw(RoleManagement) }
     ]
   }
 ])
