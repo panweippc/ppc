@@ -154,10 +154,48 @@ const menuItems = ref([
   },
   {
     id: '4',
+    name: '监测预警管理',
+    children: [
+      { id: '4-1', name: '突发性预警管理' },
+      { id: '4-2', name: '监测预警帮扶管理' }
+    ]
+  },
+  {
+    id: '5',
+    name: '村级收支管理',
+    children: [
+      { id: '5-1', name: '收入登记' },
+      { id: '5-2', name: '支出登记' },
+      { id: '5-3', name: '收支统计' }
+    ]
+  },
+  {
+    id: '6',
+    name: '民间组织及社会团体管理',
+    children: [
+      { id: '6-1', name: '民间组织及社会团体' }
+    ]
+  },
+  {
+    id: '7',
+    name: '项目管理',
+    children: [
+      { id: '7-1', name: '项目管理' }
+    ]
+  },
+  {
+    id: '8',
+    name: '扶贫性资产管理',
+    children: [
+      { id: '8-1', name: '扶贫性资产登记' }
+    ]
+  },
+  {
+    id: '9',
     name: '系统设置',
     children: [
-      { id: '4-1', name: '用户管理', component: markRaw(UserManagement) },
-      { id: '4-2', name: '角色管理', component: markRaw(RoleManagement) }
+      { id: '9-1', name: '用户管理', component: markRaw(UserManagement) },
+      { id: '9-2', name: '角色管理', component: markRaw(RoleManagement) }
     ]
   }
 ])
