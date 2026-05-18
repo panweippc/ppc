@@ -1968,35 +1968,355 @@
       </div>
 
       <div v-show="currentSubsidyTab === 'animal'" class="subsidy-content">
-        <p>牧业补贴内容</p>
+        <div class="search-row">
+          <el-select v-model="animalSubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-input v-model="animalSubsidySearch.quantity" placeholder="数量" class="search-input" />
+          <el-select v-model="animalSubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-date-picker v-model="animalSubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-input v-model="animalSubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="animalSubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+          <el-button type="primary" class="add-btn" @click="openAddAnimalSubsidyDialog">添加</el-button>
+        </div>
+
+        <el-table :data="animalSubsidyList" border class="subsidy-table">
+          <el-table-column prop="subsidyItem" label="补贴项目" />
+          <el-table-column prop="quantity" label="数量" />
+          <el-table-column prop="subsidyLevel" label="补贴等级" />
+          <el-table-column prop="confirmDate" label="补贴确认时间" />
+          <el-table-column prop="amount" label="补贴领取金额" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="primary" size="small">编辑</el-button>
+              <el-button type="danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="animalSubsidyList.length"
+            :page-size="10"
+          />
+        </div>
       </div>
 
       <div v-show="currentSubsidyTab === 'machinery'" class="subsidy-content">
-        <p>农机补贴内容</p>
+        <div class="search-row">
+          <el-select v-model="machinerySubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-input v-model="machinerySubsidySearch.quantity" placeholder="数量" class="search-input" />
+          <el-select v-model="machinerySubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-date-picker v-model="machinerySubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-input v-model="machinerySubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="machinerySubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+          <el-button type="primary" class="add-btn" @click="openAddMachinerySubsidyDialog">添加</el-button>
+        </div>
+
+        <el-table :data="machinerySubsidyList" border class="subsidy-table">
+          <el-table-column prop="subsidyItem" label="补贴项目" />
+          <el-table-column prop="quantity" label="数量" />
+          <el-table-column prop="subsidyLevel" label="补贴等级" />
+          <el-table-column prop="confirmDate" label="补贴确认时间" />
+          <el-table-column prop="amount" label="补贴领取金额" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="primary" size="small">编辑</el-button>
+              <el-button type="danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="machinerySubsidyList.length"
+            :page-size="10"
+          />
+        </div>
       </div>
 
       <div v-show="currentSubsidyTab === 'medical'" class="subsidy-content">
-        <p>医疗补贴内容</p>
+        <div class="search-row">
+          <el-select v-model="medicalSubsidySearch.personName" placeholder="人员姓名" class="search-input">
+            <el-option label="尽快" value="尽快" />
+            <el-option label="张三" value="张三" />
+            <el-option label="李四" value="李四" />
+          </el-select>
+          <el-select v-model="medicalSubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-select v-model="medicalSubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-date-picker v-model="medicalSubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-input v-model="medicalSubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="medicalSubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+          <el-button type="primary" class="add-btn" @click="openAddMedicalSubsidyDialog">添加</el-button>
+        </div>
+
+        <el-table :data="medicalSubsidyList" border class="subsidy-table">
+          <el-table-column prop="personName" label="人员姓名" />
+          <el-table-column prop="subsidyItem" label="补贴项目" />
+          <el-table-column prop="subsidyLevel" label="补贴等级" />
+          <el-table-column prop="confirmDate" label="补贴确认时间" />
+          <el-table-column prop="amount" label="补贴领取金额" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="primary" size="small">编辑</el-button>
+              <el-button type="danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="medicalSubsidyList.length"
+            :page-size="10"
+          />
+        </div>
       </div>
 
       <div v-show="currentSubsidyTab === 'householdType'" class="subsidy-content">
-        <p>户类型补贴内容</p>
+        <div class="search-row">
+          <el-select v-model="householdTypeSubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-select v-model="householdTypeSubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-date-picker v-model="householdTypeSubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-input v-model="householdTypeSubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="householdTypeSubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+          <el-button type="primary" class="add-btn" @click="openAddHouseholdTypeSubsidyDialog">添加</el-button>
+        </div>
+
+        <el-table :data="householdTypeSubsidyList" border class="subsidy-table">
+          <el-table-column prop="subsidyItem" label="补贴项目" />
+          <el-table-column prop="subsidyLevel" label="补贴等级" />
+          <el-table-column prop="confirmDate" label="补贴确认时间" />
+          <el-table-column prop="amount" label="补贴领取金额" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="primary" size="small">编辑</el-button>
+              <el-button type="danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="householdTypeSubsidyList.length"
+            :page-size="10"
+          />
+        </div>
       </div>
 
       <div v-show="currentSubsidyTab === 'grassland'" class="subsidy-content">
-        <p>草原生态补奖资金内容</p>
+        <div class="search-row">
+          <el-select v-model="grasslandSubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-select v-model="grasslandSubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-date-picker v-model="grasslandSubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-input v-model="grasslandSubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="grasslandSubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+          <el-button type="primary" class="add-btn" @click="openAddGrasslandSubsidyDialog">添加</el-button>
+        </div>
+
+        <el-table :data="grasslandSubsidyList" border class="subsidy-table">
+          <el-table-column prop="subsidyItem" label="补贴项目" />
+          <el-table-column prop="subsidyLevel" label="补贴等级" />
+          <el-table-column prop="confirmDate" label="补贴确认时间" />
+          <el-table-column prop="amount" label="补贴领取金额" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="primary" size="small">编辑</el-button>
+              <el-button type="danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="grasslandSubsidyList.length"
+            :page-size="10"
+          />
+        </div>
       </div>
 
       <div v-show="currentSubsidyTab === 'yard'" class="subsidy-content">
-        <p>庭院经济补贴内容</p>
+        <div class="search-row">
+          <el-select v-model="yardSubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-input v-model="yardSubsidySearch.quantity" placeholder="数量" class="search-input" />
+          <el-select v-model="yardSubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-date-picker v-model="yardSubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-input v-model="yardSubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="yardSubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+          <el-button type="primary" class="add-btn" @click="openAddYardSubsidyDialog">添加</el-button>
+        </div>
+
+        <el-table :data="yardSubsidyList" border class="subsidy-table">
+          <el-table-column prop="subsidyItem" label="补贴项目" />
+          <el-table-column prop="quantity" label="数量" />
+          <el-table-column prop="subsidyLevel" label="补贴等级" />
+          <el-table-column prop="confirmDate" label="补贴确认时间" />
+          <el-table-column prop="amount" label="补贴领取金额" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="primary" size="small">编辑</el-button>
+              <el-button type="danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="yardSubsidyList.length"
+            :page-size="10"
+          />
+        </div>
       </div>
 
       <div v-show="currentSubsidyTab === 'temporary'" class="subsidy-content">
-        <p>临时补贴内容</p>
+        <div class="search-row">
+          <el-select v-model="temporarySubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-select v-model="temporarySubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-date-picker v-model="temporarySubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-input v-model="temporarySubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="temporarySubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+        </div>
+        <div class="add-button-container">
+          <el-button type="primary" @click="openAddTemporarySubsidyDialog">添加</el-button>
+        </div>
+
+        <el-table :data="temporarySubsidyList" border class="subsidy-table">
+          <el-table-column prop="subsidyItem" label="补贴项目" />
+          <el-table-column prop="subsidyLevel" label="补贴等级" />
+          <el-table-column prop="confirmDate" label="补贴确认时间" />
+          <el-table-column prop="amount" label="补贴领取金额" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="primary" size="small">编辑</el-button>
+              <el-button type="danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="temporarySubsidyList.length"
+            :page-size="10"
+          />
+        </div>
       </div>
 
       <div v-show="currentSubsidyTab === 'other'" class="subsidy-content">
-        <p>其他补贴内容</p>
+        <div class="search-row">
+          <el-select v-model="otherSubsidySearch.subsidyItem" placeholder="补贴项目" class="search-input">
+            <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-select v-model="otherSubsidySearch.subsidyLevel" placeholder="补贴等级" class="search-input">
+            <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.value" />
+          </el-select>
+          <el-date-picker v-model="otherSubsidySearch.confirmDate" type="date" placeholder="补贴确认时间" class="search-input" />
+          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh">重置</el-button>
+        </div>
+
+        <div class="search-row">
+          <el-input v-model="otherSubsidySearch.amount" placeholder="补贴领取金额" class="search-input" />
+          <el-input v-model="otherSubsidySearch.remark" placeholder="请输入备注" class="search-input" style="flex: 2;" />
+        </div>
+        <div class="add-button-container">
+          <el-button type="primary" @click="openAddOtherSubsidyDialog">添加</el-button>
+        </div>
+
+        <el-table :data="otherSubsidyList" border class="subsidy-table">
+          <el-table-column prop="subsidyItem" label="补贴项目" />
+          <el-table-column prop="subsidyLevel" label="补贴等级" />
+          <el-table-column prop="confirmDate" label="补贴确认时间" />
+          <el-table-column prop="amount" label="补贴领取金额" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="primary" size="small">编辑</el-button>
+              <el-button type="danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="otherSubsidyList.length"
+            :page-size="10"
+          />
+        </div>
       </div>
 
       <template #footer>
@@ -2078,6 +2398,278 @@
       </template>
     </el-dialog>
 
+    <el-dialog title="添加" v-model="addAnimalSubsidyDialog" width="800px">
+      <el-form :model="addAnimalSubsidyForm" label-width="120px">
+        <div class="form-row">
+          <el-form-item label="*补贴项目" class="form-item">
+            <el-select v-model="addAnimalSubsidyForm.subsidyItem" placeholder="请选择补贴项目" class="form-input" style="width: 200px;">
+              <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*数量" class="form-item">
+            <el-input v-model="addAnimalSubsidyForm.quantity" placeholder="请输入数量" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="*补贴等级" class="form-item">
+            <el-select v-model="addAnimalSubsidyForm.subsidyLevel" placeholder="请选择补贴等级" class="form-input" style="width: 200px;">
+              <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.label" />
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="*补贴确认时间" class="form-item">
+            <el-date-picker v-model="addAnimalSubsidyForm.confirmDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="*补贴领取金额" class="form-item">
+            <el-input v-model="addAnimalSubsidyForm.amount" placeholder="请输入金额" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="备注" class="form-item">
+            <el-input v-model="addAnimalSubsidyForm.remark" placeholder="请输入备注" style="width: 200px;" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="addAnimalSubsidyDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddAnimalSubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="添加" v-model="addMachinerySubsidyDialog" width="800px">
+      <el-form :model="addMachinerySubsidyForm" label-width="120px">
+        <div class="form-row">
+          <el-form-item label="*补贴项目" class="form-item">
+            <el-select v-model="addMachinerySubsidyForm.subsidyItem" placeholder="请选择补贴项目" class="form-input" style="width: 200px;">
+              <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*数量" class="form-item">
+            <el-input v-model="addMachinerySubsidyForm.quantity" placeholder="请输入数量" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="*补贴等级" class="form-item">
+            <el-select v-model="addMachinerySubsidyForm.subsidyLevel" placeholder="请选择补贴等级" class="form-input" style="width: 200px;">
+              <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.label" />
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="*补贴确认时间" class="form-item">
+            <el-date-picker v-model="addMachinerySubsidyForm.confirmDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="*补贴领取金额" class="form-item">
+            <el-input v-model="addMachinerySubsidyForm.amount" placeholder="请输入金额" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="备注" class="form-item">
+            <el-input v-model="addMachinerySubsidyForm.remark" placeholder="请输入备注" style="width: 200px;" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="addMachinerySubsidyDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddMachinerySubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="添加" v-model="addMedicalSubsidyDialog" width="800px">
+      <el-form :model="addMedicalSubsidyForm" label-width="120px">
+        <div class="form-row">
+          <el-form-item label="*人员姓名" class="form-item">
+            <el-select v-model="addMedicalSubsidyForm.personName" placeholder="请选择人员姓名" class="form-input" style="width: 200px;">
+              <el-option label="尽快" value="尽快" />
+              <el-option label="张三" value="张三" />
+              <el-option label="李四" value="李四" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴项目" class="form-item">
+            <el-select v-model="addMedicalSubsidyForm.subsidyItem" placeholder="请选择补贴项目" class="form-input" style="width: 200px;">
+              <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴等级" class="form-item">
+            <el-select v-model="addMedicalSubsidyForm.subsidyLevel" placeholder="请选择补贴等级" class="form-input" style="width: 200px;">
+              <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.label" />
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="*补贴确认时间" class="form-item">
+            <el-date-picker v-model="addMedicalSubsidyForm.confirmDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="*补贴领取金额" class="form-item">
+            <el-input v-model="addMedicalSubsidyForm.amount" placeholder="请输入金额" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="备注" class="form-item">
+            <el-input v-model="addMedicalSubsidyForm.remark" placeholder="请输入备注" style="width: 200px;" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="addMedicalSubsidyDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddMedicalSubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="添加" v-model="addHouseholdTypeSubsidyDialog" width="800px">
+      <el-form :model="addHouseholdTypeSubsidyForm" label-width="120px">
+        <div class="form-row">
+          <el-form-item label="*补贴项目" class="form-item">
+            <el-select v-model="addHouseholdTypeSubsidyForm.subsidyItem" placeholder="请选择补贴项目" class="form-input" style="width: 200px;">
+              <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴等级" class="form-item">
+            <el-select v-model="addHouseholdTypeSubsidyForm.subsidyLevel" placeholder="请选择补贴等级" class="form-input" style="width: 200px;">
+              <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴确认时间" class="form-item">
+            <el-date-picker v-model="addHouseholdTypeSubsidyForm.confirmDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="*补贴领取金额" class="form-item">
+            <el-input v-model="addHouseholdTypeSubsidyForm.amount" placeholder="请输入金额" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="备注" class="form-item">
+            <el-input v-model="addHouseholdTypeSubsidyForm.remark" placeholder="请输入备注" style="width: 200px;" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="addHouseholdTypeSubsidyDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddHouseholdTypeSubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="添加" v-model="addGrasslandSubsidyDialog" width="800px">
+      <el-form :model="addGrasslandSubsidyForm" label-width="120px">
+        <div class="form-row">
+          <el-form-item label="*补贴项目" class="form-item">
+            <el-select v-model="addGrasslandSubsidyForm.subsidyItem" placeholder="请选择补贴项目" class="form-input" style="width: 200px;">
+              <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴等级" class="form-item">
+            <el-select v-model="addGrasslandSubsidyForm.subsidyLevel" placeholder="请选择补贴等级" class="form-input" style="width: 200px;">
+              <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴确认时间" class="form-item">
+            <el-date-picker v-model="addGrasslandSubsidyForm.confirmDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="*补贴领取金额" class="form-item">
+            <el-input v-model="addGrasslandSubsidyForm.amount" placeholder="请输入金额" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="备注" class="form-item">
+            <el-input v-model="addGrasslandSubsidyForm.remark" placeholder="请输入备注" style="width: 200px;" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="addGrasslandSubsidyDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddGrasslandSubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="添加" v-model="addYardSubsidyDialog" width="800px">
+      <el-form :model="addYardSubsidyForm" label-width="120px">
+        <div class="form-row">
+          <el-form-item label="*补贴项目" class="form-item">
+            <el-select v-model="addYardSubsidyForm.subsidyItem" placeholder="请选择补贴项目" class="form-input" style="width: 200px;">
+              <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*数量" class="form-item">
+            <el-input v-model="addYardSubsidyForm.quantity" placeholder="请输入数量" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="*补贴等级" class="form-item">
+            <el-select v-model="addYardSubsidyForm.subsidyLevel" placeholder="请选择补贴等级" class="form-input" style="width: 200px;">
+              <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.label" />
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="*补贴确认时间" class="form-item">
+            <el-date-picker v-model="addYardSubsidyForm.confirmDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="*补贴领取金额" class="form-item">
+            <el-input v-model="addYardSubsidyForm.amount" placeholder="请输入金额" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="备注" class="form-item">
+            <el-input v-model="addYardSubsidyForm.remark" placeholder="请输入备注" style="width: 200px;" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="addYardSubsidyDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddYardSubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="添加" v-model="addTemporarySubsidyDialog" width="800px">
+      <el-form :model="addTemporarySubsidyForm" label-width="100px">
+        <div class="form-row">
+          <el-form-item label="*补贴项目" class="form-item">
+            <el-select v-model="addTemporarySubsidyForm.subsidyItem" placeholder="请选择补贴项目" style="width: 200px;">
+              <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴等级" class="form-item">
+            <el-select v-model="addTemporarySubsidyForm.subsidyLevel" placeholder="请选择补贴等级" style="width: 200px;">
+              <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴确认时间" class="form-item">
+            <el-date-picker v-model="addTemporarySubsidyForm.confirmDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="*补贴领取金额" class="form-item">
+            <el-input v-model="addTemporarySubsidyForm.amount" placeholder="请输入金额" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="备注" class="form-item">
+            <el-input v-model="addTemporarySubsidyForm.remark" placeholder="请输入备注" style="width: 300px;" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="addTemporarySubsidyDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddTemporarySubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="添加" v-model="addOtherSubsidyDialog" width="800px">
+      <el-form :model="addOtherSubsidyForm" label-width="120px">
+        <div class="form-row">
+          <el-form-item label="*补贴项目" class="form-item">
+            <el-select v-model="addOtherSubsidyForm.subsidyItem" placeholder="请选择补贴项目" class="form-input" style="width: 200px;">
+              <el-option v-for="item in subsidyItems" :key="item.value" :label="item.label" :value="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴等级" class="form-item">
+            <el-select v-model="addOtherSubsidyForm.subsidyLevel" placeholder="请选择补贴等级" class="form-input" style="width: 200px;">
+              <el-option v-for="level in subsidyLevels" :key="level.value" :label="level.label" :value="level.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="*补贴确认时间" class="form-item">
+            <el-date-picker v-model="addOtherSubsidyForm.confirmDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="*补贴领取金额" class="form-item">
+            <el-input v-model="addOtherSubsidyForm.amount" placeholder="请输入金额" style="width: 200px;" />
+          </el-form-item>
+          <el-form-item label="备注" class="form-item">
+            <el-input v-model="addOtherSubsidyForm.remark" placeholder="请输入备注" style="width: 200px;" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="addOtherSubsidyDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddOtherSubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
     <el-dialog title="编辑补贴" v-model="editSubsidyDialog" width="500px">
       <el-form :model="editingSubsidy" label-width="100px">
         <el-form-item label="人员姓名">
@@ -2106,6 +2698,75 @@
       <template #footer>
         <el-button @click="editSubsidyDialog = false">取消</el-button>
         <el-button type="primary" @click="saveEditSubsidy">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="帮扶" v-model="helpDialog" width="900px">
+      <el-form :model="helpForm" label-width="120px">
+        <div class="form-section">
+          <div class="form-item">
+            <label class="form-label">*帮扶监测因素:</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="helpForm.monitorFactors" value="belowIncome" />
+                <span>低于监测参考人均纯收入</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="helpForm.monitorFactors" value="belowLastYearIncome" />
+                <span>低于上年度监测参考人均纯收入</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="helpForm.monitorFactors" value="emergency" />
+                <span>突发性</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="helpForm.monitorFactors" value="other" />
+                <span>其他</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item">
+            <label class="form-label">*帮扶类型:</label>
+            <el-select v-model="helpForm.helpType" placeholder="请选择帮扶类型" class="form-select" style="width: 200px;" @change="handleHelpTypeChange">
+              <el-option label="增收类" value="income" />
+              <el-option label="三保障和饮水安全类" value="security" />
+              <el-option label="兜底保障类" value="support" />
+              <el-option label="其他类" value="other" />
+            </el-select>
+          </div>
+          <div class="form-item">
+            <label class="form-label">*帮扶措施:</label>
+            <el-select v-model="helpForm.helpMeasure" placeholder="请选择帮扶措施" class="form-select" style="width: 200px;" @change="handleHelpMeasureChange">
+              <el-option v-for="measure in currentMeasures" :key="measure.value" :label="measure.label" :value="measure.value" />
+            </el-select>
+          </div>
+          <div class="form-item">
+            <label class="form-label">*帮扶项目:</label>
+            <el-select v-model="helpForm.helpProject" placeholder="请选择帮扶项目" class="form-select" style="width: 250px;">
+              <el-option v-for="project in currentProjects" :key="project.value" :label="project.label" :value="project.value" />
+            </el-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item">
+            <label class="form-label">帮扶开始时间:</label>
+            <el-date-picker v-model="helpForm.startDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </div>
+          <div class="form-item">
+            <label class="form-label">帮扶结束时间:</label>
+            <el-date-picker v-model="helpForm.endDate" type="date" placeholder="请选择日期" style="width: 200px;" />
+          </div>
+        </div>
+        <div class="form-item">
+          <label class="form-label">备注:</label>
+          <el-input v-model="helpForm.remark" type="textarea" placeholder="请输入备注" class="form-input" style="width: 100%; height: 100px;" />
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="helpDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmHelp">确定</el-button>
       </template>
     </el-dialog>
 
@@ -2410,6 +3071,501 @@ const confirmAddAgricultureSubsidy = () => {
   addAgricultureSubsidyForm.amount = ''
   addAgricultureSubsidyForm.remark = ''
   addAgricultureSubsidyDialog.value = false
+  ElMessage.success('添加成功')
+}
+
+const animalSubsidySearch = ref({
+  subsidyItem: '',
+  quantity: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const animalSubsidyList = ref([])
+
+const addAnimalSubsidyDialog = ref(false)
+const addAnimalSubsidyForm = reactive({
+  subsidyItem: '',
+  quantity: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const openAddAnimalSubsidyDialog = () => {
+  addAnimalSubsidyDialog.value = true
+}
+
+const confirmAddAnimalSubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    subsidyItem: addAnimalSubsidyForm.subsidyItem,
+    quantity: addAnimalSubsidyForm.quantity,
+    subsidyLevel: addAnimalSubsidyForm.subsidyLevel,
+    confirmDate: addAnimalSubsidyForm.confirmDate,
+    amount: addAnimalSubsidyForm.amount,
+    remark: addAnimalSubsidyForm.remark
+  }
+  animalSubsidyList.value.push(newSubsidy)
+  addAnimalSubsidyForm.subsidyItem = ''
+  addAnimalSubsidyForm.quantity = ''
+  addAnimalSubsidyForm.subsidyLevel = ''
+  addAnimalSubsidyForm.confirmDate = ''
+  addAnimalSubsidyForm.amount = ''
+  addAnimalSubsidyForm.remark = ''
+  addAnimalSubsidyDialog.value = false
+  ElMessage.success('添加成功')
+}
+
+const machinerySubsidySearch = ref({
+  subsidyItem: '',
+  quantity: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const machinerySubsidyList = ref([])
+
+const addMachinerySubsidyDialog = ref(false)
+const addMachinerySubsidyForm = reactive({
+  subsidyItem: '',
+  quantity: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const openAddMachinerySubsidyDialog = () => {
+  addMachinerySubsidyDialog.value = true
+}
+
+const confirmAddMachinerySubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    subsidyItem: addMachinerySubsidyForm.subsidyItem,
+    quantity: addMachinerySubsidyForm.quantity,
+    subsidyLevel: addMachinerySubsidyForm.subsidyLevel,
+    confirmDate: addMachinerySubsidyForm.confirmDate,
+    amount: addMachinerySubsidyForm.amount,
+    remark: addMachinerySubsidyForm.remark
+  }
+  machinerySubsidyList.value.push(newSubsidy)
+  addMachinerySubsidyForm.subsidyItem = ''
+  addMachinerySubsidyForm.quantity = ''
+  addMachinerySubsidyForm.subsidyLevel = ''
+  addMachinerySubsidyForm.confirmDate = ''
+  addMachinerySubsidyForm.amount = ''
+  addMachinerySubsidyForm.remark = ''
+  addMachinerySubsidyDialog.value = false
+  ElMessage.success('添加成功')
+}
+
+const medicalSubsidySearch = ref({
+  personName: '',
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const medicalSubsidyList = ref([])
+
+const addMedicalSubsidyDialog = ref(false)
+const addMedicalSubsidyForm = reactive({
+  personName: '',
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const openAddMedicalSubsidyDialog = () => {
+  addMedicalSubsidyDialog.value = true
+}
+
+const confirmAddMedicalSubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    personName: addMedicalSubsidyForm.personName,
+    subsidyItem: addMedicalSubsidyForm.subsidyItem,
+    subsidyLevel: addMedicalSubsidyForm.subsidyLevel,
+    confirmDate: addMedicalSubsidyForm.confirmDate,
+    amount: addMedicalSubsidyForm.amount,
+    remark: addMedicalSubsidyForm.remark
+  }
+  medicalSubsidyList.value.push(newSubsidy)
+  addMedicalSubsidyForm.personName = ''
+  addMedicalSubsidyForm.subsidyItem = ''
+  addMedicalSubsidyForm.subsidyLevel = ''
+  addMedicalSubsidyForm.confirmDate = ''
+  addMedicalSubsidyForm.amount = ''
+  addMedicalSubsidyForm.remark = ''
+  addMedicalSubsidyDialog.value = false
+  ElMessage.success('添加成功')
+}
+
+const householdTypeSubsidySearch = ref({
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const householdTypeSubsidyList = ref([])
+
+const addHouseholdTypeSubsidyDialog = ref(false)
+const addHouseholdTypeSubsidyForm = reactive({
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const openAddHouseholdTypeSubsidyDialog = () => {
+  addHouseholdTypeSubsidyDialog.value = true
+}
+
+const confirmAddHouseholdTypeSubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    subsidyItem: addHouseholdTypeSubsidyForm.subsidyItem,
+    subsidyLevel: addHouseholdTypeSubsidyForm.subsidyLevel,
+    confirmDate: addHouseholdTypeSubsidyForm.confirmDate,
+    amount: addHouseholdTypeSubsidyForm.amount,
+    remark: addHouseholdTypeSubsidyForm.remark
+  }
+  householdTypeSubsidyList.value.push(newSubsidy)
+  addHouseholdTypeSubsidyForm.subsidyItem = ''
+  addHouseholdTypeSubsidyForm.subsidyLevel = ''
+  addHouseholdTypeSubsidyForm.confirmDate = ''
+  addHouseholdTypeSubsidyForm.amount = ''
+  addHouseholdTypeSubsidyForm.remark = ''
+  addHouseholdTypeSubsidyDialog.value = false
+  ElMessage.success('添加成功')
+}
+
+const grasslandSubsidySearch = ref({
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const grasslandSubsidyList = ref([
+  {
+    id: 1,
+    subsidyItem: '草原生态保护补助奖励',
+    subsidyLevel: '二级',
+    confirmDate: '2026-04-16',
+    amount: '100',
+    remark: ''
+  }
+])
+
+const addGrasslandSubsidyDialog = ref(false)
+const addGrasslandSubsidyForm = reactive({
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const openAddGrasslandSubsidyDialog = () => {
+  addGrasslandSubsidyDialog.value = true
+}
+
+const confirmAddGrasslandSubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    subsidyItem: addGrasslandSubsidyForm.subsidyItem,
+    subsidyLevel: addGrasslandSubsidyForm.subsidyLevel,
+    confirmDate: addGrasslandSubsidyForm.confirmDate,
+    amount: addGrasslandSubsidyForm.amount,
+    remark: addGrasslandSubsidyForm.remark
+  }
+  grasslandSubsidyList.value.push(newSubsidy)
+  addGrasslandSubsidyForm.subsidyItem = ''
+  addGrasslandSubsidyForm.subsidyLevel = ''
+  addGrasslandSubsidyForm.confirmDate = ''
+  addGrasslandSubsidyForm.amount = ''
+  addGrasslandSubsidyForm.remark = ''
+  addGrasslandSubsidyDialog.value = false
+  ElMessage.success('添加成功')
+}
+
+const yardSubsidySearch = ref({
+  subsidyItem: '',
+  quantity: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const yardSubsidyList = ref([])
+
+const addYardSubsidyDialog = ref(false)
+const addYardSubsidyForm = reactive({
+  subsidyItem: '',
+  quantity: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const openAddYardSubsidyDialog = () => {
+  addYardSubsidyDialog.value = true
+}
+
+const confirmAddYardSubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    subsidyItem: addYardSubsidyForm.subsidyItem,
+    quantity: addYardSubsidyForm.quantity,
+    subsidyLevel: addYardSubsidyForm.subsidyLevel,
+    confirmDate: addYardSubsidyForm.confirmDate,
+    amount: addYardSubsidyForm.amount,
+    remark: addYardSubsidyForm.remark
+  }
+  yardSubsidyList.value.push(newSubsidy)
+  addYardSubsidyForm.subsidyItem = ''
+  addYardSubsidyForm.quantity = ''
+  addYardSubsidyForm.subsidyLevel = ''
+  addYardSubsidyForm.confirmDate = ''
+  addYardSubsidyForm.amount = ''
+  addYardSubsidyForm.remark = ''
+  addYardSubsidyDialog.value = false
+  ElMessage.success('添加成功')
+}
+
+const helpDialog = ref(false)
+const helpForm = reactive({
+  monitorFactors: [],
+  helpType: '',
+  helpMeasure: '',
+  helpProject: '',
+  startDate: '',
+  endDate: '',
+  remark: ''
+})
+
+const helpMeasureOptions = {
+  income: [
+    { label: '产业帮扶', value: 'industry' },
+    { label: '就业帮扶', value: 'employment' },
+    { label: '金融帮扶', value: 'finance' },
+    { label: '金融岗位帮扶', value: 'financeJob' },
+    { label: '公益岗位帮扶', value: 'publicJob' }
+  ],
+  security: [
+    { label: '教育帮扶', value: 'education' },
+    { label: '健康帮扶', value: 'health' },
+    { label: '住房安全保障', value: 'housing' },
+    { label: '饮水安全保障', value: 'water' }
+  ],
+  support: [
+    { label: '低保保障', value: 'livingAllowance' },
+    { label: '特困供养', value: 'specialSupport' },
+    { label: '临时救助', value: 'temporaryRelief' },
+    { label: '养老保险', value: 'pension' }
+  ],
+  other: [
+    { label: '其他帮扶', value: 'other' }
+  ]
+}
+
+const helpProjectOptions = {
+  industry: [
+    { label: '种植业', value: 'planting' },
+    { label: '林果业', value: 'fruit' },
+    { label: '养殖业', value: 'breeding' },
+    { label: '加工业', value: 'processing' },
+    { label: '乡村旅游', value: 'tourism' },
+    { label: '消费帮扶', value: 'consumption' },
+    { label: '产业帮扶其他', value: 'industryOther' }
+  ],
+  employment: [
+    { label: '外出务工', value: 'migrant' },
+    { label: '本地就业', value: 'local' },
+    { label: '技能培训', value: 'training' },
+    { label: '就业帮扶其他', value: 'employmentOther' }
+  ],
+  finance: [
+    { label: '小额信贷', value: 'microCredit' },
+    { label: '创业担保贷款', value: 'startupLoan' },
+    { label: '金融帮扶其他', value: 'financeOther' }
+  ],
+  financeJob: [
+    { label: '金融岗位', value: 'financePosition' }
+  ],
+  publicJob: [
+    { label: '护林员', value: 'forestGuard' },
+    { label: '保洁员', value: 'cleaner' },
+    { label: '公益性岗位其他', value: 'publicJobOther' }
+  ],
+  education: [
+    { label: '学前教育资助', value: 'preschool' },
+    { label: '义务教育资助', value: 'compulsory' },
+    { label: '普通高中资助', value: 'highSchool' },
+    { label: '中职教育资助', value: 'vocational' },
+    { label: '高等教育资助', value: 'higher' },
+    { label: '教育帮扶其他', value: 'educationOther' }
+  ],
+  health: [
+    { label: '基本医疗保险', value: 'basicMedical' },
+    { label: '大病保险', value: 'criticalIllness' },
+    { label: '医疗救助', value: 'medicalRelief' },
+    { label: '健康帮扶其他', value: 'healthOther' }
+  ],
+  housing: [
+    { label: '危房改造', value: 'houseRenovation' },
+    { label: '住房安全其他', value: 'housingOther' }
+  ],
+  water: [
+    { label: '饮水安全', value: 'safeWater' }
+  ],
+  livingAllowance: [
+    { label: '农村低保', value: 'ruralLiving' },
+    { label: '城市低保', value: 'urbanLiving' }
+  ],
+  specialSupport: [
+    { label: '特困人员救助供养', value: 'specialSupport' }
+  ],
+  temporaryRelief: [
+    { label: '临时救助', value: 'temporaryRelief' }
+  ],
+  pension: [
+    { label: '城乡居民养老保险', value: 'residentialPension' },
+    { label: '职工养老保险', value: 'employeePension' }
+  ],
+  other: [
+    { label: '其他', value: 'other' }
+  ]
+}
+
+const currentMeasures = computed(() => {
+  return helpMeasureOptions[helpForm.helpType] || []
+})
+
+const currentProjects = computed(() => {
+  return helpProjectOptions[helpForm.helpMeasure] || []
+})
+
+const handleHelpTypeChange = () => {
+  helpForm.helpMeasure = ''
+  helpForm.helpProject = ''
+}
+
+const handleHelpMeasureChange = () => {
+  helpForm.helpProject = ''
+}
+
+const confirmHelp = () => {
+  helpForm.monitorFactors = []
+  helpForm.helpType = ''
+  helpForm.helpMeasure = ''
+  helpForm.helpProject = ''
+  helpForm.startDate = ''
+  helpForm.endDate = ''
+  helpForm.remark = ''
+  helpDialog.value = false
+  ElMessage.success('帮扶信息已保存')
+}
+
+const temporarySubsidySearch = ref({
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const temporarySubsidyList = ref([])
+
+const addTemporarySubsidyDialog = ref(false)
+const addTemporarySubsidyForm = reactive({
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const openAddTemporarySubsidyDialog = () => {
+  addTemporarySubsidyDialog.value = true
+}
+
+const confirmAddTemporarySubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    subsidyItem: addTemporarySubsidyForm.subsidyItem,
+    subsidyLevel: addTemporarySubsidyForm.subsidyLevel,
+    confirmDate: addTemporarySubsidyForm.confirmDate,
+    amount: addTemporarySubsidyForm.amount,
+    remark: addTemporarySubsidyForm.remark
+  }
+  temporarySubsidyList.value.push(newSubsidy)
+  addTemporarySubsidyForm.subsidyItem = ''
+  addTemporarySubsidyForm.subsidyLevel = ''
+  addTemporarySubsidyForm.confirmDate = ''
+  addTemporarySubsidyForm.amount = ''
+  addTemporarySubsidyForm.remark = ''
+  addTemporarySubsidyDialog.value = false
+  ElMessage.success('添加成功')
+}
+
+const otherSubsidySearch = ref({
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const otherSubsidyList = ref([])
+
+const addOtherSubsidyDialog = ref(false)
+const addOtherSubsidyForm = reactive({
+  subsidyItem: '',
+  subsidyLevel: '',
+  confirmDate: '',
+  amount: '',
+  remark: ''
+})
+
+const openAddOtherSubsidyDialog = () => {
+  addOtherSubsidyDialog.value = true
+}
+
+const confirmAddOtherSubsidy = () => {
+  const newSubsidy = {
+    id: Date.now(),
+    subsidyItem: addOtherSubsidyForm.subsidyItem,
+    subsidyLevel: addOtherSubsidyForm.subsidyLevel,
+    confirmDate: addOtherSubsidyForm.confirmDate,
+    amount: addOtherSubsidyForm.amount,
+    remark: addOtherSubsidyForm.remark
+  }
+  otherSubsidyList.value.push(newSubsidy)
+  addOtherSubsidyForm.subsidyItem = ''
+  addOtherSubsidyForm.subsidyLevel = ''
+  addOtherSubsidyForm.confirmDate = ''
+  addOtherSubsidyForm.amount = ''
+  addOtherSubsidyForm.remark = ''
+  addOtherSubsidyDialog.value = false
   ElMessage.success('添加成功')
 }
 
@@ -3066,7 +4222,7 @@ const deletePersonnelSubsidy = (item) => {
 }
 
 const handleHelp = (row) => {
-  ElMessage.info(`为 ${row.householdNo} 安排帮扶`)
+  helpDialog.value = true
 }
 
 const handleDelete = (row) => {
