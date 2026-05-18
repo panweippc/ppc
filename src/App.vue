@@ -90,6 +90,7 @@ import PerformanceEvaluation from './components/PerformanceEvaluation.vue'
 import UserManagement from './components/UserManagement.vue'
 import RoleManagement from './components/RoleManagement.vue'
 import ComprehensiveQuery from './components/ComprehensiveQuery.vue'
+import DataDashboard from './components/DataDashboard.vue'
 
 const activeMenu = ref('1-1')
 const currentPageTitle = ref('欢迎')
@@ -224,7 +225,7 @@ const menuItems = ref([
       { id: '12-5', name: '项目库统计' },
       { id: '12-6', name: '扶贫资产统计' },
       { id: '12-7', name: '外出人员统计' },
-      { id: '12-8', name: '可视化数据展示(大屏)' }
+      { id: '12-8', name: '可视化数据展示(大屏)', component: markRaw(DataDashboard) }
     ]
   },
   {
