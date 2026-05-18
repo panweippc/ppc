@@ -25,7 +25,7 @@
                   class="suggestion-item"
                   @click="selectSuggestion(item)"
                 >
-                  <el-icon :size="16" class="suggestion-icon">{{ item.icon }}</el-icon>
+                  <el-icon :size="16" class="suggestion-icon"><component :is="item.icon" /></el-icon>
                   <span class="suggestion-text">{{ item.text }}</span>
                   <span class="suggestion-type">{{ item.type }}</span>
                 </div>
@@ -107,7 +107,7 @@
             <h3 class="section-title">搜索结果</h3>
             <div v-for="group in globalSearchResults" :key="group.type" class="result-group">
               <h4 class="group-title">
-                <el-icon>{{ group.icon }}</el-icon>
+                <el-icon><component :is="group.icon" /></el-icon>
                 {{ group.label }}
                 <span class="group-count">共{{ group.items.length }}条</span>
               </h4>
