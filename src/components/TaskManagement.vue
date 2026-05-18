@@ -84,16 +84,25 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="280" fixed="right">
           <template #default="scope">
             <div class="action-buttons">
-              <el-button v-if="scope.row.status === 'pending'" type="primary" size="small" @click="assignTask(scope.row)">指派</el-button>
-              <el-button v-if="scope.row.status === 'inProgress'" type="primary" size="small" @click="updateProgress(scope.row)">更新进度</el-button>
-              <el-button v-if="scope.row.status === 'inProgress'" type="success" size="small" @click="submitTask(scope.row)">提交验收</el-button>
-              <el-button v-if="scope.row.status === 'pendingReview'" type="success" size="small" @click="approveTask(scope.row)">通过</el-button>
-              <el-button v-if="scope.row.status === 'pendingReview'" type="danger" size="small" @click="rejectTask(scope.row)">驳回</el-button>
-              <el-button type="text" size="small" @click="viewTask(scope.row)">查看</el-button>
-              <el-button type="danger" size="small" @click="deleteTask(scope.row)">删除</el-button>
+              <template v-if="isTaskCreator(scope.row)">
+                <el-button v-if="scope.row.status === 'pending'" type="primary" size="small" @click="assignTask(scope.row)">指派</el-button>
+                <el-button v-if="scope.row.status === 'pendingReview'" type="success" size="small" @click="approveTask(scope.row)">通过</el-button>
+                <el-button v-if="scope.row.status === 'pendingReview'" type="danger" size="small" @click="rejectTask(scope.row)">驳回</el-button>
+                <el-button type="text" size="small" @click="viewTask(scope.row)">查看</el-button>
+                <el-button type="danger" size="small" @click="deleteTask(scope.row)">删除</el-button>
+              </template>
+              <template v-if="isTaskAssignee(scope.row)">
+                <el-button v-if="scope.row.status === 'inProgress'" type="primary" size="small" @click="updateProgress(scope.row)">更新进度</el-button>
+                <el-button v-if="scope.row.status === 'inProgress'" type="success" size="small" @click="submitTask(scope.row)">提交验收</el-button>
+                <el-button v-if="scope.row.status === 'inProgress'" type="primary" size="small" @click="openEditTaskDialog(scope.row)">编辑</el-button>
+                <el-button type="text" size="small" @click="viewTask(scope.row)">查看</el-button>
+              </template>
+              <template v-if="!isTaskCreator(scope.row) && !isTaskAssignee(scope.row)">
+                <el-button type="text" size="small" @click="viewTask(scope.row)">查看</el-button>
+              </template>
             </div>
           </template>
         </el-table-column>
@@ -178,6 +187,62 @@
       </template>
     </el-dialog>
 
+    <el-dialog title="编辑任务" v-model="editTaskDialog" width="600px">
+      <el-form :model="editTaskForm" label-width="120px">
+        <div class="form-row">
+          <el-form-item label="任务名称" class="form-item">
+            <el-input v-model="editTaskForm.taskName" placeholder="请输入任务名称" style="width: 300px;" />
+          </el-form-item>
+          <el-form-item label="优先级" class="form-item">
+            <el-select v-model="editTaskForm.priority" placeholder="请选择优先级" style="width: 150px;">
+              <el-option label="紧急" value="urgent" />
+              <el-option label="高" value="high" />
+              <el-option label="普通" value="normal" />
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="截止时间" class="form-item">
+            <el-date-picker v-model="editTaskForm.deadline" type="date" placeholder="请选择截止时间" style="width: 200px;" />
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="任务描述" class="form-item">
+            <el-input v-model="editTaskForm.description" type="textarea" placeholder="请输入任务描述" style="width: 100%; height: 100px;" />
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="附件上传" class="form-item">
+            <el-upload
+              :action="'/api/upload'"
+              :file-list="editTaskForm.attachments"
+              :on-success="handleAttachmentUpload"
+              :before-upload="beforeAttachmentUpload"
+              multiple
+              accept=".doc,.docx,.pdf,.jpg,.png"
+              :limit="5"
+            >
+              <el-button size="small" type="primary">点击上传附件</el-button>
+              <div style="color:#999; font-size:12px; margin-top:10px;">支持 doc, docx, pdf, jpg, png 格式，最多5个文件</div>
+            </el-upload>
+          </el-form-item>
+        </div>
+        <div v-if="editTaskForm.attachments && editTaskForm.attachments.length > 0" class="form-row">
+          <div class="attachment-list">
+            <div v-for="(file, index) in editTaskForm.attachments" :key="index" class="attachment-item">
+              <el-icon><File /></el-icon>
+              <span>{{ file.name }}</span>
+              <el-button type="text" size="small" @click="removeAttachment(index)">删除</el-button>
+            </div>
+          </div>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="editTaskDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmEditTask">保存</el-button>
+      </template>
+    </el-dialog>
+
     <el-dialog title="任务详情" v-model="viewTaskDialog" width="600px">
       <div class="task-detail">
         <div class="detail-row">
@@ -229,13 +294,13 @@
       </template>
     </el-dialog>
 
-    <div class="timeout-reminder" v-if="timeoutReminder.show">
+    <div class="timeout-reminder" v-if="timeoutReminder.show && isTaskAssignee({ id: timeoutReminder.taskId, assigneeId: currentUserId.value })">
       <div class="reminder-content">
         <div class="reminder-header">
           <el-icon class="reminder-icon"><Bell /></el-icon>
           <span class="reminder-title">任务即将超时提醒</span>
           <el-button class="reminder-close" @click="closeTimeoutReminder">
-            <el-icon><X /></el-icon>
+            <el-icon><Close /></el-icon>
           </el-button>
         </div>
         <div class="reminder-body">
@@ -254,7 +319,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
-import { Search, Refresh, Plus, Bell, X } from '@element-plus/icons-vue'
+import { Search, Refresh, Plus, Bell, Close, File } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 const searchForm = reactive({
@@ -288,6 +353,8 @@ const tasks = ref([
     id: 1,
     taskName: '完成贫困户信息录入',
     priority: 'urgent',
+    creatorId: 1,
+    creatorName: '张三',
     assigneeId: 1,
     assigneeName: '张三',
     deadline: '2026-05-20',
@@ -295,6 +362,7 @@ const tasks = ref([
     status: 'inProgress',
     description: '完成全村贫困户信息的录入和核对工作',
     createTime: '2026-05-15 09:00',
+    attachments: [],
     interactionRecords: [
       { time: '2026-05-15 09:00', action: '任务创建', reason: '' },
       { time: '2026-05-15 09:30', action: '任务指派给张三', reason: '' }
@@ -304,6 +372,8 @@ const tasks = ref([
     id: 2,
     taskName: '整理帮扶资料',
     priority: 'high',
+    creatorId: 1,
+    creatorName: '张三',
     assigneeId: 2,
     assigneeName: '李四',
     deadline: '2026-05-25',
@@ -311,6 +381,7 @@ const tasks = ref([
     status: 'inProgress',
     description: '整理本年度帮扶工作相关资料',
     createTime: '2026-05-16 10:00',
+    attachments: [],
     interactionRecords: [
       { time: '2026-05-16 10:00', action: '任务创建', reason: '' },
       { time: '2026-05-16 10:15', action: '任务指派给李四', reason: '' }
@@ -320,6 +391,8 @@ const tasks = ref([
     id: 3,
     taskName: '检查危房改造情况',
     priority: 'urgent',
+    creatorId: 1,
+    creatorName: '张三',
     assigneeId: 3,
     assigneeName: '王五',
     deadline: '2026-05-18',
@@ -327,6 +400,7 @@ const tasks = ref([
     status: 'pendingReview',
     description: '检查全村危房改造完成情况',
     createTime: '2026-05-10 08:00',
+    attachments: [],
     interactionRecords: [
       { time: '2026-05-10 08:00', action: '任务创建', reason: '' },
       { time: '2026-05-10 08:30', action: '任务指派给王五', reason: '' },
@@ -337,6 +411,8 @@ const tasks = ref([
     id: 4,
     taskName: '组织党员学习',
     priority: 'normal',
+    creatorId: 1,
+    creatorName: '张三',
     assigneeId: 4,
     assigneeName: '赵六',
     deadline: '2026-05-30',
@@ -344,6 +420,7 @@ const tasks = ref([
     status: 'inProgress',
     description: '组织本月党员学习活动',
     createTime: '2026-05-14 14:00',
+    attachments: [],
     interactionRecords: [
       { time: '2026-05-14 14:00', action: '任务创建', reason: '' },
       { time: '2026-05-14 14:30', action: '任务指派给赵六', reason: '' }
@@ -353,6 +430,8 @@ const tasks = ref([
     id: 5,
     taskName: '统计村民收入情况',
     priority: 'high',
+    creatorId: 1,
+    creatorName: '张三',
     assigneeId: 5,
     assigneeName: '钱七',
     deadline: '2026-05-15',
@@ -360,6 +439,7 @@ const tasks = ref([
     status: 'timeout',
     description: '统计全村村民本年度收入情况',
     createTime: '2026-05-10 09:00',
+    attachments: [],
     interactionRecords: [
       { time: '2026-05-10 09:00', action: '任务创建', reason: '' },
       { time: '2026-05-10 09:15', action: '任务指派给钱七', reason: '' },
@@ -377,6 +457,17 @@ const createTaskForm = reactive({
   deadline: '',
   description: ''
 })
+
+const editTaskDialog = ref(false)
+const editTaskForm = reactive({
+  taskId: null,
+  taskName: '',
+  priority: 'normal',
+  deadline: '',
+  description: '',
+  attachments: []
+})
+const editingTaskData = ref(null)
 
 const timeoutReminder = reactive({
   show: false,
@@ -404,6 +495,9 @@ const rejectingTask = ref(null)
 const viewTaskDialog = ref(false)
 const viewingTask = reactive({})
 
+const currentUserId = ref(1)
+const currentUserRole = ref('creator')
+
 const filteredTasks = computed(() => {
   return tasks.value.filter(task => {
     if (searchForm.taskName && !task.taskName.includes(searchForm.taskName)) return false
@@ -411,8 +505,16 @@ const filteredTasks = computed(() => {
     if (searchForm.status && task.status !== searchForm.status) return false
     if (searchForm.assignee && task.assigneeId !== parseInt(searchForm.assignee)) return false
     return true
-  })
+  }).sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
 })
+
+const isTaskCreator = (task) => {
+  return task.creatorId === currentUserId.value
+}
+
+const isTaskAssignee = (task) => {
+  return task.assigneeId === currentUserId.value
+}
 
 const getPriorityText = (priority) => {
   const map = { urgent: '紧急', high: '高', normal: '普通' }
@@ -584,6 +686,57 @@ const deleteTask = (task) => {
   }
 }
 
+const openEditTaskDialog = (task) => {
+  editingTaskData.value = task
+  editTaskForm.taskId = task.id
+  editTaskForm.taskName = task.taskName
+  editTaskForm.priority = task.priority
+  editTaskForm.deadline = task.deadline
+  editTaskForm.description = task.description
+  editTaskForm.attachments = task.attachments ? [...task.attachments] : []
+  editTaskDialog.value = true
+}
+
+const confirmEditTask = () => {
+  if (!editTaskForm.taskName) {
+    ElMessage.error('请输入任务名称')
+    return
+  }
+  
+  const task = tasks.value.find(t => t.id === editTaskForm.taskId)
+  if (task) {
+    task.taskName = editTaskForm.taskName
+    task.priority = editTaskForm.priority
+    task.deadline = editTaskForm.deadline
+    task.description = editTaskForm.description
+    task.attachments = editTaskForm.attachments
+    task.interactionRecords.push({
+      time: new Date().toLocaleString('zh-CN'),
+      action: '任务信息更新',
+      reason: ''
+    })
+  }
+  editTaskDialog.value = false
+  ElMessage.success('任务编辑成功')
+}
+
+const handleAttachmentUpload = (response, file, fileList) => {
+  editTaskForm.attachments = fileList
+}
+
+const beforeAttachmentUpload = (file) => {
+  const fileSize = file.size / 1024 / 1024
+  if (fileSize > 10) {
+    ElMessage.error('单个文件大小不能超过10MB')
+    return false
+  }
+  return true
+}
+
+const removeAttachment = (index) => {
+  editTaskForm.attachments.splice(index, 1)
+}
+
 const handleTemplateChange = () => {
   if (createTaskForm.templateId) {
     const template = templates.value.find(t => t.id === createTaskForm.templateId)
@@ -610,7 +763,7 @@ const closeTimeoutReminder = () => {
 const handleTimeoutReminderAction = () => {
   const task = tasks.value.find(t => t.id === timeoutReminder.taskId)
   if (task) {
-    viewTask(task)
+    openEditTaskDialog(task)
   }
   closeTimeoutReminder()
 }
@@ -934,5 +1087,23 @@ onUnmounted(() => {
   gap: 10px;
   padding: 15px 20px;
   border-top: 1px solid #f0f0f0;
+}
+
+.attachment-list {
+  margin-top: 10px;
+}
+
+.attachment-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f9fafb;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.attachment-item:last-child {
+  margin-bottom: 0;
 }
 </style>
