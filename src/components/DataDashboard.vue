@@ -3,14 +3,14 @@
     <div class="dashboard-header">
       <div class="header-left">
         <div class="region-badge">
-          <span class="region-icon">📍</span>
+          <component :is="User" class="region-icon" />
           <span class="region-name">灏明县</span>
         </div>
         <span class="date-text">{{ currentDate }}</span>
       </div>
       <div class="header-center">
-        <h1 class="dashboard-title">乡村综合事务与数据管理平台</h1>
-        <div class="title-sub">Real-time Monitoring Dashboard</div>
+        <h1 class="dashboard-title">乡村振兴数据监测平台</h1>
+        <div class="title-sub">实时数据分析中心</div>
       </div>
       <div class="header-right">
         <div class="status-indicator">
@@ -25,78 +25,59 @@
     </div>
 
     <div class="dashboard-grid" :class="gridClass">
-      <div class="grid-panel population-panel">
+      <div class="grid-panel overview-panel" :class="{ 'span-2': isMediumScreen }">
         <div class="panel-header">
-          <span class="panel-icon">👥</span>
+          <component :is="User" class="panel-icon" />
           <span class="panel-title">人口概况</span>
-          <span class="panel-badge">{{ populationTrend > 0 ? '+' : '' }}{{ populationTrend }}%</span>
+          <span class="panel-badge positive">+2.3%</span>
         </div>
         <div class="panel-body">
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon bg-blue">🏠</div>
+          <div class="stats-row">
+            <div class="stat-card" v-for="(stat, index) in populationStats" :key="index">
+              <div class="stat-icon" :class="stat.bgClass">{{ stat.value }}</div>
               <div class="stat-info">
-                <span class="stat-value">{{ animatedHouseholds }}</span>
-                <span class="stat-label">总户数</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon bg-green">👨‍👩‍👧</div>
-              <div class="stat-info">
-                <span class="stat-value">{{ animatedPopulation }}</span>
-                <span class="stat-label">总人口</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon bg-orange">👨</div>
-              <div class="stat-info">
-                <span class="stat-value">{{ animatedMale }}</span>
-                <span class="stat-label">男性</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon bg-pink">👩</div>
-              <div class="stat-info">
-                <span class="stat-value">{{ animatedFemale }}</span>
-                <span class="stat-label">女性</span>
+                <span class="stat-label">{{ stat.label }}</span>
+                <span class="stat-value">{{ formatNumber(stat.number) }}</span>
               </div>
             </div>
           </div>
-          <div class="chart-section">
-            <div class="chart-title">人口结构分布</div>
+          <div class="chart-block">
+            <div class="chart-header">
+              <span class="chart-title">人口结构分布</span>
+            </div>
             <div class="bar-chart">
               <div v-for="(item, index) in populationStructure" :key="index" class="bar-item">
                 <div class="bar-wrapper">
                   <div class="bar-fill" :style="{ height: item.value + '%', backgroundColor: item.color }"></div>
                 </div>
                 <span class="bar-label">{{ item.label }}</span>
-                <span class="bar-value">{{ item.value }}%</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="grid-panel agriculture-panel">
+      <div class="grid-panel land-panel">
         <div class="panel-header">
-          <span class="panel-icon">🌾</span>
+          <component :is="List" class="panel-icon" />
           <span class="panel-title">农业用地</span>
         </div>
         <div class="panel-body">
-          <div class="ring-chart-grid">
-            <div v-for="(item, index) in agricultureData" :key="index" class="ring-item">
-              <div class="ring-container">
-                <svg viewBox="0 0 80 80" class="ring-svg">
-                  <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(0,255,255,0.1)" stroke-width="8"/>
-                  <circle cx="40" cy="40" r="32" fill="none" :stroke="item.color" stroke-width="8"
+          <div class="land-cards">
+            <div v-for="(item, index) in landData" :key="index" class="land-card">
+              <div class="land-ring">
+                <svg viewBox="0 0 60 60" class="ring-svg">
+                  <circle cx="30" cy="30" r="22" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="6"/>
+                  <circle cx="30" cy="30" r="22" fill="none" :stroke="item.color" stroke-width="6"
                           :stroke-dasharray="getRingDash(item.percentage)" stroke-linecap="round" 
-                          transform="rotate(-90 40 40)" :class="{ 'animate-ring': true }"/>
+                          transform="rotate(-90 30 30)" class="animate-ring"/>
                 </svg>
-                <div class="ring-center">
-                  <span class="ring-value">{{ item.value }}</span>
-                </div>
+                <div class="ring-text">{{ item.percentage }}%</div>
               </div>
-              <span class="ring-label">{{ item.label }}</span>
+              <div class="land-info">
+                <span class="land-value">{{ item.value }}</span>
+                <span class="land-label">{{ item.label }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -104,24 +85,24 @@
 
       <div class="grid-panel household-panel">
         <div class="panel-header">
-          <span class="panel-icon">🏠</span>
+          <component :is="House" class="panel-icon" />
           <span class="panel-title">户类型分布</span>
         </div>
         <div class="panel-body">
-          <div class="pie-chart-container">
-            <svg viewBox="0 0 180 180" class="pie-svg">
+          <div class="pie-wrapper">
+            <svg viewBox="0 0 100 100" class="pie-svg">
               <g v-for="(item, index) in householdPieData" :key="index">
-                <path :d="getPiePath(item.startAngle, item.endAngle)" :fill="item.color" class="pie-slice"/>
+                <path :d="getPiePath(item.startAngle, item.endAngle)" :fill="item.color"/>
               </g>
-              <circle cx="90" cy="90" r="45" fill="#0a1628"/>
+              <circle cx="50" cy="50" r="25" fill="#1a2332"/>
             </svg>
-            <div class="pie-center-text">
+            <div class="pie-center">
               <span class="pie-total">{{ totalHouseholds }}</span>
               <span class="pie-label">总户数</span>
             </div>
           </div>
-          <div class="legend-list">
-            <div v-for="(item, index) in householdTypes" :key="index" class="legend-item">
+          <div class="household-legend">
+            <div v-for="(item, index) in householdTypes" :key="index" class="legend-row">
               <span class="legend-color" :style="{ backgroundColor: item.color }"></span>
               <span class="legend-text">{{ item.label }}</span>
               <span class="legend-value">{{ item.count }}</span>
@@ -132,10 +113,10 @@
 
       <div class="grid-panel economy-panel">
         <div class="panel-header">
-          <span class="panel-icon">💰</span>
+          <component :is="ArrowUp" class="panel-icon" />
           <span class="panel-title">经济收支</span>
-          <span class="panel-badge" :class="{ 'positive': economyTrend > 0, 'negative': economyTrend < 0 }">
-            {{ economyTrend > 0 ? '+' : '' }}{{ economyTrend }}%
+          <span class="panel-badge" :class="economyTrend >= 0 ? 'positive' : 'negative'">
+            {{ economyTrend >= 0 ? '+' : '' }}{{ economyTrend }}%
           </span>
         </div>
         <div class="panel-body">
@@ -146,24 +127,27 @@
               {{ tab.name }}
             </button>
           </div>
-          <div class="economy-content">
-            <div class="income-grid">
-              <div v-for="(item, index) in currentEconomyData" :key="index" class="income-item">
-                <span class="income-label">{{ item.label }}</span>
-                <span class="income-value" :class="{ highlight: item.value > 0 }">{{ formatCurrency(item.value) }}</span>
-              </div>
+          <div class="income-list">
+            <div v-for="(item, index) in currentEconomyData" :key="index" class="income-row">
+              <span class="income-label">{{ item.label }}</span>
+              <span class="income-value">{{ formatCurrency(item.value) }}</span>
             </div>
-            <div class="mini-chart">
-              <div class="chart-line">
-                <div v-for="(point, index) in miniChartData" :key="index" 
-                     class="chart-point" :style="{ left: (index * 16.67) + '%', bottom: point + '%' }">
-                  <div class="point-dot"></div>
-                  <div class="point-line"></div>
-                </div>
-              </div>
-              <div class="chart-labels">
-                <span>1月</span><span>3月</span><span>6月</span><span>9月</span><span>12月</span>
-              </div>
+          </div>
+          <div class="mini-line-chart">
+            <svg viewBox="0 0 200 60" class="line-svg">
+              <defs>
+                <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#00c8ff;stop-opacity:0.3" />
+                  <stop offset="100%" style="stop-color:#00c8ff;stop-opacity:0" />
+                </linearGradient>
+              </defs>
+              <path :d="areaPath" fill="url(#lineGradient)"/>
+              <path :d="linePath" fill="none" stroke="#00c8ff" stroke-width="2"/>
+              <circle v-for="(point, index) in chartPoints" :key="index" 
+                      :cx="point.x" :cy="point.y" r="3" fill="#00c8ff"/>
+            </svg>
+            <div class="chart-x-labels">
+              <span>1月</span><span>6月</span><span>12月</span>
             </div>
           </div>
         </div>
@@ -171,40 +155,37 @@
 
       <div class="grid-panel task-panel">
         <div class="panel-header">
-          <span class="panel-icon">📋</span>
+          <component :is="List" class="panel-icon" />
           <span class="panel-title">工作动态</span>
         </div>
         <div class="panel-body">
-          <div class="task-stats">
-            <div class="task-stat-item">
-              <span class="task-stat-value">{{ taskStats.total }}</span>
-              <span class="task-stat-label">总任务</span>
+          <div class="task-summary">
+            <div class="summary-item">
+              <span class="summary-num">{{ taskStats.total }}</span>
+              <span class="summary-label">总任务</span>
             </div>
-            <div class="task-stat-item">
-              <span class="task-stat-value pending">{{ taskStats.pending }}</span>
-              <span class="task-stat-label">待处理</span>
+            <div class="summary-item">
+              <span class="summary-num pending">{{ taskStats.pending }}</span>
+              <span class="summary-label">待处理</span>
             </div>
-            <div class="task-stat-item">
-              <span class="task-stat-value processing">{{ taskStats.processing }}</span>
-              <span class="task-stat-label">进行中</span>
+            <div class="summary-item">
+              <span class="summary-num processing">{{ taskStats.processing }}</span>
+              <span class="summary-label">进行中</span>
             </div>
-            <div class="task-stat-item">
-              <span class="task-stat-value completed">{{ taskStats.completed }}</span>
-              <span class="task-stat-label">已完成</span>
+            <div class="summary-item">
+              <span class="summary-num completed">{{ taskStats.completed }}</span>
+              <span class="summary-label">已完成</span>
             </div>
           </div>
           <div class="task-list">
             <div v-for="(task, index) in recentTasks" :key="index" class="task-item">
-              <div class="task-status" :class="task.status"></div>
-              <div class="task-info">
+              <div class="task-status-dot" :class="task.status"></div>
+              <div class="task-content">
                 <span class="task-title">{{ task.title }}</span>
-                <span class="task-time">{{ task.time }}</span>
-              </div>
-              <div class="task-progress">
-                <div class="progress-bar">
+                <div class="task-progress-bar">
                   <div class="progress-fill" :style="{ width: task.progress + '%' }"></div>
                 </div>
-                <span class="progress-text">{{ task.progress }}%</span>
+                <span class="task-meta">{{ task.time }} · {{ task.progress }}%</span>
               </div>
             </div>
           </div>
@@ -213,22 +194,22 @@
 
       <div class="grid-panel warning-panel">
         <div class="panel-header">
-          <span class="panel-icon">⚠️</span>
+          <component :is="Bell" class="panel-icon" />
           <span class="panel-title">监测预警</span>
           <span class="alert-badge" v-if="warningStats.total > 0">{{ warningStats.total }}</span>
         </div>
         <div class="panel-body">
-          <div class="warning-cards">
-            <div class="warning-card" v-for="(item, index) in warningCards" :key="index" :class="item.type">
-              <span class="warning-icon">{{ item.icon }}</span>
-              <div class="warning-content">
+          <div class="warning-summary">
+            <div class="warning-item" v-for="(item, index) in warningSummary" :key="index" :class="item.type">
+              <component :is="item.icon" class="warning-icon" />
+              <div class="warning-info">
                 <span class="warning-count">{{ item.count }}</span>
                 <span class="warning-label">{{ item.label }}</span>
               </div>
             </div>
           </div>
-          <div class="warning-list">
-            <div v-for="(item, index) in warningList" :key="index" class="warning-item">
+          <div class="warning-detail">
+            <div v-for="(item, index) in warningList" :key="index" class="warning-row">
               <span class="warning-tag" :class="item.type">{{ item.typeText }}</span>
               <span class="warning-desc">{{ item.desc }}</span>
               <span class="warning-time">{{ item.time }}</span>
@@ -237,86 +218,70 @@
         </div>
       </div>
 
-      <div class="grid-panel farming-panel">
+      <div class="grid-panel livestock-panel">
         <div class="panel-header">
-          <span class="panel-icon">🐑</span>
-          <span class="panel-title">养殖业/设施</span>
+          <component :is="House" class="panel-icon" />
+          <span class="panel-title">养殖业统计</span>
         </div>
         <div class="panel-body">
-          <div class="farming-content">
-            <div class="facility-section">
-              <div class="section-title">养殖设施</div>
-              <div class="pyramid-container">
-                <svg viewBox="0 0 120 140" class="pyramid-svg">
-                  <polygon points="60,10 110,35 60,60 10,35" :fill="pyramidColors[0]" opacity="0.9"/>
-                  <polygon points="60,50 100,70 60,90 20,70" :fill="pyramidColors[1]" opacity="0.8"/>
-                  <polygon points="60,85 85,100 60,115 35,100" :fill="pyramidColors[2]" opacity="0.7"/>
-                  <polygon points="60,110 72,118 60,126 48,118" :fill="pyramidColors[3]" opacity="0.6"/>
-                  <text x="60" y="28" text-anchor="middle" fill="#fff" font-size="10">{{ facilityData[0].value }}</text>
-                  <text x="60" y="68" text-anchor="middle" fill="#fff" font-size="10">{{ facilityData[1].value }}</text>
-                  <text x="60" y="98" text-anchor="middle" fill="#fff" font-size="9">{{ facilityData[2].value }}</text>
-                  <text x="60" y="118" text-anchor="middle" fill="#fff" font-size="8">{{ facilityData[3].value }}</text>
-                </svg>
-                <div class="pyramid-legend">
-                  <div v-for="(item, index) in facilityData" :key="index" class="legend-item">
-                    <span class="legend-color" :style="{ backgroundColor: pyramidColors[index] }"></span>
-                    <span>{{ item.label }}</span>
-                  </div>
-                </div>
+          <div class="livestock-grid">
+            <div v-for="(item, index) in livestockData" :key="index" class="livestock-card">
+              <span class="livestock-emoji">{{ item.icon }}</span>
+              <div class="livestock-info">
+                <span class="livestock-name">{{ item.name }}</span>
+                <span class="livestock-count">{{ formatNumber(item.count) }}</span>
               </div>
             </div>
-            <div class="livestock-section">
-              <div class="section-title">牧畜统计</div>
-              <div class="livestock-grid">
-                <div v-for="(item, index) in livestockData.slice(0, 5)" :key="index" class="livestock-item">
-                  <span class="livestock-icon">{{ item.icon }}</span>
-                  <span class="livestock-name">{{ item.name }}</span>
-                  <span class="livestock-count">{{ item.count }}</span>
+          </div>
+          <div class="facility-section">
+            <span class="section-title">养殖设施面积</span>
+            <div class="facility-bars">
+              <div v-for="(item, index) in facilityData" :key="index" class="facility-bar-item">
+                <span class="facility-label">{{ item.label }}</span>
+                <div class="facility-bar">
+                  <div class="facility-fill" :style="{ width: item.percentage + '%' }"></div>
                 </div>
+                <span class="facility-value">{{ item.value }}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="grid-panel map-panel">
+      <div class="grid-panel region-panel">
         <div class="panel-header">
-          <span class="panel-icon">🗺️</span>
+          <component :is="List" class="panel-icon" />
           <span class="panel-title">区域分布</span>
         </div>
         <div class="panel-body">
-          <div class="map-container">
-            <div class="map-visual">
-              <div class="map-grid">
-                <div v-for="(area, index) in areaData" :key="index" 
-                     class="map-cell" :style="{ backgroundColor: area.color }"
-                     @mouseenter="hoverArea = area.name"
-                     @mouseleave="hoverArea = null">
-                  <span class="cell-label">{{ area.label }}</span>
-                  <span class="cell-count">{{ area.count }}</span>
-                </div>
-              </div>
-              <div class="map-legend">
-                <div class="legend-item">
-                  <span class="legend-color" style="background: #00ffff"></span>
-                  <span>高密度</span>
-                </div>
-                <div class="legend-item">
-                  <span class="legend-color" style="background: #0099ff"></span>
-                  <span>中密度</span>
-                </div>
-                <div class="legend-item">
-                  <span class="legend-color" style="background: #0066ff"></span>
-                  <span>低密度</span>
-                </div>
-              </div>
+          <div class="region-grid">
+            <div v-for="(area, index) in regionData" :key="index" 
+                 class="region-cell" :style="{ backgroundColor: area.color }"
+                 @mouseenter="hoverRegion = area"
+                 @mouseleave="hoverRegion = null">
+              <span class="region-name">{{ area.label }}</span>
+              <span class="region-count">{{ area.count }}</span>
             </div>
-            <div class="area-detail" v-if="hoverArea">
-              <div class="detail-header">{{ hoverArea }}</div>
-              <div class="detail-content">
-                <span>户数：{{ getAreaData(hoverArea)?.count }}</span>
-                <span>人口：{{ getAreaData(hoverArea)?.population }}</span>
-              </div>
+          </div>
+          <div class="region-legend">
+            <div class="legend-item">
+              <span class="legend-color" style="background: #00c8ff"></span>
+              <span>高密度</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color" style="background: #0088cc"></span>
+              <span>中密度</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color" style="background: #005599"></span>
+              <span>低密度</span>
+            </div>
+          </div>
+          <div class="region-tooltip" v-if="hoverRegion">
+            <div class="tooltip-header">{{ hoverRegion.name }}</div>
+            <div class="tooltip-content">
+              <span>户数：{{ hoverRegion.count }}</span>
+              <span>人口：{{ hoverRegion.population }}</span>
             </div>
           </div>
         </div>
@@ -326,50 +291,46 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { 
+  User, House, List, ArrowDown, Bell, Clock, 
+  ArrowUp, Search, Plus, Refresh 
+} from '@element-plus/icons-vue'
 
 const dashboardRef = ref(null)
 const isFullscreen = ref(false)
 const currentTime = ref('')
 const currentDate = ref('')
 const activeEconomyTab = ref('year')
-const hoverArea = ref(null)
+const hoverRegion = ref(null)
 
-const animatedHouseholds = ref(0)
-const animatedPopulation = ref(0)
-const animatedMale = ref(0)
-const animatedFemale = ref(0)
-
-const statistics = ref({
-  households: 2456,
-  population: 8932,
-  male: 4567,
-  female: 4365
-})
-
-const populationTrend = ref(2.3)
-const economyTrend = ref(5.8)
-
-const populationStructure = ref([
-  { label: '0-14岁', value: 18, color: '#00ffff' },
-  { label: '15-59岁', value: 65, color: '#00ccff' },
-  { label: '60岁+', value: 17, color: '#0099ff' }
+const populationStats = ref([
+  { label: '总户数', number: 2456, value: '🏠', bgClass: 'bg-blue' },
+  { label: '总人口', number: 8932, value: '👥', bgClass: 'bg-green' },
+  { label: '男性', number: 4567, value: '👨', bgClass: 'bg-orange' },
+  { label: '女性', number: 4365, value: '👩', bgClass: 'bg-pink' }
 ])
 
-const agricultureData = ref([
-  { label: '耕地', value: '502.51万', percentage: 85, color: '#ff6b6b' },
-  { label: '林地', value: '258.77万', percentage: 52, color: '#4ecdc4' },
-  { label: '草地', value: '277.36万', percentage: 55, color: '#ffe66d' },
-  { label: '水面', value: '12.8万', percentage: 3, color: '#95e1d3' }
+const populationStructure = ref([
+  { label: '0-14岁', value: 18, color: '#00c8ff' },
+  { label: '15-59岁', value: 65, color: '#00ff99' },
+  { label: '60岁+', value: 17, color: '#ff9966' }
+])
+
+const landData = ref([
+  { label: '耕地', value: '502.51万亩', percentage: 85, color: '#ff6b6b' },
+  { label: '林地', value: '258.77万亩', percentage: 52, color: '#4ecdc4' },
+  { label: '草地', value: '277.36万亩', percentage: 55, color: '#ffe66d' },
+  { label: '水面', value: '12.8万亩', percentage: 3, color: '#95e1d3' }
 ])
 
 const householdTypes = ref([
-  { label: '一般户', count: 1856, percentage: 75.6, color: '#00ffff' },
-  { label: '脱贫户', count: 320, percentage: 13.0, color: '#00ff00' },
-  { label: '监测户', count: 156, percentage: 6.4, color: '#ffff00' },
-  { label: '低保户', count: 86, percentage: 3.5, color: '#ff00ff' },
-  { label: '五保户', count: 28, percentage: 1.1, color: '#ff6600' },
-  { label: '优抚户', count: 10, percentage: 0.4, color: '#ff0000' }
+  { label: '一般户', count: 1856, percentage: 75.6, color: '#00c8ff' },
+  { label: '脱贫户', count: 320, percentage: 13.0, color: '#00ff99' },
+  { label: '监测户', count: 156, percentage: 6.4, color: '#ffdd00' },
+  { label: '低保户', count: 86, percentage: 3.5, color: '#ff6b9d' },
+  { label: '五保户', count: 28, percentage: 1.1, color: '#ff9966' },
+  { label: '优抚户', count: 10, percentage: 0.4, color: '#ff6b6b' }
 ])
 
 const totalHouseholds = computed(() => {
@@ -381,20 +342,14 @@ const householdPieData = computed(() => {
   return householdTypes.value.map(item => {
     const angle = (item.percentage / 100) * 360
     const endAngle = startAngle + angle
-    const data = {
-      startAngle,
-      endAngle,
-      color: item.color
-    }
+    const data = { startAngle, endAngle, color: item.color }
     startAngle = endAngle
     return data
   })
 })
 
-const economyTabs = [
-  { id: 'year', name: '本年' },
-  { id: 'lastYear', name: '上年' }
-]
+const economyTrend = ref(5.8)
+const economyTabs = [{ id: 'year', name: '本年' }, { id: 'lastYear', name: '上年' }]
 
 const yearIncome = ref([
   { label: '工资性收入', value: 1258000 },
@@ -402,7 +357,7 @@ const yearIncome = ref([
   { label: '财产性收入', value: 126000 },
   { label: '转移性收入', value: 658000 },
   { label: '其他收入', value: 89000 },
-  { label: '总计', value: 3026000 }
+  { label: '合计', value: 3026000 }
 ])
 
 const lastYearIncome = ref([
@@ -411,22 +366,39 @@ const lastYearIncome = ref([
   { label: '财产性收入', value: 112000 },
   { label: '转移性收入', value: 589000 },
   { label: '其他收入', value: 76000 },
-  { label: '总计', value: 2688000 }
+  { label: '合计', value: 2688000 }
 ])
 
 const currentEconomyData = computed(() => {
   return activeEconomyTab.value === 'year' ? yearIncome.value : lastYearIncome.value
 })
 
-const miniChartData = ref([25, 38, 45, 62, 55, 78])
-
-const taskStats = ref({
-  total: 156,
-  pending: 23,
-  processing: 68,
-  completed: 65
+const chartData = ref([35, 42, 38, 55, 48, 62])
+const chartPoints = computed(() => {
+  const width = 200
+  const height = 60
+  const padding = 10
+  const maxVal = 70
+  return chartData.value.map((val, i) => ({
+    x: padding + (i * (width - 2 * padding)) / (chartData.value.length - 1),
+    y: height - padding - (val / maxVal) * (height - 2 * padding)
+  }))
 })
 
+const linePath = computed(() => {
+  if (chartPoints.value.length === 0) return ''
+  return chartPoints.value.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
+})
+
+const areaPath = computed(() => {
+  if (chartPoints.value.length === 0) return ''
+  const points = chartPoints.value
+  const firstX = points[0].x
+  const lastX = points[points.length - 1].x
+  return `${linePath.value} L ${lastX} 60 L ${firstX} 60 Z`
+})
+
+const taskStats = ref({ total: 156, pending: 23, processing: 68, completed: 65 })
 const recentTasks = ref([
   { title: '乡村道路改造项目', time: '2024-05-18', progress: 75, status: 'processing' },
   { title: '灌溉设施维护', time: '2024-05-17', progress: 45, status: 'processing' },
@@ -434,50 +406,46 @@ const recentTasks = ref([
   { title: '农田水利修复', time: '2024-05-15', progress: 20, status: 'pending' }
 ])
 
-const warningStats = ref({
-  total: 5,
-  income: 2,
-  health: 1,
-  other: 2
-})
-
-const warningCards = ref([
-  { type: 'income', icon: '📉', count: warningStats.value.income, label: '收入异常' },
-  { type: 'health', icon: '🏥', count: warningStats.value.health, label: '健康预警' },
-  { type: 'other', icon: '⚠️', count: warningStats.value.other, label: '其他预警' }
+const warningStats = ref({ total: 5, income: 2, health: 1, other: 2 })
+const warningSummary = ref([
+  { type: 'income', icon: ArrowDown, count: 2, label: '收入异常' },
+  { type: 'health', icon: Bell, count: 1, label: '健康预警' },
+  { type: 'other', icon: Clock, count: 2, label: '其他预警' }
 ])
-
 const warningList = ref([
   { type: 'income', typeText: '收入异常', desc: '张三户收入环比下降30%', time: '10分钟前' },
   { type: 'health', typeText: '健康预警', desc: '李四健康状况需关注', time: '30分钟前' },
   { type: 'other', typeText: '其他预警', desc: '王五户需走访', time: '1小时前' }
 ])
 
-const facilityData = ref([
-  { label: '育肥圈', value: '1256m²' },
-  { label: '饲料间', value: '890m²' },
-  { label: '储草间', value: '650m²' },
-  { label: '棚圈', value: '2340m²' }
-])
-
-const pyramidColors = ['#00ffff', '#00ccff', '#0099ff', '#0066ff']
-
 const livestockData = ref([
   { name: '羊', count: 8560, icon: '🐑' },
   { name: '牛', count: 1256, icon: '🐄' },
   { name: '猪', count: 3256, icon: '🐖' },
   { name: '鸡', count: 15680, icon: '🐔' },
-  { name: '鸭', count: 4580, icon: '🦆' }
+  { name: '鸭', count: 4580, icon: '🦆' },
+  { name: '鹅', count: 1256, icon: '🦢' }
 ])
 
-const areaData = ref([
-  { name: '光明镇', label: '光明', count: 856, population: 3256, color: '#00ffff' },
-  { name: '敖包村', label: '敖包', count: 423, population: 1568, color: '#00ccff' },
-  { name: '北山村', label: '北山', count: 389, population: 1456, color: '#00ccff' },
-  { name: '塔拉村', label: '塔拉', count: 298, population: 1086, color: '#0099ff' },
-  { name: '红旗村', label: '红旗', count: 256, population: 926, color: '#0099ff' },
-  { name: '幸福村', label: '幸福', count: 234, population: 846, color: '#0066ff' }
+const facilityData = ref([
+  { label: '育肥圈', value: '1,256m²', percentage: 85 },
+  { label: '饲料间', value: '890m²', percentage: 65 },
+  { label: '储草间', value: '650m²', percentage: 45 },
+  { label: '棚圈', value: '2,340m²', percentage: 95 }
 ])
+
+const regionData = ref([
+  { name: '光明镇', label: '光明', count: 856, population: 3256, color: '#00c8ff' },
+  { name: '敖包村', label: '敖包', count: 423, population: 1568, color: '#00aacc' },
+  { name: '北山村', label: '北山', count: 389, population: 1456, color: '#00aacc' },
+  { name: '塔拉村', label: '塔拉', count: 298, population: 1086, color: '#0088cc' },
+  { name: '红旗村', label: '红旗', count: 256, population: 926, color: '#0088cc' },
+  { name: '幸福村', label: '幸福', count: 234, population: 846, color: '#005599' }
+])
+
+const isMediumScreen = computed(() => {
+  return window.innerWidth >= 1200 && window.innerWidth < 1920
+})
 
 const gridClass = computed(() => {
   const width = window.innerWidth
@@ -487,7 +455,7 @@ const gridClass = computed(() => {
 })
 
 const getRingDash = (percentage) => {
-  const circumference = 2 * Math.PI * 32
+  const circumference = 2 * Math.PI * 22
   const filled = (percentage / 100) * circumference
   return `${filled} ${circumference - filled}`
 }
@@ -495,12 +463,16 @@ const getRingDash = (percentage) => {
 const getPiePath = (startAngle, endAngle) => {
   const startRad = ((startAngle - 90) * Math.PI) / 180
   const endRad = ((endAngle - 90) * Math.PI) / 180
-  const x1 = 90 + 60 * Math.cos(startRad)
-  const y1 = 90 + 60 * Math.sin(startRad)
-  const x2 = 90 + 60 * Math.cos(endRad)
-  const y2 = 90 + 60 * Math.sin(endRad)
+  const x1 = 50 + 35 * Math.cos(startRad)
+  const y1 = 50 + 35 * Math.sin(startRad)
+  const x2 = 50 + 35 * Math.cos(endRad)
+  const y2 = 50 + 35 * Math.sin(endRad)
   const largeArc = endAngle - startAngle > 180 ? 1 : 0
-  return `M 90 90 L ${x1} ${y1} A 60 60 0 ${largeArc} 1 ${x2} ${y2} Z`
+  return `M 50 50 L ${x1} ${y1} A 35 35 0 ${largeArc} 1 ${x2} ${y2} Z`
+}
+
+const formatNumber = (num) => {
+  return num.toLocaleString()
 }
 
 const formatCurrency = (value) => {
@@ -508,10 +480,6 @@ const formatCurrency = (value) => {
     return (value / 10000).toFixed(1) + '万'
   }
   return value.toLocaleString()
-}
-
-const getAreaData = (name) => {
-  return areaData.value.find(item => item.name === name)
 }
 
 const toggleFullscreen = () => {
@@ -528,115 +496,72 @@ const updateTime = () => {
   const now = new Date()
   currentTime.value = now.toLocaleTimeString('zh-CN', { hour12: false })
   currentDate.value = now.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: 'long'
+    year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
   })
-}
-
-const animateNumbers = () => {
-  const duration = 2000
-  const steps = 60
-  const interval = duration / steps
-  
-  let step = 0
-  const timer = setInterval(() => {
-    step++
-    const progress = step / steps
-    const eased = 1 - Math.pow(1 - progress, 3)
-    
-    animatedHouseholds.value = Math.round(statistics.value.households * eased)
-    animatedPopulation.value = Math.round(statistics.value.population * eased)
-    animatedMale.value = Math.round(statistics.value.male * eased)
-    animatedFemale.value = Math.round(statistics.value.female * eased)
-    
-    if (step >= steps) {
-      clearInterval(timer)
-    }
-  }, interval)
-}
-
-const updateDynamicData = () => {
-  miniChartData.value = miniChartData.value.map(v => {
-    const change = (Math.random() - 0.5) * 10
-    return Math.max(20, Math.min(80, v + change))
-  })
-  
-  taskStats.value.processing = Math.max(0, taskStats.value.processing + Math.floor((Math.random() - 0.5) * 5))
-  taskStats.value.completed = Math.max(0, taskStats.value.completed + Math.floor((Math.random() - 0.3) * 3))
 }
 
 let timeTimer = null
-let dataTimer = null
 
 onMounted(() => {
   updateTime()
-  animateNumbers()
   timeTimer = setInterval(updateTime, 1000)
-  dataTimer = setInterval(updateDynamicData, 5000)
 })
 
 onUnmounted(() => {
   if (timeTimer) clearInterval(timeTimer)
-  if (dataTimer) clearInterval(dataTimer)
-})
-
-watch(gridClass, () => {
-  animateNumbers()
 })
 </script>
 
 <style scoped>
 .dashboard-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a1628 0%, #0d1f35 50%, #0a1628 100%);
-  padding: 20px;
+  background: linear-gradient(180deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+  padding: 16px;
   box-sizing: border-box;
-  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding: 20px 30px;
-  background: linear-gradient(90deg, rgba(0, 100, 150, 0.4) 0%, rgba(0, 150, 200, 0.3) 50%, rgba(0, 100, 150, 0.4) 100%);
-  border-radius: 15px;
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+  margin-bottom: 16px;
+  padding: 16px 24px;
+  background: rgba(16, 23, 33, 0.95);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 200, 255, 0.2);
 }
 
-.header-left {
+.header-left, .header-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
 }
 
 .region-badge {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  background: rgba(0, 255, 255, 0.15);
+  padding: 6px 14px;
+  background: rgba(0, 200, 255, 0.1);
   border-radius: 20px;
-  border: 1px solid rgba(0, 255, 255, 0.3);
+  border: 1px solid rgba(0, 200, 255, 0.3);
 }
 
 .region-icon {
-  font-size: 16px;
+  color: #00c8ff;
+  font-size: 14px;
 }
 
 .region-name {
-  font-size: 16px;
-  color: #00ffff;
-  font-weight: bold;
+  font-size: 14px;
+  color: #00c8ff;
+  font-weight: 600;
 }
 
 .date-text {
-  font-size: 14px;
-  color: #999;
+  font-size: 13px;
+  color: #6e7681;
 }
 
 .header-center {
@@ -644,24 +569,18 @@ watch(gridClass, () => {
 }
 
 .dashboard-title {
-  font-size: 32px;
-  color: #00ffff;
-  text-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
-  margin: 0 0 5px;
-  letter-spacing: 2px;
+  font-size: 24px;
+  color: #00c8ff;
+  margin: 0 0 4px;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .title-sub {
-  font-size: 12px;
-  color: #666;
+  font-size: 11px;
+  color: #6e7681;
   text-transform: uppercase;
-  letter-spacing: 3px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  letter-spacing: 2px;
 }
 
 .status-indicator {
@@ -671,9 +590,9 @@ watch(gridClass, () => {
 }
 
 .status-dot {
-  width: 10px;
-  height: 10px;
-  background: #00ff00;
+  width: 8px;
+  height: 8px;
+  background: #3fb950;
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
@@ -684,39 +603,41 @@ watch(gridClass, () => {
 }
 
 .status-text {
-  font-size: 14px;
-  color: #00ff00;
+  font-size: 13px;
+  color: #3fb950;
 }
 
 .current-time {
-  font-size: 24px;
-  color: #fff;
-  font-family: 'Courier New', monospace;
-  letter-spacing: 2px;
+  font-size: 20px;
+  color: #f0f6fc;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  letter-spacing: 1px;
 }
 
 .screen-btn {
-  padding: 10px 20px;
-  background: rgba(0, 255, 255, 0.2);
-  border: 1px solid rgba(0, 255, 255, 0.5);
-  color: #00ffff;
-  border-radius: 8px;
+  padding: 8px 14px;
+  background: rgba(0, 200, 255, 0.1);
+  border: 1px solid rgba(0, 200, 255, 0.3);
+  color: #00c8ff;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 14px;
+  transition: all 0.2s;
 }
 
 .screen-btn:hover {
-  background: rgba(0, 255, 255, 0.4);
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  background: rgba(0, 200, 255, 0.2);
+}
+
+.screen-icon {
+  font-size: 16px;
 }
 
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 20px;
-  height: calc(100vh - 180px);
+  gap: 16px;
+  height: calc(100vh - 140px);
 }
 
 .dashboard-grid.large-screen {
@@ -732,160 +653,156 @@ watch(gridClass, () => {
 }
 
 .grid-panel {
-  background: rgba(5, 20, 40, 0.85);
-  border: 1px solid rgba(0, 255, 255, 0.2);
-  border-radius: 15px;
+  background: rgba(16, 23, 33, 0.95);
+  border: 1px solid rgba(0, 200, 255, 0.15);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.08);
   transition: all 0.3s;
 }
 
 .grid-panel:hover {
-  border-color: rgba(0, 255, 255, 0.4);
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
+  border-color: rgba(0, 200, 255, 0.3);
+}
+
+.grid-panel.span-2 {
+  grid-column: span 2;
 }
 
 .panel-header {
   display: flex;
   align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(90deg, rgba(0, 100, 150, 0.5) 0%, rgba(0, 150, 200, 0.4) 100%);
-  border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+  padding: 12px 16px;
+  background: rgba(0, 200, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 200, 255, 0.15);
 }
 
 .panel-icon {
-  font-size: 20px;
+  color: #00c8ff;
+  font-size: 16px;
   margin-right: 10px;
 }
 
 .panel-title {
-  font-size: 16px;
-  color: #00ffff;
-  font-weight: bold;
+  font-size: 14px;
+  color: #f0f6fc;
+  font-weight: 600;
   flex: 1;
 }
 
 .panel-badge {
-  padding: 4px 12px;
-  background: rgba(0, 255, 0, 0.2);
-  border-radius: 15px;
-  font-size: 12px;
-  color: #00ff00;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .panel-badge.positive {
-  background: rgba(0, 255, 0, 0.2);
-  color: #00ff00;
+  background: rgba(63, 185, 80, 0.15);
+  color: #3fb950;
 }
 
 .panel-badge.negative {
-  background: rgba(255, 100, 100, 0.2);
-  color: #ff6b6b;
+  background: rgba(248, 81, 73, 0.15);
+  color: #f85149;
 }
 
 .alert-badge {
-  padding: 4px 12px;
-  background: rgba(255, 100, 100, 0.3);
-  border-radius: 15px;
-  font-size: 12px;
-  color: #ff6b6b;
-  font-weight: bold;
+  padding: 3px 10px;
+  background: rgba(248, 81, 73, 0.2);
+  border-radius: 10px;
+  font-size: 11px;
+  color: #f85149;
+  font-weight: 600;
 }
 
 .panel-body {
-  padding: 15px;
-  height: calc(100% - 60px);
+  padding: 14px;
+  height: calc(100% - 52px);
   overflow-y: auto;
 }
 
-.stats-grid {
+.stats-row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .stat-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: rgba(0, 50, 100, 0.4);
-  border-radius: 10px;
-  border: 1px solid rgba(0, 255, 255, 0.15);
+  padding: 12px 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 }
 
 .stat-icon {
-  width: 45px;
-  height: 45px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 18px;
+  margin-bottom: 8px;
 }
 
-.stat-icon.bg-blue {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.stat-icon.bg-green {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
-.stat-icon.bg-orange {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-}
-
-.stat-icon.bg-pink {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
+.stat-icon.bg-blue { background: linear-gradient(135deg, #238636 0%, #2ea043 100%); }
+.stat-icon.bg-green { background: linear-gradient(135deg, #58a6ff 0%, #79c0ff 100%); }
+.stat-icon.bg-orange { background: linear-gradient(135deg, #d29922 0%, #e3b341 100%); }
+.stat-icon.bg-pink { background: linear-gradient(135deg, #db61a2 0%, #e075b0 100%); }
 
 .stat-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-value {
-  font-size: 22px;
-  font-weight: bold;
-  color: #fff;
+  text-align: center;
 }
 
 .stat-label {
-  font-size: 12px;
-  color: #999;
+  display: block;
+  font-size: 11px;
+  color: #6e7681;
+  margin-bottom: 4px;
 }
 
-.chart-section {
-  margin-top: 15px;
+.stat-value {
+  font-size: 16px;
+  color: #f0f6fc;
+  font-weight: 600;
+}
+
+.chart-block {
+  margin-top: 8px;
+}
+
+.chart-header {
+  margin-bottom: 10px;
 }
 
 .chart-title {
-  font-size: 13px;
-  color: #999;
-  margin-bottom: 10px;
+  font-size: 12px;
+  color: #6e7681;
 }
 
 .bar-chart {
   display: flex;
   justify-content: space-around;
   align-items: flex-end;
-  height: 80px;
+  height: 60px;
 }
 
 .bar-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+  width: 60px;
 }
 
 .bar-wrapper {
-  width: 40px;
-  height: 60px;
-  background: rgba(0, 50, 100, 0.4);
-  border-radius: 5px;
+  width: 30px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -893,36 +810,35 @@ watch(gridClass, () => {
 
 .bar-fill {
   width: 100%;
-  border-radius: 5px 5px 0 0;
+  border-radius: 4px 4px 0 0;
   transition: height 0.8s ease;
 }
 
 .bar-label {
-  font-size: 11px;
-  color: #999;
+  font-size: 10px;
+  color: #6e7681;
 }
 
-.bar-value {
-  font-size: 11px;
-  color: #00ffff;
-  font-weight: bold;
-}
-
-.ring-chart-grid {
+.land-cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
+  gap: 12px;
 }
 
-.ring-item {
-  text-align: center;
+.land-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 }
 
-.ring-container {
+.land-ring {
   position: relative;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 8px;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 8px;
 }
 
 .ring-svg {
@@ -935,33 +851,40 @@ watch(gridClass, () => {
 }
 
 @keyframes ringProgress {
-  from { stroke-dasharray: 0 201; }
+  from { stroke-dasharray: 0 138; }
 }
 
-.ring-center {
+.ring-text {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: #f0f6fc;
+  font-weight: 500;
+}
+
+.land-info {
   text-align: center;
 }
 
-.ring-value {
-  font-size: 12px;
-  color: #fff;
-  font-weight: bold;
+.land-value {
+  display: block;
+  font-size: 13px;
+  color: #f0f6fc;
+  font-weight: 600;
 }
 
-.ring-label {
-  font-size: 12px;
-  color: #999;
+.land-label {
+  font-size: 11px;
+  color: #6e7681;
 }
 
-.pie-chart-container {
+.pie-wrapper {
   position: relative;
-  width: 150px;
-  height: 150px;
-  margin: 0 auto 15px;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 12px;
 }
 
 .pie-svg {
@@ -969,15 +892,7 @@ watch(gridClass, () => {
   height: 100%;
 }
 
-.pie-slice {
-  transition: opacity 0.3s;
-}
-
-.pie-slice:hover {
-  opacity: 0.8;
-}
-
-.pie-center-text {
+.pie-center {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -987,518 +902,519 @@ watch(gridClass, () => {
 
 .pie-total {
   display: block;
-  font-size: 24px;
-  color: #00ffff;
-  font-weight: bold;
+  font-size: 18px;
+  color: #00c8ff;
+  font-weight: 700;
 }
 
 .pie-label {
-  font-size: 12px;
-  color: #999;
+  font-size: 10px;
+  color: #6e7681;
 }
 
-.legend-list {
+.household-legend {
   display: flex;
   flex-direction: column;
+  gap: 6px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
   gap: 8px;
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .legend-color {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 3px;
 }
 
 .legend-text {
   flex: 1;
-  font-size: 12px;
-  color: #ccc;
+  font-size: 11px;
+  color: #c9d1d9;
 }
 
 .legend-value {
-  font-size: 12px;
-  color: #00ffff;
+  font-size: 11px;
+  color: #00c8ff;
+  font-weight: 500;
 }
 
 .economy-tabs {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .tab-btn {
-  padding: 8px 16px;
-  background: rgba(0, 100, 150, 0.3);
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  color: #999;
-  border-radius: 8px;
+  padding: 6px 14px;
+  background: rgba(0, 200, 255, 0.05);
+  border: 1px solid rgba(0, 200, 255, 0.2);
+  color: #6e7681;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
-  transition: all 0.3s;
+  font-size: 12px;
+  transition: all 0.2s;
 }
 
 .tab-btn.active {
-  background: rgba(0, 255, 255, 0.2);
-  color: #00ffff;
-  border-color: #00ffff;
+  background: rgba(0, 200, 255, 0.15);
+  color: #00c8ff;
+  border-color: #00c8ff;
 }
 
-.income-grid {
+.income-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
-.income-item {
-  text-align: center;
-  padding: 10px;
-  background: rgba(0, 50, 100, 0.3);
-  border-radius: 8px;
+.income-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
 }
 
 .income-label {
-  display: block;
   font-size: 11px;
-  color: #999;
-  margin-bottom: 5px;
+  color: #6e7681;
 }
 
 .income-value {
-  font-size: 14px;
-  color: #fff;
-  font-weight: bold;
+  font-size: 12px;
+  color: #f0f6fc;
+  font-weight: 600;
 }
 
-.income-value.highlight {
-  color: #00ff00;
+.mini-line-chart {
+  margin-top: 8px;
 }
 
-.mini-chart {
+.line-svg {
+  width: 100%;
   height: 60px;
-  position: relative;
 }
 
-.chart-line {
-  position: relative;
-  height: 100%;
-}
-
-.chart-point {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.point-dot {
-  width: 8px;
-  height: 8px;
-  background: #00ffff;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #00ffff;
-}
-
-.point-line {
-  width: 2px;
-  height: 30px;
-  background: linear-gradient(to bottom, #00ffff, transparent);
-  margin-top: 5px;
-}
-
-.chart-labels {
+.chart-x-labels {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 6px;
   font-size: 10px;
-  color: #666;
+  color: #6e7681;
 }
 
-.task-stats {
+.task-summary {
   display: flex;
   justify-content: space-around;
-  margin-bottom: 15px;
   padding: 10px;
-  background: rgba(0, 50, 100, 0.3);
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-bottom: 12px;
 }
 
-.task-stat-item {
+.summary-item {
   text-align: center;
 }
 
-.task-stat-value {
+.summary-num {
   display: block;
-  font-size: 20px;
-  color: #00ffff;
-  font-weight: bold;
+  font-size: 18px;
+  color: #00c8ff;
+  font-weight: 700;
 }
 
-.task-stat-value.pending {
-  color: #ffaa00;
-}
+.summary-num.pending { color: #d29922; }
+.summary-num.processing { color: #58a6ff; }
+.summary-num.completed { color: #3fb950; }
 
-.task-stat-value.processing {
-  color: #00ccff;
-}
-
-.task-stat-value.completed {
-  color: #00ff00;
-}
-
-.task-stat-label {
-  font-size: 12px;
-  color: #999;
+.summary-label {
+  font-size: 11px;
+  color: #6e7681;
 }
 
 .task-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .task-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   padding: 10px;
-  background: rgba(0, 50, 100, 0.2);
-  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
 }
 
-.task-status {
-  width: 10px;
-  height: 10px;
+.task-status-dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.task-status.pending {
-  background: #ffaa00;
-}
-
-.task-status.processing {
-  background: #00ccff;
+.task-status-dot.pending { background: #d29922; }
+.task-status-dot.processing { 
+  background: #58a6ff; 
   animation: blink 1s infinite;
 }
-
-.task-status.completed {
-  background: #00ff00;
-}
+.task-status-dot.completed { background: #3fb950; }
 
 @keyframes blink {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.4; }
 }
 
-.task-info {
+.task-content {
   flex: 1;
+  min-width: 0;
 }
 
 .task-title {
   display: block;
-  font-size: 13px;
-  color: #fff;
-  margin-bottom: 3px;
-}
-
-.task-time {
-  font-size: 11px;
-  color: #666;
-}
-
-.task-progress {
-  width: 80px;
-}
-
-.progress-bar {
-  height: 6px;
-  background: rgba(0, 50, 100, 0.5);
-  border-radius: 3px;
+  font-size: 12px;
+  color: #f0f6fc;
+  margin-bottom: 6px;
   overflow: hidden;
-  margin-bottom: 3px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-progress-bar {
+  height: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #00ffff, #00ff00);
-  border-radius: 3px;
+  background: linear-gradient(90deg, #00c8ff, #3fb950);
+  border-radius: 2px;
   transition: width 0.5s ease;
 }
 
-.progress-text {
-  font-size: 11px;
-  color: #00ffff;
+.task-meta {
+  font-size: 10px;
+  color: #6e7681;
 }
 
-.warning-cards {
+.warning-summary {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
-.warning-card {
+.warning-item {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 15px 10px;
-  border-radius: 10px;
+  padding: 12px 8px;
+  border-radius: 8px;
 }
 
-.warning-card.income {
-  background: rgba(255, 100, 100, 0.15);
-  border: 1px solid rgba(255, 100, 100, 0.3);
+.warning-item.income {
+  background: rgba(248, 81, 73, 0.1);
+  border: 1px solid rgba(248, 81, 73, 0.2);
 }
 
-.warning-card.health {
-  background: rgba(255, 200, 100, 0.15);
-  border: 1px solid rgba(255, 200, 100, 0.3);
+.warning-item.health {
+  background: rgba(250, 173, 20, 0.1);
+  border: 1px solid rgba(250, 173, 20, 0.2);
 }
 
-.warning-card.other {
-  background: rgba(255, 255, 100, 0.15);
-  border: 1px solid rgba(255, 255, 100, 0.3);
+.warning-item.other {
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid rgba(250, 204, 21, 0.2);
 }
 
 .warning-icon {
-  font-size: 24px;
-  margin-bottom: 5px;
+  font-size: 18px;
+  margin-bottom: 6px;
 }
 
-.warning-content {
+.warning-info {
   text-align: center;
 }
 
 .warning-count {
   display: block;
-  font-size: 20px;
-  color: #fff;
-  font-weight: bold;
+  font-size: 16px;
+  color: #f0f6fc;
+  font-weight: 700;
 }
 
 .warning-label {
-  font-size: 11px;
-  color: #999;
+  font-size: 10px;
+  color: #6e7681;
 }
 
-.warning-list {
+.warning-detail {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
-.warning-item {
+.warning-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 8px;
-  background: rgba(0, 50, 100, 0.2);
-  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
 }
 
 .warning-tag {
-  padding: 3px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 10px;
+  flex-shrink: 0;
 }
 
 .warning-tag.income {
-  background: rgba(255, 100, 100, 0.2);
-  color: #ff6b6b;
+  background: rgba(248, 81, 73, 0.2);
+  color: #f85149;
 }
 
 .warning-tag.health {
-  background: rgba(255, 200, 100, 0.2);
-  color: #ffaa00;
+  background: rgba(250, 173, 20, 0.2);
+  color: #fabd05;
 }
 
 .warning-tag.other {
-  background: rgba(255, 255, 100, 0.2);
-  color: #ffff00;
+  background: rgba(250, 204, 21, 0.2);
+  color: #facc15;
 }
 
 .warning-desc {
   flex: 1;
-  font-size: 12px;
-  color: #ccc;
+  font-size: 11px;
+  color: #c9d1d9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .warning-time {
-  font-size: 11px;
-  color: #666;
-}
-
-.farming-content {
-  display: flex;
-  gap: 20px;
-}
-
-.facility-section,
-.livestock-section {
-  flex: 1;
-}
-
-.section-title {
-  font-size: 13px;
-  color: #00ffff;
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-
-.pyramid-container {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.pyramid-svg {
-  width: 120px;
-  height: 140px;
-}
-
-.pyramid-legend {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  font-size: 10px;
+  color: #6e7681;
+  flex-shrink: 0;
 }
 
 .livestock-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
-.livestock-item {
-  text-align: center;
-  padding: 10px 5px;
-  background: rgba(0, 50, 100, 0.3);
+.livestock-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
 }
 
-.livestock-icon {
-  font-size: 20px;
-  margin-bottom: 5px;
+.livestock-emoji {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.livestock-info {
+  text-align: center;
 }
 
 .livestock-name {
   display: block;
   font-size: 11px;
-  color: #999;
+  color: #6e7681;
   margin-bottom: 3px;
 }
 
 .livestock-count {
   font-size: 14px;
-  color: #00ffff;
-  font-weight: bold;
+  color: #00c8ff;
+  font-weight: 600;
 }
 
-.map-container {
-  position: relative;
+.facility-section {
+  margin-top: 8px;
+}
+
+.section-title {
+  display: block;
+  font-size: 12px;
+  color: #6e7681;
+  margin-bottom: 10px;
+}
+
+.facility-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.facility-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.facility-label {
+  width: 50px;
+  font-size: 11px;
+  color: #6e7681;
+  flex-shrink: 0;
+}
+
+.facility-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.facility-fill {
   height: 100%;
+  background: linear-gradient(90deg, #00c8ff, #00ff99);
+  border-radius: 3px;
+  transition: width 0.5s ease;
 }
 
-.map-visual {
-  height: 100%;
+.facility-value {
+  width: 60px;
+  font-size: 11px;
+  color: #f0f6fc;
+  text-align: right;
+  flex-shrink: 0;
 }
 
-.map-grid {
+.region-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 10px;
-  height: 150px;
+  gap: 8px;
+  height: 120px;
+  margin-bottom: 12px;
 }
 
-.map-cell {
+.region-cell {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s;
   border: 2px solid transparent;
 }
 
-.map-cell:hover {
-  transform: scale(1.05);
-  border-color: #00ffff;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+.region-cell:hover {
+  transform: scale(1.03);
+  border-color: #00c8ff;
 }
 
-.cell-label {
-  font-size: 14px;
-  color: #fff;
-  font-weight: bold;
+.region-name {
+  font-size: 12px;
+  color: #f0f6fc;
+  font-weight: 500;
 }
 
-.cell-count {
-  font-size: 20px;
-  color: #00ffff;
-  font-weight: bold;
+.region-count {
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 700;
 }
 
-.map-legend {
+.region-legend {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 15px;
+  gap: 16px;
 }
 
-.area-detail {
+.region-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #6e7681;
+}
+
+.region-legend .legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.region-tooltip {
   position: absolute;
   top: 10px;
   right: 10px;
-  padding: 15px;
-  background: rgba(0, 50, 100, 0.9);
-  border-radius: 10px;
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  min-width: 150px;
+  padding: 12px;
+  background: rgba(16, 23, 33, 0.95);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 200, 255, 0.3);
+  min-width: 140px;
 }
 
-.detail-header {
-  font-size: 14px;
-  color: #00ffff;
-  font-weight: bold;
-  margin-bottom: 10px;
+.tooltip-header {
+  font-size: 13px;
+  color: #00c8ff;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
-.detail-content {
+.tooltip-content {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  font-size: 12px;
-  color: #ccc;
+  gap: 4px;
+  font-size: 11px;
+  color: #c9d1d9;
 }
 
-@media (max-width: 1200px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
-  .population-panel {
+@media (max-width: 1919px) {
+  .dashboard-grid.medium-screen .overview-panel {
     grid-column: span 2;
   }
 }
 
-@media (max-width: 768px) {
-  .dashboard-grid {
+@media (max-width: 1199px) {
+  .dashboard-grid.small-screen {
     grid-template-columns: repeat(2, 1fr);
   }
   
   .dashboard-title {
-    font-size: 20px;
+    font-size: 18px;
   }
   
   .current-time {
-    font-size: 18px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-grid.small-screen {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .livestock-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>
