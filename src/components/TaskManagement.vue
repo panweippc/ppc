@@ -122,6 +122,12 @@
               <el-option label="普通" value="normal" />
             </el-select>
           </el-form-item>
+          <el-form-item label="模板选择" class="form-item">
+            <el-select v-model="createTaskForm.templateId" placeholder="请选择模板" style="width: 150px;" @change="handleTemplateChange">
+              <el-option label="请选择" value="" />
+              <el-option v-for="template in templates" :key="template.id" :label="template.templateName" :value="template.id" />
+            </el-select>
+          </el-form-item>
         </div>
         <div class="form-row">
           <el-form-item label="*指派人员" class="form-item">
@@ -222,12 +228,33 @@
         <el-button @click="viewTaskDialog = false">关闭</el-button>
       </template>
     </el-dialog>
+
+    <div class="timeout-reminder" v-if="timeoutReminder.show">
+      <div class="reminder-content">
+        <div class="reminder-header">
+          <el-icon class="reminder-icon"><Bell /></el-icon>
+          <span class="reminder-title">任务即将超时提醒</span>
+          <el-button class="reminder-close" @click="closeTimeoutReminder">
+            <el-icon><X /></el-icon>
+          </el-button>
+        </div>
+        <div class="reminder-body">
+          <div class="reminder-task">任务名称：{{ timeoutReminder.taskName }}</div>
+          <div class="reminder-deadline">截止时间：{{ timeoutReminder.deadline }}</div>
+          <div class="reminder-days">剩余天数：<span class="days-count">{{ timeoutReminder.daysLeft }}</span> 天</div>
+        </div>
+        <div class="reminder-footer">
+          <el-button type="primary" @click="handleTimeoutReminderAction">立即处理</el-button>
+          <el-button @click="closeTimeoutReminder">稍后处理</el-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { Search, Refresh, Plus } from '@element-plus/icons-vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
+import { Search, Refresh, Plus, Bell, X } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 const searchForm = reactive({
@@ -246,6 +273,14 @@ const users = ref([
   { id: 3, name: '王五', department: '第二组' },
   { id: 4, name: '赵六', department: '第二组' },
   { id: 5, name: '钱七', department: '第三组' }
+])
+
+const templates = ref([
+  { id: 1, templateName: '贫困户信息录入', priority: 'high', deadlineDays: 7, description: '完成全村贫困户信息的录入和核对工作' },
+  { id: 2, templateName: '危房检查', priority: 'urgent', deadlineDays: 3, description: '检查全村危房改造完成情况' },
+  { id: 3, templateName: '党员学习组织', priority: 'normal', deadlineDays: 15, description: '组织本月党员学习活动' },
+  { id: 4, templateName: '帮扶资料整理', priority: 'high', deadlineDays: 10, description: '整理本年度帮扶工作相关资料' },
+  { id: 5, templateName: '村民收入统计', priority: 'high', deadlineDays: 5, description: '统计全村村民本年度收入情况' }
 ])
 
 const tasks = ref([
@@ -337,10 +372,21 @@ const createTaskDialog = ref(false)
 const createTaskForm = reactive({
   taskName: '',
   priority: 'normal',
+  templateId: '',
   assigneeId: '',
   deadline: '',
   description: ''
 })
+
+const timeoutReminder = reactive({
+  show: false,
+  taskId: null,
+  taskName: '',
+  deadline: '',
+  daysLeft: 0
+})
+
+let reminderTimer = null
 
 const updateProgressDialog = ref(false)
 const progressForm = reactive({
@@ -409,6 +455,7 @@ const handlePageChange = (page) => {
 const openCreateTaskDialog = () => {
   createTaskForm.taskName = ''
   createTaskForm.priority = 'normal'
+  createTaskForm.templateId = ''
   createTaskForm.assigneeId = ''
   createTaskForm.deadline = ''
   createTaskForm.description = ''
@@ -536,6 +583,70 @@ const deleteTask = (task) => {
     ElMessage.success('删除成功')
   }
 }
+
+const handleTemplateChange = () => {
+  if (createTaskForm.templateId) {
+    const template = templates.value.find(t => t.id === createTaskForm.templateId)
+    if (template) {
+      createTaskForm.taskName = template.templateName
+      createTaskForm.priority = template.priority
+      createTaskForm.description = template.description
+      const deadline = new Date()
+      deadline.setDate(deadline.getDate() + template.deadlineDays)
+      createTaskForm.deadline = deadline.toISOString().split('T')[0]
+    }
+  } else {
+    createTaskForm.taskName = ''
+    createTaskForm.priority = 'normal'
+    createTaskForm.description = ''
+    createTaskForm.deadline = ''
+  }
+}
+
+const closeTimeoutReminder = () => {
+  timeoutReminder.show = false
+}
+
+const handleTimeoutReminderAction = () => {
+  const task = tasks.value.find(t => t.id === timeoutReminder.taskId)
+  if (task) {
+    viewTask(task)
+  }
+  closeTimeoutReminder()
+}
+
+const checkTimeoutTasks = () => {
+  const warningDays = 2
+  const now = new Date()
+  
+  for (const task of tasks.value) {
+    if (task.status === 'completed') continue
+    
+    const deadline = new Date(task.deadline)
+    const diffTime = deadline.getTime() - now.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays > 0 && diffDays <= warningDays) {
+      timeoutReminder.show = true
+      timeoutReminder.taskId = task.id
+      timeoutReminder.taskName = task.taskName
+      timeoutReminder.deadline = task.deadline
+      timeoutReminder.daysLeft = diffDays
+      break
+    }
+  }
+}
+
+onMounted(() => {
+  checkTimeoutTasks()
+  reminderTimer = setInterval(checkTimeoutTasks, 60000)
+})
+
+onUnmounted(() => {
+  if (reminderTimer) {
+    clearInterval(reminderTimer)
+  }
+})
 </script>
 
 <style scoped>
@@ -739,5 +850,89 @@ const deleteTask = (task) => {
 .timeout {
   color: #dc2626;
   font-weight: bold;
+}
+
+.timeout-reminder {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.reminder-content {
+  width: 350px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.reminder-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+}
+
+.reminder-icon {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.reminder-title {
+  flex: 1;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.reminder-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.reminder-body {
+  padding: 15px 20px;
+}
+
+.reminder-task,
+.reminder-deadline {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.reminder-days {
+  font-size: 14px;
+  color: #666;
+}
+
+.days-count {
+  color: #dc2626;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.reminder-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 15px 20px;
+  border-top: 1px solid #f0f0f0;
 }
 </style>
