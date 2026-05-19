@@ -91,6 +91,8 @@ import UserManagement from './components/UserManagement.vue'
 import RoleManagement from './components/RoleManagement.vue'
 import ComprehensiveQuery from './components/ComprehensiveQuery.vue'
 import DataDashboard from './components/DataDashboard.vue'
+import TalentManagement from './components/TalentManagement.vue'
+import AssetManagement from './components/AssetManagement.vue'
 
 const activeMenu = ref('1-1')
 const currentPageTitle = ref('欢迎')
@@ -189,14 +191,14 @@ const menuItems = ref([
     id: '8',
     name: '扶贫性资产管理',
     children: [
-      { id: '8-1', name: '扶贫性资产登记' }
+      { id: '8-1', name: '扶贫性资产登记', component: markRaw(AssetManagement) }
     ]
   },
   {
     id: '9',
     name: '人才管理',
     children: [
-      { id: '9-1', name: '人才管理' }
+      { id: '9-1', name: '人才管理', component: markRaw(TalentManagement) }
     ]
   },
   {
